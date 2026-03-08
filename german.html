@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Deutsch — German Grammar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f4f2ee}
+input:focus{outline:none;box-shadow:0 0 0 2px rgba(26,26,26,0.15)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#ece9e2}
+::-webkit-scrollbar-thumb{background:#aaa;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const C={bg:"#f4f2ee",surface:"#ffffff",border:"rgba(0,0,0,0.1)",borderDim:"rgba(0,0,0,0.06)",text:"#1a1a1a",textMuted:"rgba(26,26,26,0.45)",accent:"#1a1a1a",accentDim:"rgba(26,26,26,0.07)",red:"#c8403a",green:"#2d7a50"};
+
+const TABLES=[
+  {id:"artikel_def",title:"Definite Articles (der/die/das)",intro:"The definite article changes according to case and grammatical gender.",
+   headers:["","Masculine","Feminine","Neuter","Plural"],
+   rows:[{label:"Nominative (subject)",answers:["der","die","das","die"]},{label:"Accusative (direct object)",answers:["den","die","das","die"]},{label:"Dative (indirect object)",answers:["dem","der","dem","den"]},{label:"Genitive (possession)",answers:["des","der","des","der"]}]},
+  {id:"artikel_indef",title:"Indefinite Articles (ein/eine)",intro:"Indefinite articles follow a similar pattern but have no plural.",
+   headers:["","Masculine","Feminine","Neuter"],
+   rows:[{label:"Nominative",answers:["ein","eine","ein"]},{label:"Accusative",answers:["einen","eine","ein"]},{label:"Dative",answers:["einem","einer","einem"]},{label:"Genitive",answers:["eines","einer","eines"]}]},
+  {id:"pronomen",title:"Personal Pronouns",intro:"German personal pronouns inflect for case.",
+   headers:["","Nominative","Accusative","Dative"],
+   rows:[{label:"I / me",answers:["ich","mich","mir"]},{label:"you (inf. sg.)",answers:["du","dich","dir"]},{label:"he / him",answers:["er","ihn","ihm"]},{label:"she / her",answers:["sie","sie","ihr"]},{label:"it",answers:["es","es","ihm"]},{label:"we / us",answers:["wir","uns","uns"]},{label:"you (inf. pl.)",answers:["ihr","euch","euch"]},{label:"they / them",answers:["sie","sie","ihnen"]},{label:"You (formal)",answers:["Sie","Sie","Ihnen"]}]},
+  {id:"sein",title:"sein — to be",intro:"sein is the most important irregular verb and must be memorised.",
+   headers:["","sein (to be)"],
+   rows:[{label:"ich",answers:["bin"]},{label:"du",answers:["bist"]},{label:"er/sie/es",answers:["ist"]},{label:"wir",answers:["sind"]},{label:"ihr",answers:["seid"]},{label:"sie/Sie",answers:["sind"]}]},
+  {id:"haben",title:"haben — to have",intro:"haben is the second essential auxiliary, used in the Perfekt with most verbs.",
+   headers:["","haben (to have)"],
+   rows:[{label:"ich",answers:["habe"]},{label:"du",answers:["hast"]},{label:"er/sie/es",answers:["hat"]},{label:"wir",answers:["haben"]},{label:"ihr",answers:["habt"]},{label:"sie/Sie",answers:["haben"]}]},
+  {id:"regular",title:"Present Tense: Regular Verbs",intro:"Remove -en from the infinitive, add personal endings. Shown for machen (to make/do).",
+   headers:["","machen"],
+   rows:[{label:"ich",answers:["mache"]},{label:"du",answers:["machst"]},{label:"er/sie/es",answers:["macht"]},{label:"wir",answers:["machen"]},{label:"ihr",answers:["macht"]},{label:"sie/Sie",answers:["machen"]}]},
+  {id:"modal",title:"Modal Verbs — Present Tense",intro:"Modals are irregular in the singular. The main verb infinitive goes to the end.",
+   headers:["","müssen","können","wollen","dürfen","sollen","mögen"],
+   rows:[{label:"ich",answers:["muss","kann","will","darf","soll","mag"]},{label:"du",answers:["musst","kannst","willst","darfst","sollst","magst"]},{label:"er/sie/es",answers:["muss","kann","will","darf","soll","mag"]},{label:"wir",answers:["müssen","können","wollen","dürfen","sollen","mögen"]},{label:"ihr",answers:["müsst","könnt","wollt","dürft","sollt","mögt"]},{label:"sie/Sie",answers:["müssen","können","wollen","dürfen","sollen","mögen"]}]},
+  {id:"perfekt",title:"Perfekt: haben vs sein",intro:"The Perfekt uses haben or sein + past participle. Motion/change verbs take sein.",
+   headers:["","Auxiliary","Past Participle"],
+   rows:[{label:"machen",answers:["haben","gemacht"]},{label:"gehen",answers:["sein","gegangen"]},{label:"kommen",answers:["sein","gekommen"]},{label:"fahren",answers:["sein","gefahren"]},{label:"essen",answers:["haben","gegessen"]},{label:"sehen",answers:["haben","gesehen"]},{label:"trinken",answers:["haben","getrunken"]},{label:"schreiben",answers:["haben","geschrieben"]}]},
+  {id:"adj_stark",title:"Strong Adjective Endings (no article)",intro:"Without an article, the adjective carries full gender/case information.",
+   headers:["","Masculine","Feminine","Neuter","Plural"],
+   rows:[{label:"Nominative",answers:["roter","rote","rotes","rote"]},{label:"Accusative",answers:["roten","rote","rotes","rote"]},{label:"Dative",answers:["rotem","roter","rotem","roten"]},{label:"Genitive",answers:["roten","roter","roten","roter"]}]},
+  {id:"adj_schwach",title:"Weak Adjective Endings (after der/die/das)",intro:"After a definite article, adjectives only need -e or -en.",
+   headers:["","Masculine","Feminine","Neuter","Plural"],
+   rows:[{label:"Nominative",answers:["rote","rote","rote","roten"]},{label:"Accusative",answers:["roten","rote","rote","roten"]},{label:"Dative",answers:["roten","roten","roten","roten"]},{label:"Genitive",answers:["roten","roten","roten","roten"]}]},
+];
+
+const CATEGORIES=[
+  {id:"nouns",label:"Basic Nouns",words:[
+    {de:"Mann",en:"man"},{de:"Frau",en:"woman"},{de:"Kind",en:"child"},{de:"Haus",en:"house"},
+    {de:"Stadt",en:"city"},{de:"Land",en:"country"},{de:"Zeit",en:"time"},{de:"Jahr",en:"year"},
+    {de:"Tag",en:"day"},{de:"Nacht",en:"night"},{de:"Wasser",en:"water"},{de:"Buch",en:"book"},
+    {de:"Schule",en:"school"},{de:"Freund",en:"friend"},{de:"Arbeit",en:"work"}]},
+  {id:"verbs",label:"Common Verbs",words:[
+    {de:"gehen",en:"to go"},{de:"kommen",en:"to come"},{de:"machen",en:"to make/do"},{de:"sagen",en:"to say"},
+    {de:"sehen",en:"to see"},{de:"geben",en:"to give"},{de:"wissen",en:"to know"},{de:"denken",en:"to think"},
+    {de:"lesen",en:"to read"},{de:"schreiben",en:"to write"},{de:"essen",en:"to eat"},
+    {de:"trinken",en:"to drink"},{de:"fahren",en:"to drive"},{de:"finden",en:"to find"},{de:"verstehen",en:"to understand"}]},
+  {id:"adjectives",label:"Adjectives",words:[
+    {de:"groß",en:"big/tall"},{de:"klein",en:"small/short"},{de:"gut",en:"good"},{de:"schlecht",en:"bad"},
+    {de:"neu",en:"new"},{de:"alt",en:"old"},{de:"jung",en:"young"},{de:"schön",en:"beautiful"},
+    {de:"schnell",en:"fast"},{de:"langsam",en:"slow"},{de:"wichtig",en:"important"},
+    {de:"einfach",en:"simple"},{de:"schwer",en:"difficult"},{de:"richtig",en:"correct"},{de:"falsch",en:"wrong"}]},
+  {id:"numbers",label:"Numbers",words:[
+    {de:"eins",en:"one"},{de:"zwei",en:"two"},{de:"drei",en:"three"},{de:"vier",en:"four"},{de:"fünf",en:"five"},
+    {de:"sechs",en:"six"},{de:"sieben",en:"seven"},{de:"acht",en:"eight"},{de:"neun",en:"nine"},{de:"zehn",en:"ten"},
+    {de:"elf",en:"eleven"},{de:"zwölf",en:"twelve"},{de:"zwanzig",en:"twenty"},{de:"hundert",en:"hundred"},{de:"tausend",en:"thousand"}]},
+  {id:"prepositions",label:"Prepositions",words:[
+    {de:"mit +Dat",en:"with"},{de:"von +Dat",en:"from/of"},{de:"bei +Dat",en:"at/near"},{de:"nach +Dat",en:"after/to"},
+    {de:"seit +Dat",en:"since/for"},{de:"für +Akk",en:"for"},{de:"durch +Akk",en:"through"},{de:"ohne +Akk",en:"without"},
+    {de:"um +Akk",en:"around/at"},{de:"in +Dat",en:"in (location)"},{de:"in +Akk",en:"into (motion)"},
+    {de:"auf +Dat",en:"on (location)"},{de:"zu +Dat",en:"to (people)"},{de:"über +Akk",en:"over/about"},{de:"an +Dat",en:"at/on (vert.)"}]},
+  {id:"conjunctions",label:"Conjunctions",words:[
+    {de:"und",en:"and"},{de:"aber",en:"but"},{de:"oder",en:"or"},{de:"denn",en:"because (coord)"},
+    {de:"weil",en:"because (subord)"},{de:"dass",en:"that (subord)"},{de:"wenn",en:"when/if"},
+    {de:"obwohl",en:"although"},{de:"damit",en:"so that"},{de:"bevor",en:"before (subord)"},
+    {de:"nachdem",en:"after (subord)"},{de:"als",en:"when (past)"},{de:"ob",en:"whether"},
+    {de:"trotzdem",en:"nevertheless"},{de:"deshalb",en:"therefore"}]},
+];
+
+function normalise(s){return s.trim().toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss");}
+function check(inp,ans){return normalise(inp)===normalise(ans);}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function ScoreBar({score,total,submitted}){
+  if(!submitted)return null;
+  const pct=Math.round((score/total)*100);
+  const g=pct===100?{l:"Ausgezeichnet!",c:C.green}:pct>=80?{l:"Sehr gut!",c:C.green}:pct>=60?{l:"Nicht schlecht",c:"#8a6914"}:{l:"Weiterüben!",c:C.red};
+  return(<div style={{marginTop:"20px",padding:"14px 18px",background:C.surface,border:"1px solid "+C.border,borderRadius:"4px",display:"flex",alignItems:"center",gap:"14px"}}>
+    <div style={{flex:1,height:"6px",background:C.borderDim,borderRadius:"3px",overflow:"hidden"}}>
+      <div style={{height:"100%",width:pct+"%",background:g.c,transition:"width 0.6s"}}/>
+    </div>
+    <span style={{fontFamily:"'Source Serif 4',serif",fontSize:"15px",fontWeight:"600",color:g.c,whiteSpace:"nowrap"}}>{g.l}</span>
+    <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:"12px",color:C.textMuted,whiteSpace:"nowrap"}}>{score}/{total}</span>
+  </div>);
+}
+
+function PracticeMode(){
+  const [tableId,setTableId]=React.useState("artikel_def");
+  const table=TABLES.find(t=>t.id===tableId);
+  const totalCells=table.rows.reduce((s,r)=>s+r.answers.length,0);
+  const [vals,setVals]=React.useState({});
+  const [sub,setSub]=React.useState(false);
+  const [score,setScore]=React.useState(0);
+  const reset=id=>{setTableId(id);setVals({});setSub(false);setScore(0);};
+  const submit=()=>{let c=0;table.rows.forEach((row,ri)=>row.answers.forEach((ans,ci)=>{if(check(vals[ri+"-"+ci]||"",ans))c++;}));setScore(c);setSub(true);};
+  const reveal=()=>{const nv={};table.rows.forEach((row,ri)=>row.answers.forEach((ans,ci)=>{nv[ri+"-"+ci]=ans;}));setVals(nv);setSub(true);setScore(0);};
+  return(
+    <div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:"5px",marginBottom:"20px",marginTop:"20px"}}>
+        {TABLES.map(t=><button key={t.id} onClick={()=>reset(t.id)} style={{fontFamily:"'DM Sans',sans-serif",fontSize:"11px",fontWeight:"500",padding:"5px 13px",border:"1px solid",borderColor:t.id===tableId?C.accent:C.border,borderRadius:"20px",background:t.id===tableId?C.accent:"transparent",color:t.id===tableId?"#fff":C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>{t.title}</button>)}
+      </div>
+      <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+        <div style={{padding:"20px 24px",borderBottom:"1px solid "+C.borderDim}}>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"18px",fontWeight:"600",color:C.text,marginBottom:table.intro?"6px":"0"}}>{table.title}</h2>
+          {table.intro&&<p style={{fontFamily:"'Source Serif 4',serif",fontStyle:"italic",fontSize:"13px",color:C.textMuted,lineHeight:"1.5"}}>{table.intro}</p>}
+        </div>
+        <div style={{overflowX:"auto"}}>
+          <table style={{width:"100%",borderCollapse:"collapse"}}>
+            <thead><tr>{table.headers.map((h,i)=><th key={i} style={{fontFamily:"'DM Sans',sans-serif",fontSize:"10px",fontWeight:"600",letterSpacing:"1px",textTransform:"uppercase",color:C.textMuted,padding:"10px 14px",borderBottom:"1px solid "+C.borderDim,textAlign:i===0?"left":"center",background:"#fafaf8",whiteSpace:"nowrap"}}>{h}</th>)}</tr></thead>
+            <tbody>{table.rows.map((row,ri)=>(
+              <tr key={ri} style={{borderBottom:"1px solid "+C.borderDim}}>
+                <td style={{fontFamily:"'Source Serif 4',serif",fontSize:"13px",color:C.textMuted,padding:"10px 14px",whiteSpace:"nowrap",background:"#fafaf8",fontStyle:"italic"}}>{row.label}</td>
+                {row.answers.map((ans,ci)=>{const key=ri+"-"+ci;const val=vals[key]||"";const ok=sub?check(val,ans):null;return(
+                  <td key={ci} style={{padding:"6px 8px",textAlign:"center"}}>
+                    <input value={val} onChange={e=>!sub&&setVals(v=>({...v,[key]:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter"&&!sub)submit();}} disabled={sub} style={{width:"100%",maxWidth:"110px",textAlign:"center",padding:"6px 8px",fontFamily:"'Source Serif 4',serif",fontSize:"15px",background:sub?(ok?"rgba(45,122,80,0.07)":"rgba(200,64,58,0.07)"):C.bg,border:"1px solid",borderColor:sub?(ok?C.green:C.red):C.border,borderRadius:"3px",color:ok===false?C.red:C.text,outline:"none"}}/>
+                    {sub&&!ok&&<div style={{fontFamily:"'Source Serif 4',serif",fontSize:"11px",color:C.green,marginTop:"2px"}}>{ans}</div>}
+                  </td>);})}
+              </tr>))}</tbody>
+          </table>
+        </div>
+        <div style={{padding:"14px 20px",borderTop:"1px solid "+C.borderDim,display:"flex",gap:"8px",justifyContent:"flex-end"}}>
+          {sub?<button onClick={()=>reset(tableId)} style={{fontFamily:"'DM Sans',sans-serif",fontWeight:"600",fontSize:"11px",letterSpacing:"1px",padding:"8px 20px",background:C.accent,color:"#fff",border:"none",borderRadius:"3px",cursor:"pointer"}}>TRY AGAIN</button>
+          :<><button onClick={reveal} style={{fontFamily:"'DM Sans',sans-serif",fontWeight:"500",fontSize:"11px",letterSpacing:"1px",padding:"8px 18px",background:"transparent",color:C.textMuted,border:"1px solid "+C.border,borderRadius:"3px",cursor:"pointer"}}>REVEAL</button>
+            <button onClick={submit} style={{fontFamily:"'DM Sans',sans-serif",fontWeight:"600",fontSize:"11px",letterSpacing:"1px",padding:"8px 20px",background:C.accent,color:"#fff",border:"none",borderRadius:"3px",cursor:"pointer"}}>CHECK</button></>}
+        </div>
+      </div>
+      <ScoreBar score={score} total={totalCells} submitted={sub}/>
+    </div>);
+}
+
+const MATCH_COLORS=[{l:"rgba(26,26,26,0.07)",b:"#555"},{l:"rgba(200,64,58,0.08)",b:"#c8403a"},{l:"rgba(45,122,80,0.08)",b:"#2d7a50"},{l:"rgba(60,100,200,0.08)",b:"#3c64c8"},{l:"rgba(140,60,160,0.08)",b:"#8c3ca0"},{l:"rgba(200,120,20,0.08)",b:"#c87814"},{l:"rgba(20,140,160,0.08)",b:"#148ca0"},{l:"rgba(80,80,80,0.08)",b:"#888"}];
+const PAIRS_PER_ROUND=8;
+
+function MatchingMode(){
+  const [catId,setCatId]=React.useState(CATEGORIES[0].id);
+  const getPairs=id=>CATEGORIES.find(c=>c.id===id).words.map(w=>({left:w.de,right:w.en}));
+  const [round,setRound]=React.useState(0);
+  const [left,setLeft]=React.useState([]);
+  const [right,setRight]=React.useState([]);
+  const [matched,setMatched]=React.useState({});
+  const [selL,setSelL]=React.useState(null);
+  const [selR,setSelR]=React.useState(null);
+  const [wrong,setWrong]=React.useState({l:null,r:null});
+  const [done,setDone]=React.useState(false);
+  const [corr,setCorr]=React.useState(0);
+  const [att,setAtt]=React.useState(0);
+  const startRound=React.useCallback((r,pairs)=>{const start=(r*PAIRS_PER_ROUND)%pairs.length;const slice=Array.from({length:PAIRS_PER_ROUND},(_,i)=>({...pairs[(start+i)%pairs.length],id:i}));setLeft(shuffle(slice.map(p=>({id:p.id,text:p.left}))));setRight(shuffle(slice.map(p=>({id:p.id,text:p.right}))));setMatched({});setSelL(null);setSelR(null);setWrong({l:null,r:null});setDone(false);},[]);
+  React.useEffect(()=>{setRound(0);setCorr(0);setAtt(0);startRound(0,getPairs(catId));},[catId]);
+  React.useEffect(()=>{if(selL===null||selR===null)return;setAtt(a=>a+1);if(selL===selR){const ci=Object.keys(matched).length%MATCH_COLORS.length;const nm={...matched,[selL]:ci};setMatched(nm);setCorr(c=>c+1);setSelL(null);setSelR(null);if(Object.keys(nm).length===PAIRS_PER_ROUND)setTimeout(()=>setDone(true),300);}else{setWrong({l:selL,r:selR});setTimeout(()=>{setWrong({l:null,r:null});setSelL(null);setSelR(null);},650);}},[selL,selR]);
+  const acc=att>0?Math.round((corr/att)*100):null;
+  const mc=Object.keys(matched).length;
+  const tile=(id,side)=>{const isM=matched[id]!==undefined;const col=isM?MATCH_COLORS[matched[id]]:null;const isSel=side==="l"?selL===id:selR===id;const isW=side==="l"?wrong.l===id:wrong.r===id;return{padding:"10px 12px",border:"1.5px solid",borderColor:isM?col.b:isW?C.red:isSel?C.accent:C.border,borderRadius:"4px",background:isM?col.l:isW?"rgba(200,64,58,0.07)":isSel?C.accentDim:C.surface,color:isM?col.b:isW?C.red:isSel?C.accent:C.text,cursor:isM?"default":"pointer",transition:"all 0.15s",textAlign:"center",userSelect:"none",opacity:isM?0.5:1,textDecoration:isM?"line-through":"none",minHeight:"48px",display:"flex",alignItems:"center",justifyContent:"center"};};
+  return(
+    <div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:"5px",marginBottom:"20px",marginTop:"20px"}}>
+        {CATEGORIES.map(c=><button key={c.id} onClick={()=>setCatId(c.id)} style={{fontFamily:"'DM Sans',sans-serif",fontSize:"11px",fontWeight:"500",padding:"5px 13px",border:"1px solid",borderColor:c.id===catId?C.accent:C.border,borderRadius:"20px",background:c.id===catId?C.accent:"transparent",color:c.id===catId?"#fff":C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>{c.label}</button>)}
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"12px"}}>
+        <div style={{flex:1,height:"3px",background:C.borderDim,borderRadius:"2px",overflow:"hidden"}}>
+          <div style={{height:"100%",width:(mc/PAIRS_PER_ROUND*100)+"%",background:C.accent,transition:"width 0.4s"}}/>
+        </div>
+        <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:"11px",color:C.textMuted,whiteSpace:"nowrap"}}>{mc}/{PAIRS_PER_ROUND}{acc!==null?" · "+acc+"%":""}</span>
+      </div>
+      {done&&<div style={{textAlign:"center",padding:"16px",background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",marginBottom:"14px",boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>
+        <div style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",fontWeight:"600",color:C.text,marginBottom:"4px"}}>{acc===100?"Ausgezeichnet! ✓":acc>=80?"Sehr gut! ✓":acc>=60?"Nicht schlecht":"Weiterüben!"}</div>
+        <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:"11px",color:C.textMuted,letterSpacing:"1px",marginBottom:"12px"}}>{acc}% ACCURACY</div>
+        <button onClick={()=>{const nr=round+1;setRound(nr);setCorr(0);setAtt(0);startRound(nr,getPairs(catId));}} style={{fontFamily:"'DM Sans',sans-serif",fontWeight:"600",fontSize:"11px",letterSpacing:"1px",padding:"8px 22px",background:C.accent,color:"#fff",border:"none",borderRadius:"3px",cursor:"pointer"}}>NEXT ROUND →</button>
+      </div>}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px 16px"}}>
+        <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:"9px",fontWeight:"600",letterSpacing:"2px",color:C.textMuted,textAlign:"center",paddingBottom:"4px",borderBottom:"1px solid "+C.border}}>DEUTSCH</div>
+        <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:"9px",fontWeight:"600",letterSpacing:"2px",color:C.textMuted,textAlign:"center",paddingBottom:"4px",borderBottom:"1px solid "+C.border}}>ENGLISH</div>
+        {left.map((item,i)=><React.Fragment key={item.id}>
+          <div onClick={()=>!matched[item.id]&&wrong.l===null&&setSelL(item.id)} style={tile(item.id,"l")}><span style={{fontFamily:"'Source Serif 4',serif",fontSize:"15px"}}>{item.text}</span></div>
+          <div onClick={()=>!matched[right[i].id]&&wrong.l===null&&setSelR(right[i].id)} style={tile(right[i].id,"r")}><span style={{fontFamily:"'DM Sans',sans-serif",fontSize:"13px"}}>{right[i].text}</span></div>
+        </React.Fragment>)}
+      </div>
+    </div>);
+}
+
+function App(){
+  const [mode,setMode]=React.useState("tables");
+  return(
+    <div style={{minHeight:"100vh",background:C.bg,paddingBottom:"60px"}}>
+      <header style={{background:"#1a1a1a",padding:"20px 32px 18px",display:"flex",alignItems:"flex-end",gap:"20px"}}>
+        <div>
+          <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:"9px",fontWeight:"600",letterSpacing:"4px",color:"rgba(255,255,255,0.35)",marginBottom:"4px",textTransform:"uppercase"}}>Sprachstudium</div>
+          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"22px",fontWeight:"600",color:"#fff",margin:0}}>Deutsch</h1>
+        </div>
+        <div style={{marginLeft:"auto",fontFamily:"'Source Serif 4',serif",fontStyle:"italic",color:"rgba(255,255,255,0.3)",fontSize:"13px",paddingBottom:"2px"}}>Übung macht den Meister</div>
+      </header>
+      <div style={{maxWidth:"900px",margin:"0 auto",padding:"0 20px"}}>
+        <div style={{display:"flex",flexWrap:"wrap",marginTop:"20px",borderBottom:"2px solid "+C.border}}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"]].map(([m,label])=>(
+            <button key={m} onClick={()=>setMode(m)} style={{fontFamily:"'DM Sans',sans-serif",fontWeight:"600",fontSize:"11px",letterSpacing:"0.8px",padding:"9px 18px",border:"none",borderBottom:mode===m?"2px solid "+C.accent:"2px solid transparent",marginBottom:"-2px",background:"transparent",color:mode===m?C.accent:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>{label}</button>
+          ))}
+        </div>
+        {mode==="tables"&&<PracticeMode/>}
+        {mode==="matching"&&<MatchingMode/>}
+      </div>
+    </div>);
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>

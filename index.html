@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Moderne Sprog</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f4f2ee;--surface:#fff;--border:rgba(0,0,0,0.08);--text:#1a1a1a;--muted:rgba(26,26,26,0.45)}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,0,0,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1}
+header{text-align:center;padding:80px 20px 60px;border-bottom:1px solid var(--border)}
+.site-label{font-size:10px;font-weight:600;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
+h1{font-family:'Playfair Display',serif;font-size:clamp(38px,6vw,66px);font-weight:400;font-style:italic;color:var(--text);letter-spacing:-1px;margin-bottom:18px;line-height:1.05}
+.subtitle{font-size:clamp(14px,2vw,16px);font-weight:300;color:var(--muted);max-width:460px;margin:0 auto 14px;line-height:1.65}
+.rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:22px}
+.rule-line{width:60px;height:1px;background:var(--muted);opacity:0.3}
+.rule-text{font-size:9px;font-weight:500;letter-spacing:3px;color:var(--muted);text-transform:uppercase;opacity:0.6}
+.grid-section{max-width:800px;margin:0 auto;padding:60px 20px 80px}
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.lang-card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0;overflow:hidden;aspect-ratio:4/3;position:relative;transition:transform 0.2s,box-shadow 0.25s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.lang-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.12)}
+.lang-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity 0.2s}
+.lang-card:hover::after{opacity:1}
+footer{text-align:center;padding:24px 20px 44px;border-top:1px solid var(--border)}
+footer p{font-size:9px;font-weight:500;letter-spacing:3px;color:var(--muted);text-transform:uppercase;opacity:0.5}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+header{animation:fadeUp 0.6s ease both}
+.lang-card:nth-child(1){animation:fadeUp 0.6s 0.15s ease both}
+.lang-card:nth-child(2){animation:fadeUp 0.6s 0.25s ease both}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="site-label">Modern Language Studies</div>
+    <h1>Moderne Sprog</h1>
+    <p class="subtitle">Grammar tables, vocabulary practice, and reading passages for modern European languages.</p>
+    <div class="rule">
+      <div class="rule-line"></div>
+      <div class="rule-text">Choose a language</div>
+      <div class="rule-line"></div>
+    </div>
+  </header>
+  <main class="grid-section">
+    <div class="lang-grid">
+      <a class="lang-card" href="danish.html" style="--accent:#c8403a;">
+        <img src="danish.png" alt="Danish" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </a>
+      <a class="lang-card" href="german.html" style="--accent:#1a1a1a;">
+        <img src="german.png" alt="German" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+      </a>
+    </div>
+  </main>
+  <footer><p>Übung macht den Meister · Øvelse gør mester</p></footer>
+</div>
+</body>
+</html>
