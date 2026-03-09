@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Classical Chinese — 文言文</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0e0a06; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(210,160,60,0.35); }
+  button { transition: all 0.15s; }
+  button:hover { opacity: 0.88; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #1a1208; }
+  ::-webkit-scrollbar-thumb { background: #8a6820; border-radius: 3px; }
+  details summary { list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CLASSICAL CHINESE — 文言文
+//  Four modes: Character Drill · Reader · Patterns · Matching
+//
+//  CHARACTER FORMAT (CHARACTERS array):
+//  { char:"人", pinyin:"rén", eng:"person, people, human being",
+//    pos:"noun/verb", notes:"One of the most common characters." }
+//
+//  PASSAGE FORMAT (PASSAGES array):
+//  { id, title, source, date, intro, text: "學 而 時 習 之 ，不 亦 說 乎" }
+//  Separate each character/punctuation with a space for the tokeniser.
+//
+//  PATTERN FORMAT (PATTERNS array):
+//  { id, pattern, pinyin, meaning, example, translation, notes }
+//
+//  DICTIONARY (chinese_dict.json):
+//  { "人": { "pinyin":"rén", "pos":"noun", "eng":"person, human", "notes":"..." } }
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── COLORS ──────────────────────────────────────────────────────────────────
+
+const C = {
+  bg:         "#0e0a06",
+  surface:    "#16100a",
+  card:       "#1e1508",
+  border:     "#3a2a10",
+  borderDim:  "#2a1e0a",
+  gold:       "#d4a840",
+  goldLight:  "#f0c870",
+  goldDim:    "#8a6820",
+  goldFaint:  "rgba(212,168,64,0.12)",
+  text:       "#f0e8d0",
+  textMuted:  "#8a7a5a",
+  red:        "#c84030",
+  green:      "#3a8a50",
+  headerBg:   "linear-gradient(180deg,#100c04 0%,#1a1208 100%)",
+};
+
+const POS_COLORS = {
+  noun:    { bg:"rgba(45,106,79,0.18)",   border:"#2d6a4f" },
+  verb:    { bg:"rgba(180,120,20,0.18)",  border:"#b07818" },
+  adj:     { bg:"rgba(80,40,140,0.18)",   border:"#6a3aaa" },
+  adv:     { bg:"rgba(20,80,140,0.18)",   border:"#1a60aa" },
+  particle:{ bg:"rgba(140,40,40,0.18)",   border:"#8a2828" },
+  pronoun: { bg:"rgba(40,100,140,0.18)",  border:"#2878aa" },
+  numeral: { bg:"rgba(100,60,0,0.18)",    border:"#7a4800" },
+};
+
+// ─── CHARACTER DATA ───────────────────────────────────────────────────────────
+
+const CHARACTERS = [
+  // Core high-frequency characters
+  { char:"人", pinyin:"rén",  eng:"person, people, human being",      pos:"noun",     notes:"One of the most frequent characters in Classical Chinese. As a suffix it often means 'a person of' e.g. 學人 a scholar." },
+  { char:"天", pinyin:"tiān", eng:"heaven, sky, nature, day",         pos:"noun",     notes:"In Classical thought 天 is the supreme moral order as well as the physical sky. Contrast 地 (earth)." },
+  { char:"地", pinyin:"dì",   eng:"earth, ground, place, land",       pos:"noun",     notes:"Paired with 天 in the cosmological pair 天地 (heaven and earth = the universe)." },
+  { char:"王", pinyin:"wáng", eng:"king, ruler, to rule",             pos:"noun/verb",notes:"As a verb 王 means 'to act as king' or 'to become king'. The three horizontal strokes represent Heaven, Humanity, Earth; the vertical stroke connects them." },
+  { char:"子", pinyin:"zǐ",   eng:"son, child, master, you (honorific)",pos:"noun",   notes:"子 is used as an honorific title for philosophers: 孔子 (Confucius), 孟子 (Mencius). Also the first Earthly Branch." },
+  { char:"學", pinyin:"xué",  eng:"to learn, to study, learning",     pos:"verb",     notes:"The opening character of the Analects: 學而時習之。The traditional form 學 shows hands above a child under a roof." },
+  { char:"道", pinyin:"dào",  eng:"way, path, principle, to speak",   pos:"noun/verb",notes:"The central concept of Taoism. As a verb it means 'to say' or 'to lead'. Contains 首 (head) + 辶 (movement)." },
+  { char:"德", pinyin:"dé",   eng:"virtue, moral power, character",   pos:"noun",     notes:"A key Confucian concept: inner moral cultivation that radiates outward. Related to 得 (to obtain)." },
+  { char:"仁", pinyin:"rén",  eng:"benevolence, humaneness, goodness",pos:"noun",     notes:"The supreme Confucian virtue. Written 人 (person) + 二 (two) — benevolence exists between people." },
+  { char:"義", pinyin:"yì",   eng:"righteousness, rightness, duty",   pos:"noun",     notes:"One of the five cardinal Confucian virtues. Contrast with 利 (profit, advantage)." },
+  { char:"禮", pinyin:"lǐ",   eng:"ritual, propriety, rites, courtesy",pos:"noun",   notes:"The system of social ritual and proper conduct. A core Confucian concern — ritual structures social harmony." },
+  { char:"知", pinyin:"zhī",  eng:"to know, knowledge, wisdom",       pos:"verb",     notes:"Also read zhì (wisdom as a noun). Distinct from 識 (to recognise, to be acquainted with)." },
+  { char:"心", pinyin:"xīn",  eng:"heart, mind, thought, feeling",    pos:"noun",     notes:"In Classical Chinese the heart is the seat of both emotion and thought — there is no word/thought distinction." },
+  { char:"國", pinyin:"guó",  eng:"state, kingdom, country",          pos:"noun",     notes:"Literally 'people/territory enclosed by a border'. The 戰國 (Warring States) period was named from 諸國 (the various states)." },
+  { char:"君", pinyin:"jūn",  eng:"ruler, lord, gentleman, you",      pos:"noun",     notes:"君子 (the noble person / gentleman) is a key Confucian concept — the morally cultivated person." },
+  { char:"民", pinyin:"mín",  eng:"people, subjects, the people",     pos:"noun",     notes:"The governed populace as distinct from 君 (ruler). Mencius famously argued 民 are the most important element of a state." },
+  { char:"文", pinyin:"wén",  eng:"writing, culture, civil, pattern", pos:"noun/adj", notes:"文言 (literary language) = the written classical style. Contrast 武 (martial, military)." },
+  { char:"言", pinyin:"yán",  eng:"to speak, words, speech, saying",  pos:"verb/noun",notes:"言 as a noun means a word, statement or saying. 言而有信 = to speak and be trustworthy." },
+  { char:"行", pinyin:"xíng", eng:"to walk, to act, conduct, practice",pos:"verb",   notes:"Also read háng (a row, a profession). The pair 知行 (knowing and acting) is a key Neo-Confucian theme." },
+  { char:"學", pinyin:"xué",  eng:"to learn, learning",               pos:"verb",     notes:"See above." },
+  { char:"不", pinyin:"bù",   eng:"not, no (negation before verbs)",  pos:"particle", notes:"The most common negation particle. 不 negates present or general facts. Contrast 無 (there is not) and 非 (is not = not equal to)." },
+  { char:"之", pinyin:"zhī",  eng:"(1) of, 's (possessive particle) (2) it, him, them (object pronoun) (3) to go to", pos:"particle/pronoun", notes:"之 is the most versatile particle in Classical Chinese. Context determines its function. It never carries stress." },
+  { char:"而", pinyin:"ér",   eng:"and, but, yet, and then (connective particle)", pos:"particle", notes:"而 connects clauses. It can be additive (and), adversative (but), or sequential (and then). It never acts as a noun." },
+  { char:"以", pinyin:"yǐ",   eng:"by means of, with, using, because, in order to", pos:"particle/verb", notes:"以 introduces the instrument or means of an action. 以...為 = 'to regard...as' or 'to use...as'." },
+  { char:"於", pinyin:"yú",   eng:"at, in, on, from, by, than (preposition)", pos:"particle", notes:"The primary Classical Chinese preposition for location, source, and comparison. Often written 于 in bronze inscriptions." },
+  { char:"其", pinyin:"qí",   eng:"his, her, its, their (3rd person possessive)", pos:"pronoun",  notes:"Also used as a modal particle expressing supposition or exhortation. 其 never appears as a direct object." },
+  { char:"者", pinyin:"zhě",  eng:"(nominaliser) one who, that which, the -er", pos:"particle", notes:"者 follows a verb or adjective to create a noun phrase: 學者 = one who studies = a scholar. Part of the 者...也 pattern." },
+  { char:"也", pinyin:"yě",   eng:"(sentence-final particle, asserting a judgment)", pos:"particle", notes:"也 ends declarative sentences, especially definitions and judgments. 者...也 = 'as for X, it is Y'." },
+  { char:"乎", pinyin:"hū",   eng:"(question particle) ? / (exclamatory) oh!", pos:"particle", notes:"The main rhetorical question marker. 不亦...乎 = 'is it not...?' — a common Analects construction." },
+  { char:"為", pinyin:"wéi",  eng:"to be, to act as, to do, to become, for (preposition)", pos:"verb/particle", notes:"One of the most flexible characters. 以...為 = regard as. 為...所 = passive construction. Read wèi when meaning 'for the sake of'." },
+  { char:"有", pinyin:"yǒu",  eng:"to have, there is/are, to exist",  pos:"verb",     notes:"Negated by 無 (wú) not 不有. 有 begins many existential sentences: 有朋自遠方來 = there are friends coming from afar." },
+  { char:"無", pinyin:"wú",   eng:"to not have, there is no, without, nothingness", pos:"verb/noun", notes:"The existential negative paired with 有. Also a key Taoist concept: 無為 (non-action, effortless action)." },
+  { char:"是", pinyin:"shì",  eng:"this, this is right, correct",     pos:"pronoun/adj",notes:"In Classical Chinese 是 is primarily a demonstrative pronoun (this). The copular use (= is) develops later. 是以 = therefore." },
+  { char:"非", pinyin:"fēi",  eng:"is not, wrong, to negate, to blame",pos:"verb",   notes:"The copular negative: 非 negates equations. 非...不 = 'only if not X then not Y' — a double negative affirmative." },
+  { char:"古", pinyin:"gǔ",   eng:"ancient, old, antiquity",          pos:"adj/noun", notes:"The Classical authors frequently appealed to 古 (antiquity) as a moral standard. 古之人 = the people of antiquity." },
+  { char:"今", pinyin:"jīn",  eng:"now, the present, today",          pos:"adv/noun", notes:"Often contrasted with 古: 古今 = antiquity and the present = throughout all time." },
+  { char:"大", pinyin:"dà",   eng:"great, large, important",          pos:"adj",      notes:"Also read tài (supreme: 太/大極 the supreme ultimate). 大人 = a great person, a lord." },
+  { char:"小", pinyin:"xiǎo", eng:"small, minor, petty",              pos:"adj",      notes:"小人 = the petty person / the base person, contrasted with 君子 in Confucian ethics." },
+  { char:"上", pinyin:"shàng",eng:"above, upper, superior, to ascend",pos:"noun/verb",notes:"As a directional complement: going up. 上 = the superior, the ruler (used as a euphemism for the emperor)." },
+  { char:"下", pinyin:"xià",  eng:"below, lower, inferior, to descend",pos:"noun/verb",notes:"天下 (under heaven = the realm, the world) is one of the most important compounds in Classical Chinese." },
+];
+
+// ─── GRAMMAR PATTERNS ────────────────────────────────────────────────────────
+
+const PATTERNS = [
+  {
+    id:"zhe_ye",
+    pattern:"者 … 也",
+    pinyin:"zhě … yě",
+    meaning:"Nominal predication — 'As for X, it is Y'",
+    example:"學者，所以求道也。",
+    translation:"A scholar is one who seeks the Way.",
+    notes:"The most fundamental Classical Chinese sentence pattern. 者 nominalises the subject; 也 asserts the predicate. The verb 是 (to be) is NOT used."
+  },
+  {
+    id:"bu_yi_hu",
+    pattern:"不亦 … 乎",
+    pinyin:"bù yì … hū",
+    meaning:"Rhetorical question — 'Is it not … ?'",
+    example:"學而時習之，不亦說乎？",
+    translation:"To learn and at due times to practise what one has learned — is that not a pleasure?",
+    notes:"One of the most famous Analects constructions. 不亦 = 'is it not also'; 乎 ends the rhetorical question. The expected answer is always 'yes, it is'."
+  },
+  {
+    id:"yi_wei",
+    pattern:"以 … 為",
+    pinyin:"yǐ … wéi",
+    meaning:"'To regard X as Y' / 'To use X as Y'",
+    example:"以天下為己任。",
+    translation:"To regard the realm under Heaven as one's own responsibility.",
+    notes:"以 introduces the object/instrument; 為 introduces what it is treated as. One of the most productive patterns for expressing judgment or purpose."
+  },
+  {
+    id:"wei_suo",
+    pattern:"為 … 所",
+    pinyin:"wéi … suǒ",
+    meaning:"Passive construction — 'to be X-ed by'",
+    example:"吾為汝所欺。",
+    translation:"I was deceived by you.",
+    notes:"The main passive pattern in Classical Chinese. 為 introduces the agent; 所 precedes the verb. Compare the later 被 passive which becomes dominant in Literary Chinese."
+  },
+  {
+    id:"fei_bu",
+    pattern:"非 … 不",
+    pinyin:"fēi … bù",
+    meaning:"Double negative — 'Only X can / Unless X, not'",
+    example:"非禮勿視，非禮勿聽。",
+    translation:"Do not look at what is contrary to ritual; do not listen to what is contrary to ritual.",
+    notes:"Two negatives create a strong affirmative or exclusive statement. 非 negates a noun/condition; 不 negates the verb. Extremely common in Analects-style prose."
+  },
+  {
+    id:"shi_yi",
+    pattern:"是以",
+    pinyin:"shì yǐ",
+    meaning:"'Therefore, for this reason'",
+    example:"是以聖人處無為之事。",
+    translation:"Therefore the sage dwells in non-action.",
+    notes:"是以 = 'by means of this' → therefore. A very common connective in philosophical prose. 是 here is a demonstrative pronoun (this), not the later copula."
+  },
+  {
+    id:"wu_wei",
+    pattern:"無為",
+    pinyin:"wú wéi",
+    meaning:"Non-action, effortless action, acting in accordance with nature",
+    example:"為學日益，為道日損。",
+    translation:"In pursuit of learning, something is gained every day; in pursuit of the Way, something is relinquished every day.",
+    notes:"無為 is the Taoist ideal of acting without forced, artificial effort. The pattern 為X日Y contrasts the Confucian (learning/gaining) with the Taoist (the Way/losing) paths."
+  },
+  {
+    id:"yu_bi",
+    pattern:"與其 … 寧",
+    pinyin:"yǔ qí … nìng",
+    meaning:"'Rather than X, it is better to Y'",
+    example:"與其媚於奧，寧媚於竈。",
+    translation:"Rather than curry favour with the southwest corner, it is better to curry favour with the stove.",
+    notes:"A preference construction. 與其 introduces the less preferred option; 寧 (or 不如) introduces the preferred one. Found in the Analects."
+  },
+  {
+    id:"suo_v",
+    pattern:"所 + Verb",
+    pinyin:"suǒ + Verb",
+    meaning:"Nominalisation — 'that which is verb-ed', 'what one verbs'",
+    example:"所學者，道也。",
+    translation:"What one studies is the Way.",
+    notes:"所 before a verb creates a noun phrase referring to the object of that verb. 所學 = what is studied; 所見 = what is seen. Extremely productive in Classical Chinese."
+  },
+  {
+    id:"qi_modal",
+    pattern:"其 + Verb/Adj",
+    pinyin:"qí + Verb/Adj",
+    meaning:"Modal 其 — supposition, exhortation, or rhetorical question",
+    example:"其恕乎！",
+    translation:"Is it not perhaps reciprocity?",
+    notes:"When 其 does not clearly refer to a third-person possessor, it functions as a modal particle expressing supposition (perhaps) or exhortation (let). Context is decisive."
+  },
+];
+
+// ─── PASSAGES ─────────────────────────────────────────────────────────────────
+// Each character separated by a space for the tokeniser.
+// Use ， 。 ？ ！ for punctuation — also space-separated.
+
+const PASSAGES = [
+  {
+    id:"lunyu_1_1",
+    title:"論語 學而篇 1.1",
+    source:"孔子 Confucius — Analects",
+    date:"Compiled c. 5th–4th century BC",
+    intro:"The opening passage of the Analects — perhaps the most famous lines in the entire Classical Chinese canon. Three rhetorical questions using the 不亦…乎 pattern.",
+    text:"學 而 時 習 之 ， 不 亦 說 乎 ？ 有 朋 自 遠 方 來 ， 不 亦 樂 乎 ？ 有 人 不 知 而 不 慍 ， 不 亦 君 子 乎 ？"
+  },
+  {
+    id:"laozi_1",
+    title:"道德經 第一章",
+    source:"老子 Laozi — Tao Te Ching",
+    date:"c. 4th–3rd century BC",
+    intro:"The opening of the Tao Te Ching — the most translated Chinese text. It immediately problematises language itself: the Way that can be named is not the eternal Way.",
+    text:"道 可 道 ， 非 常 道 。 名 可 名 ， 非 常 名 。 無 名 天 地 之 始 ； 有 名 萬 物 之 母 。"
+  },
+  {
+    id:"lunyu_4_15",
+    title:"論語 里仁篇 4.15",
+    source:"孔子 Confucius — Analects",
+    date:"Compiled c. 5th–4th century BC",
+    intro:"Confucius reveals to his disciple Zengzi that his Way is threaded through by a single principle. Zengzi interprets this as 忠恕 — loyalty and reciprocity.",
+    text:"子 曰 ： 吾 道 一 以 貫 之 。 曾 子 曰 ： 唯 。 子 出 ， 門 人 問 曰 ： 何 謂 也 ？ 曾 子 曰 ： 夫 子 之 道 ， 忠 恕 而 已 矣 。"
+  },
+];
+
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function normalise(s) {
+  return s.trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]/g,"");
+}
+
+// ─── CHARACTER DRILL ──────────────────────────────────────────────────────────
+
+function CharDrill() {
+  const [order]     = React.useState(() => shuffle([...Array(CHARACTERS.length).keys()]));
+  const [idx, setIdx] = React.useState(0);
+  const [input, setInput]   = React.useState("");
+  const [status, setStatus] = React.useState(null); // null | "correct" | "wrong"
+  const [showHint, setShowHint] = React.useState(false);
+  const [score, setScore]   = React.useState({c:0,w:0});
+
+  const char = CHARACTERS[order[idx % order.length]];
+
+  const check = () => {
+    if (!input.trim()) return;
+    const answers = char.eng.split(",").map(a => normalise(a));
+    const attempt = normalise(input);
+    const ok = answers.some(a => attempt === a || a.includes(attempt) || attempt.includes(a.split(" ")[0]));
+    if (ok) {
+      setStatus("correct");
+      setScore(s => ({...s, c:s.c+1}));
+    } else {
+      setStatus("wrong");
+      setScore(s => ({...s, w:s.w+1}));
+    }
+  };
+
+  const next = () => {
+    setIdx(i => i+1);
+    setInput(""); setStatus(null); setShowHint(false);
+  };
+
+  const total = score.c + score.w;
+  const acc = total > 0 ? Math.round((score.c/total)*100) : null;
+
+  return (
+    <div style={{marginTop:"20px"}}>
+      {/* Progress */}
+      <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"20px"}}>
+        <div style={{flex:1,height:"3px",background:C.borderDim,borderRadius:"2px",overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${((idx%CHARACTERS.length)/CHARACTERS.length)*100}%`,background:C.gold,transition:"width 0.4s"}}/>
+        </div>
+        <span style={{fontFamily:"'Cinzel',serif",fontSize:"10px",color:C.textMuted,whiteSpace:"nowrap"}}>
+          {idx%CHARACTERS.length+1}/{CHARACTERS.length}{acc!==null?` · ${acc}% acc`:""}
+        </span>
+      </div>
+
+      {/* Card */}
+      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",marginBottom:"16px"}}>
+        {/* Character display */}
+        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:C.goldLight,lineHeight:1,marginBottom:"12px",textShadow:"0 2px 20px rgba(212,168,64,0.3)"}}>
+            {char.char}
+          </div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase"}}>
+            {char.pos}
+          </div>
+        </div>
+
+        {/* Input area */}
+        <div style={{padding:"20px 24px"}}>
+          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,marginBottom:"10px",fontStyle:"italic"}}>
+            Enter the English meaning:
+          </div>
+          <div style={{display:"flex",gap:"8px"}}>
+            <input
+              value={input}
+              onChange={e=>{setInput(e.target.value);setStatus(null);}}
+              onKeyDown={e=>{if(e.key==="Enter") status?next():check();}}
+              disabled={!!status}
+              placeholder="e.g. person"
+              style={{flex:1,background:C.surface,border:"1px solid",borderColor:status==="correct"?C.green:status==="wrong"?C.red:C.border,borderRadius:"3px",padding:"9px 12px",fontFamily:"'EB Garamond',serif",fontSize:"16px",color:C.text}}
+            />
+            {!status
+              ? <button onClick={check} disabled={!input.trim()} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1.5px",padding:"9px 18px",background:input.trim()?C.gold:"#3a2a10",color:input.trim()?"#1a1000":C.textMuted,border:"none",borderRadius:"3px",cursor:input.trim()?"pointer":"default"}}>CHECK</button>
+              : <button onClick={next} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1.5px",padding:"9px 18px",background:C.gold,color:"#1a1000",border:"none",borderRadius:"3px",cursor:"pointer"}}>NEXT →</button>
+            }
+          </div>
+
+          {/* Feedback */}
+          {status==="correct" && (
+            <div style={{marginTop:"12px",padding:"10px 14px",background:"rgba(58,138,80,0.12)",border:"1px solid "+C.green,borderRadius:"3px"}}>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:C.green,marginBottom:"4px"}}>✓ CORRECT</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"14px",color:C.text}}>{char.eng}</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic",marginTop:"3px"}}>Pinyin: {char.pinyin}</div>
+            </div>
+          )}
+          {status==="wrong" && (
+            <div style={{marginTop:"12px",padding:"10px 14px",background:"rgba(200,64,48,0.1)",border:"1px solid "+C.red,borderRadius:"3px"}}>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:C.red,marginBottom:"4px"}}>✗ INCORRECT</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"14px",color:C.text}}>{char.eng}</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic",marginTop:"3px"}}>Pinyin: {char.pinyin}</div>
+            </div>
+          )}
+
+          {/* Hint / notes */}
+          {char.notes && (
+            <button onClick={()=>setShowHint(v=>!v)} style={{marginTop:"10px",background:"transparent",border:"none",fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1.5px",color:C.textMuted,cursor:"pointer",textTransform:"uppercase",padding:0}}>
+              {showHint?"▾ HIDE NOTE":"▸ SHOW NOTE"}
+            </button>
+          )}
+          {showHint && char.notes && (
+            <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,fontStyle:"italic",lineHeight:"1.6",borderLeft:"2px solid "+C.border,paddingLeft:"12px"}}>
+              {char.notes}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── READER ───────────────────────────────────────────────────────────────────
+
+function ReaderMode() {
+  const [dict, setDict]         = React.useState(null);
+  const [err, setErr]           = React.useState(null);
+  const [pidx, setPidx]         = React.useState(0);
+  const [activeId, setActiveId] = React.useState(null);
+
+  React.useEffect(()=>{
+    fetch("chinese_dict.json")
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(setDict).catch(e=>setErr(e.message));
+  },[]);
+
+  const passage = PASSAGES[pidx];
+  // Tokenise: each space-separated item is a token
+  const tokens = passage.text.split(" ").filter(t=>t.length>0);
+  const charTokens = tokens.filter(t=>/[\u4e00-\u9fff]/.test(t));
+  const inDict = dict ? charTokens.filter(t=>dict[t]).length : 0;
+  const coverage = charTokens.length>0 ? Math.round((inDict/charTokens.length)*100) : 0;
+
+  const isPunct = t => /^[，。？！；：「」『』、]$/.test(t);
+  let wc = 0;
+
+  return (
+    <div style={{marginTop:"20px"}}>
+      {/* Passage selector */}
+      <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginBottom:"14px"}}>
+        {PASSAGES.map((p,i)=>(
+          <button key={p.id} onClick={()=>{setPidx(i);setActiveId(null);}} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"5px 14px",border:"1px solid",borderColor:i===pidx?C.gold:C.border,borderRadius:"20px",background:i===pidx?"#2a1e08":"transparent",color:i===pidx?C.goldLight:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+            {p.title}
+          </button>
+        ))}
+      </div>
+
+      {err && (
+        <div style={{padding:"14px",background:"rgba(180,30,30,0.08)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px"}}>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#c84040",marginBottom:"5px"}}>DICTIONARY NOT FOUND</div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,lineHeight:"1.6"}}>
+            Could not load <code>chinese_dict.json</code>. Ensure it is in the same folder and you are serving from Netlify or <code>npx serve .</code>
+          </div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#c06060",marginTop:"5px",fontStyle:"italic"}}>Error: {err}</div>
+        </div>
+      )}
+
+      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",padding:"24px 28px"}}>
+        {/* Header */}
+        <div style={{marginBottom:"16px",paddingBottom:"14px",borderBottom:"1px solid "+C.borderDim}}>
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",flexWrap:"wrap",gap:"8px"}}>
+            <div>
+              <h2 style={{fontFamily:"'Noto Serif TC',serif",fontSize:"18px",fontWeight:"600",color:C.goldLight,marginBottom:"4px"}}>{passage.title}</h2>
+              <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"13px",color:C.textMuted}}>{passage.source} · {passage.date}</div>
+            </div>
+            {dict && (
+              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",flexShrink:0}}>
+                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:C.textMuted,textTransform:"uppercase"}}>Dictionary coverage</div>
+                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                  <div style={{width:"70px",height:"3px",background:C.borderDim,borderRadius:"2px",overflow:"hidden"}}>
+                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?C.gold:coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}}/>
+                  </div>
+                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:C.goldDim,fontWeight:"600"}}>{coverage}%</span>
+                </div>
+                <div style={{fontFamily:"'EB Garamond',serif",fontSize:"11px",color:C.textMuted,fontStyle:"italic"}}>{inDict}/{charTokens.length} characters</div>
+              </div>
+            )}
+          </div>
+          {passage.intro && <div style={{marginTop:"10px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,lineHeight:"1.6",fontStyle:"italic"}}>{passage.intro}</div>}
+        </div>
+
+        {/* POS legend */}
+        <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginBottom:"16px",alignItems:"center"}}>
+          {Object.entries(POS_COLORS).map(([pos,c])=>(
+            <span key={pos} style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",textTransform:"uppercase",padding:"2px 6px",borderRadius:"10px",background:c.bg,border:"1px solid "+c.border,color:c.border}}>{pos}</span>
+          ))}
+          <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic",marginLeft:"6px"}}>{dict?"hover or tap any character":"loading dictionary…"}</span>
+        </div>
+
+        {/* Text */}
+        <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"32px",lineHeight:"2.6",color:C.text,marginBottom:"20px",letterSpacing:"2px"}}>
+          {tokens.map((token,i)=>{
+            if (isPunct(token)) return <span key={i} style={{color:C.textMuted,fontSize:"28px"}}>{token}</span>;
+            const id = wc++;
+            const entry = dict ? dict[token] : null;
+            const isActive = activeId===id;
+            const pc = entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
+            return (
+              <span key={i} style={{position:"relative",display:"inline-block"}}>
+                <span onClick={()=>setActiveId(isActive?null:id)} onMouseEnter={()=>setActiveId(id)} onMouseLeave={()=>setActiveId(null)}
+                  style={{cursor:"pointer",
+                    borderBottom:isActive?(entry?"2px solid "+C.gold:"2px solid #888"):(entry?"1px dotted "+C.goldDim:"none"),
+                    color:isActive?(entry?C.gold:"#888"):C.text,
+                    background:isActive?C.goldFaint:"transparent",
+                    borderRadius:"2px",padding:"0 1px",transition:"all 0.1s",display:"inline-block"}}>
+                  {token}
+                </span>
+                {isActive && (
+                  <span style={{position:"absolute",bottom:"calc(100% + 10px)",left:"50%",transform:"translateX(-50%)",zIndex:200,width:"260px",background:"#100c04",border:"1px solid "+(entry?C.goldDim:"#555"),borderRadius:"5px",boxShadow:"0 8px 32px rgba(0,0,0,0.7)",padding:"12px 14px",pointerEvents:"none",fontFamily:"'EB Garamond',serif"}}>
+                    <span style={{position:"absolute",bottom:"-6px",left:"50%",width:"10px",height:"10px",background:"#100c04",border:"1px solid "+(entry?C.goldDim:"#555"),borderTop:"none",borderLeft:"none",transform:"translateX(-50%) rotate(45deg)",display:"block"}}/>
+                    {entry ? <>
+                      <div style={{display:"flex",alignItems:"baseline",gap:"10px",marginBottom:"7px",flexWrap:"wrap"}}>
+                        <span style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:C.goldLight,lineHeight:1}}>{token}</span>
+                        <span style={{fontSize:"14px",color:C.textMuted,fontStyle:"italic"}}>{entry.pinyin}</span>
+                      </div>
+                      {entry.pos && <div style={{marginBottom:"6px"}}>
+                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1.5px",textTransform:"uppercase",padding:"2px 7px",borderRadius:"10px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border}}>{entry.pos}</span>
+                      </div>}
+                      <div style={{fontSize:"13px",color:C.goldLight,lineHeight:"1.4",marginBottom:entry.notes?"7px":"0"}}>
+                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:C.textMuted,textTransform:"uppercase",marginRight:"5px"}}>Meaning</span>"{entry.eng}"
+                      </div>
+                      {entry.notes && <div style={{fontSize:"11px",fontStyle:"italic",color:C.textMuted,borderTop:"1px solid "+C.borderDim,paddingTop:"6px",lineHeight:"1.5"}}>
+                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:"#5a4a2a",textTransform:"uppercase",marginRight:"5px",fontStyle:"normal"}}>Note</span>{entry.notes}
+                      </div>}
+                    </> : <>
+                      <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:"#aaa",marginBottom:"8px",lineHeight:1}}>{token}</div>
+                      <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#666",textTransform:"uppercase",marginBottom:"5px"}}>Not yet in dictionary</div>
+                      <div style={{fontSize:"11px",color:"#555",fontStyle:"italic"}}>Key to add: <span style={{fontFamily:"monospace",background:"#0a0804",padding:"1px 5px",borderRadius:"2px",color:"#888"}}>"{token}"</span></div>
+                    </>}
+                  </span>
+                )}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Word list */}
+        <details>
+          <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:C.goldDim,cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
+            ▸ Character List {dict?`(${inDict} found · ${charTokens.length-inDict} missing)`:""}
+          </summary>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"4px",marginTop:"10px"}}>
+            {charTokens.map((token,i)=>{
+              const entry=dict?dict[token]:null;
+              const pc=entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
+              return (
+                <div key={i} style={{display:"flex",alignItems:"baseline",gap:"8px",padding:"6px 10px",background:entry?C.goldFaint:"rgba(150,50,50,0.06)",border:"1px solid",borderColor:entry?C.borderDim:"#3a2020",borderRadius:"3px"}}>
+                  <span style={{fontFamily:"'Noto Serif TC',serif",fontSize:"20px",color:entry?C.gold:"#c08080",minWidth:"28px",lineHeight:1}}>{token}</span>
+                  {entry?<>
+                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
+                    <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic"}}>{entry.eng.split(",")[0]}</span>
+                  </>:<span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",color:"#c08080"}}>{dict?"not in dictionary":"loading…"}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </details>
+      </div>
+    </div>
+  );
+}
+
+// ─── GRAMMAR PATTERNS ─────────────────────────────────────────────────────────
+
+function PatternsMode() {
+  const [pidx, setPidx]   = React.useState(0);
+  const [revealed, setRevealed] = React.useState(false);
+  const pat = PATTERNS[pidx];
+
+  const go = (dir) => {
+    setPidx(i=>(i+dir+PATTERNS.length)%PATTERNS.length);
+    setRevealed(false);
+  };
+
+  return (
+    <div style={{marginTop:"20px"}}>
+      {/* Pattern pills */}
+      <div style={{display:"flex",flexWrap:"wrap",gap:"5px",marginBottom:"16px"}}>
+        {PATTERNS.map((p,i)=>(
+          <button key={p.id} onClick={()=>{setPidx(i);setRevealed(false);}} style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"0.8px",padding:"4px 12px",border:"1px solid",borderColor:i===pidx?C.gold:C.border,borderRadius:"20px",background:i===pidx?"#2a1e08":"transparent",color:i===pidx?C.goldLight:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+            {p.pattern}
+          </button>
+        ))}
+      </div>
+
+      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden"}}>
+        {/* Pattern header */}
+        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:C.goldLight,letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:C.textMuted,textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:C.gold,textAlign:"center"}}>{pat.meaning}</div>
+        </div>
+
+        <div style={{padding:"22px 28px"}}>
+          {/* Example text */}
+          <div style={{marginBottom:"16px"}}>
+            <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase",marginBottom:"8px"}}>Example</div>
+            <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:C.text,letterSpacing:"4px",lineHeight:"1.6",marginBottom:"8px"}}>{pat.example}</div>
+            {revealed
+              ? <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"16px",color:C.goldLight,lineHeight:"1.5"}}>{pat.translation}</div>
+              : <button onClick={()=>setRevealed(true)} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1.5px",padding:"7px 18px",background:"transparent",color:C.textMuted,border:"1px solid "+C.border,borderRadius:"3px",cursor:"pointer"}}>REVEAL TRANSLATION</button>
+            }
+          </div>
+
+          {/* Notes */}
+          <div style={{borderTop:"1px solid "+C.borderDim,paddingTop:"14px"}}>
+            <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase",marginBottom:"8px"}}>Note</div>
+            <div style={{fontFamily:"'EB Garamond',serif",fontSize:"14px",color:C.textMuted,lineHeight:"1.7",fontStyle:"italic"}}>{pat.notes}</div>
+          </div>
+
+          {/* Nav */}
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:"18px"}}>
+            <button onClick={()=>go(-1)} style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",padding:"8px 16px",background:"transparent",color:C.textMuted,border:"1px solid "+C.border,borderRadius:"3px",cursor:"pointer"}}>← PREV</button>
+            <span style={{fontFamily:"'Cinzel',serif",fontSize:"10px",color:C.textMuted,alignSelf:"center"}}>{pidx+1} / {PATTERNS.length}</span>
+            <button onClick={()=>go(1)} style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",padding:"8px 16px",background:C.gold,color:"#1a1000",border:"none",borderRadius:"3px",cursor:"pointer"}}>NEXT →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── MATCHING MODE ────────────────────────────────────────────────────────────
+
+const MATCH_COLORS = [
+  {light:"rgba(212,168,64,0.12)",  border:"#d4a840"},
+  {light:"rgba(80,160,100,0.12)",  border:"#50a064"},
+  {light:"rgba(80,120,200,0.12)",  border:"#5078c8"},
+  {light:"rgba(200,80,80,0.12)",   border:"#c85050"},
+  {light:"rgba(160,80,200,0.12)",  border:"#a050c8"},
+  {light:"rgba(80,180,180,0.12)",  border:"#50b4b4"},
+  {light:"rgba(200,140,40,0.12)",  border:"#c88c28"},
+  {light:"rgba(100,180,80,0.12)",  border:"#64b450"},
+];
+const PAIRS_PER_ROUND = 8;
+
+function MatchingMode() {
+  const allPairs = React.useMemo(()=>CHARACTERS.map(c=>({left:c.char,right:c.eng.split(",")[0].trim()})),[]);
+  const [round, setRound]     = React.useState(0);
+  const [left, setLeft]       = React.useState([]);
+  const [right, setRight]     = React.useState([]);
+  const [matched, setMatched] = React.useState({});
+  const [selL, setSelL]       = React.useState(null);
+  const [selR, setSelR]       = React.useState(null);
+  const [wrong, setWrong]     = React.useState({l:null,r:null});
+  const [done, setDone]       = React.useState(false);
+  const [corr, setCorr]       = React.useState(0);
+  const [att, setAtt]         = React.useState(0);
+
+  const startRound = React.useCallback((r)=>{
+    const start=(r*PAIRS_PER_ROUND)%allPairs.length;
+    const slice=Array.from({length:PAIRS_PER_ROUND},(_,i)=>({...allPairs[(start+i)%allPairs.length],id:i}));
+    setLeft(shuffle(slice.map(p=>({id:p.id,text:p.left}))));
+    setRight(shuffle(slice.map(p=>({id:p.id,text:p.right}))));
+    setMatched({}); setSelL(null); setSelR(null);
+    setWrong({l:null,r:null}); setDone(false);
+  },[allPairs]);
+
+  React.useEffect(()=>{startRound(0);},[]);
+
+  React.useEffect(()=>{
+    if(selL===null||selR===null) return;
+    setAtt(a=>a+1);
+    if(selL===selR){
+      const ci=Object.keys(matched).length%MATCH_COLORS.length;
+      const nm={...matched,[selL]:ci};
+      setMatched(nm); setCorr(c=>c+1);
+      setSelL(null); setSelR(null);
+      if(Object.keys(nm).length===PAIRS_PER_ROUND) setTimeout(()=>setDone(true),300);
+    } else {
+      setWrong({l:selL,r:selR});
+      setTimeout(()=>{setWrong({l:null,r:null});setSelL(null);setSelR(null);},650);
+    }
+  },[selL,selR]);
+
+  const mc=Object.keys(matched).length;
+  const acc=att>0?Math.round((corr/att)*100):null;
+
+  const tile=(id,side)=>{
+    const isM=matched[id]!==undefined;
+    const col=isM?MATCH_COLORS[matched[id]]:null;
+    const isSel=side==="l"?selL===id:selR===id;
+    const isW=side==="l"?wrong.l===id:wrong.r===id;
+    return {
+      padding:"10px 8px", border:"1.5px solid",
+      borderColor:isM?col.border:isW?"#c85050":isSel?C.gold:C.border,
+      borderRadius:"4px",
+      background:isM?col.light:isW?"rgba(200,80,80,0.1)":isSel?C.goldFaint:C.card,
+      color:isM?col.border:isW?"#c87070":isSel?C.goldLight:C.text,
+      cursor:isM?"default":"pointer", transition:"all 0.15s", textAlign:"center",
+      userSelect:"none", opacity:isM?0.55:1, textDecoration:isM?"line-through":"none",
+      minHeight:"52px", display:"flex", alignItems:"center", justifyContent:"center",
+    };
+  };
+
+  return (
+    <div style={{marginTop:"20px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"12px"}}>
+        <div style={{flex:1,height:"3px",background:C.borderDim,borderRadius:"2px",overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${(mc/PAIRS_PER_ROUND)*100}%`,background:C.gold,transition:"width 0.4s"}}/>
+        </div>
+        <span style={{fontFamily:"'Cinzel',serif",fontSize:"10px",color:C.textMuted,whiteSpace:"nowrap"}}>{mc}/{PAIRS_PER_ROUND}{acc!==null?` · ${acc}% acc`:""}</span>
+      </div>
+      {!done && <div style={{textAlign:"center",marginBottom:"10px",color:C.textMuted,fontSize:"12px",fontFamily:"'Cinzel',serif",letterSpacing:"0.5px"}}>Match each character to its English meaning</div>}
+      {done && (
+        <div style={{textAlign:"center",padding:"16px",background:C.card,border:"1px solid "+C.border,borderRadius:"6px",marginBottom:"14px"}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"22px",color:C.goldLight,marginBottom:"4px"}}>
+            {acc===100?"善！🎋":acc>=80?"甚好！✓":acc>=60?"尚可":"再學！"}
+          </div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",color:C.textMuted,letterSpacing:"1px",marginBottom:"12px"}}>{acc}% ACCURACY</div>
+          <button onClick={()=>{setRound(r=>{const n=r+1;startRound(n);return n;});}} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1.5px",padding:"8px 22px",background:C.gold,color:"#1a1000",border:"none",borderRadius:"3px",cursor:"pointer"}}>NEXT ROUND →</button>
+        </div>
+      )}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px 16px"}}>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textAlign:"center",paddingBottom:"4px",borderBottom:"1px solid "+C.border}}>CHARACTER</div>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textAlign:"center",paddingBottom:"4px",borderBottom:"1px solid "+C.border}}>ENGLISH</div>
+        {left.map((item,i)=>(
+          <React.Fragment key={item.id}>
+            <div onClick={()=>!matched[item.id]&&wrong.l===null&&setSelL(item.id)} style={tile(item.id,"l")}>
+              <span style={{fontFamily:"'Noto Serif TC',serif",fontSize:"28px",lineHeight:1}}>{item.text}</span>
+            </div>
+            <div onClick={()=>!matched[right[i].id]&&wrong.l===null&&setSelR(right[i].id)} style={tile(right[i].id,"r")}>
+              <span style={{fontFamily:"'EB Garamond',serif",fontSize:"14px",fontStyle:"italic"}}>{right[i].text}</span>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+
+const MODES = [
+  ["drill",    "✏️  Character Drill"],
+  ["reader",   "📖  Reader"],
+  ["patterns", "⊞  Grammar Patterns"],
+  ["matching", "🔗  Matching"],
+];
+
+function App() {
+  const [mode, setMode] = React.useState("drill");
+  return (
+    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'EB Garamond',serif",color:C.text,paddingBottom:"60px"}}>
+
+      {/* Header */}
+      <header style={{borderBottom:"2px solid "+C.border,background:C.headerBg,padding:"20px 32px 16px",display:"flex",alignItems:"flex-end",gap:"20px"}}>
+        <div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"4px",color:C.goldDim,marginBottom:"4px"}}>文言文</div>
+          <h1 style={{fontFamily:"'Noto Serif TC',serif",fontSize:"22px",fontWeight:"600",color:C.goldLight,margin:0,letterSpacing:"2px"}}>Classical Chinese</h1>
+        </div>
+        <div style={{marginLeft:"auto",fontStyle:"italic",color:C.textMuted,fontSize:"13px",paddingBottom:"2px"}}>學而時習之</div>
+      </header>
+
+      <div style={{maxWidth:"880px",margin:"0 auto",padding:"0 20px"}}>
+        {/* Mode tabs */}
+        <div style={{display:"flex",flexWrap:"wrap",marginTop:"24px",borderBottom:"2px solid "+C.border}}>
+          {MODES.map(([m,label])=>(
+            <button key={m} onClick={()=>setMode(m)} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"9px 18px",border:"none",borderBottom:mode===m?"2px solid "+C.gold:"2px solid transparent",marginBottom:"-2px",background:mode===m?C.card:"transparent",color:mode===m?C.goldLight:C.textMuted,cursor:"pointer",fontWeight:mode===m?"600":"400",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {mode==="drill"    && <CharDrill />}
+        {mode==="reader"   && <ReaderMode />}
+        {mode==="patterns" && <PatternsMode />}
+        {mode==="matching" && <MatchingMode />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

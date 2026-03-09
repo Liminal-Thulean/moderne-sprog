@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Greek Practice Tables</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f1a2e; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(100,160,255,0.3); }
+  button:hover { opacity: 0.85; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #1a2a40; }
+  ::-webkit-scrollbar-thumb { background: #4a7ab5; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+// ─── PATTERNS ─────────────────────────────────────────────────────────────────
+
+const CONJ_PATTERNS = {
+  // Thematic -ω present active indicative
+  thematic_present: {
+    headers: ["", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ω",     null,     "ομεν"] },
+      { label: "2nd", suffixes: ["εις",   "ετον",   "ετε"]  },
+      { label: "3rd", suffixes: ["ει",    "ετον",   "ουσι(ν)"] },
+    ],
+  },
+  // Thematic -ω imperfect active indicative
+  thematic_imperfect: {
+    headers: ["", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ον",    null,     "ομεν"] },
+      { label: "2nd", suffixes: ["ες",    "ετον",   "ετε"]  },
+      { label: "3rd", suffixes: ["ε(ν)",  "ετην",   "ον"]   },
+    ],
+    augment: true, // prepend ἐ- to stem
+  },
+  // Thematic -ω future active indicative (same endings as present, different stem)
+  thematic_future: {
+    headers: ["", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ω",     null,     "ομεν"] },
+      { label: "2nd", suffixes: ["εις",   "ετον",   "ετε"]  },
+      { label: "3rd", suffixes: ["ει",    "ετον",   "ουσι(ν)"] },
+    ],
+    useFutureStem: true,
+  },
+  // Thematic -ω aorist active indicative (weak/sigmatic)
+  thematic_aorist: {
+    headers: ["", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["α",     null,     "αμεν"] },
+      { label: "2nd", suffixes: ["ας",    "ατον",   "ατε"]  },
+      { label: "3rd", suffixes: ["ε(ν)",  "ατην",   "αν"]   },
+    ],
+    augment: true,
+    useAoristStem: true,
+  },
+  // Contract -άω present active
+  contract_alpha_present: {
+    headers: ["", "Singular", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ῶ",    "ῶμεν"] },
+      { label: "2nd", suffixes: ["ᾷς",   "ᾶτε"]  },
+      { label: "3rd", suffixes: ["ᾷ",    "ῶσι(ν)"] },
+    ],
+  },
+  // Contract -έω present active
+  contract_epsilon_present: {
+    headers: ["", "Singular", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ῶ",    "οῦμεν"] },
+      { label: "2nd", suffixes: ["εῖς",  "εῖτε"]  },
+      { label: "3rd", suffixes: ["εῖ",   "οῦσι(ν)"] },
+    ],
+  },
+  // Contract -όω present active
+  contract_omicron_present: {
+    headers: ["", "Singular", "Plural"],
+    rows: [
+      { label: "1st", suffixes: ["ῶ",    "οῦμεν"] },
+      { label: "2nd", suffixes: ["οῖς",  "οῦτε"]  },
+      { label: "3rd", suffixes: ["οῖ",   "οῦσι(ν)"] },
+    ],
+  },
+};
+
+const DECL_PATTERNS = {
+  // 1st declension feminine -η
+  decl1_eta: {
+    headers: ["Case", "Singular", "Plural"],
+    rows: [
+      { label: "Nominative", suffixes: ["η",   "αι"]  },
+      { label: "Genitive",   suffixes: ["ης",  "ων"]  },
+      { label: "Dative",     suffixes: ["ῃ",   "αις"] },
+      { label: "Accusative", suffixes: ["ην",  "ας"]  },
+      { label: "Vocative",   suffixes: ["η",   "αι"]  },
+    ],
+  },
+  // 1st declension feminine -α (pure)
+  decl1_alpha: {
+    headers: ["Case", "Singular", "Plural"],
+    rows: [
+      { label: "Nominative", suffixes: ["α",   "αι"]  },
+      { label: "Genitive",   suffixes: ["ας",  "ων"]  },
+      { label: "Dative",     suffixes: ["ᾳ",   "αις"] },
+      { label: "Accusative", suffixes: ["αν",  "ας"]  },
+      { label: "Vocative",   suffixes: ["α",   "αι"]  },
+    ],
+  },
+  // 2nd declension masculine -ος
+  decl2_masc: {
+    headers: ["Case", "Singular", "Plural"],
+    rows: [
+      { label: "Nominative", suffixes: ["ος",  "οι"]  },
+      { label: "Genitive",   suffixes: ["ου",  "ων"]  },
+      { label: "Dative",     suffixes: ["ῳ",   "οις"] },
+      { label: "Accusative", suffixes: ["ον",  "ους"] },
+      { label: "Vocative",   suffixes: ["ε",   "οι"]  },
+    ],
+  },
+  // 2nd declension neuter -ον
+  decl2_neut: {
+    headers: ["Case", "Singular", "Plural"],
+    rows: [
+      { label: "Nominative", suffixes: ["ον",  "α"]   },
+      { label: "Genitive",   suffixes: ["ου",  "ων"]  },
+      { label: "Dative",     suffixes: ["ῳ",   "οις"] },
+      { label: "Accusative", suffixes: ["ον",  "α"]   },
+      { label: "Vocative",   suffixes: ["ον",  "α"]   },
+    ],
+  },
+  // 3rd declension consonant stem (uses nom_sg explicitly)
+  decl3: {
+    headers: ["Case", "Singular", "Plural"],
+    rows: [
+      { label: "Nominative", suffixes: [null,  "ες"]  },
+      { label: "Genitive",   suffixes: ["ος",  "ων"]  },
+      { label: "Dative",     suffixes: ["ι",   "σι(ν)"] },
+      { label: "Accusative", suffixes: ["α",   "ας"]  },
+      { label: "Vocative",   suffixes: [null,  "ες"]  },
+    ],
+  },
+};
+
+// ─── VOCABULARY ───────────────────────────────────────────────────────────────
+// To add words: copy a line inside any `words: [...]` array and edit it.
+// For thematic verbs: { lemma, meaning, stem, futureStem (opt), aoristStem (opt), augmentedStem (opt) }
+// For 3rd decl nouns: also include nom_sg
+// For irregular verbs: explicit `tables` array with answers
+
+const CATEGORIES = [
+
+  // ══════════════════════════════════════════════════════════
+  //  THEMATIC -ω VERBS — PRESENT
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "thematic_present",
+    label: "Thematic -ω",
+    sublabel: "Present Active Indicative",
+    type: "conjugation",
+    pattern: "thematic_present",
+    words: [
+      // stem = present stem (before -ω endings)
+      { lemma: "λύω",      meaning: "to loosen/destroy", stem: "λυ"    },
+      { lemma: "γράφω",    meaning: "to write",          stem: "γραφ"  },
+      { lemma: "πάσχω",    meaning: "to suffer",         stem: "πασχ"  },
+      { lemma: "πιστεύω",  meaning: "to believe/trust",  stem: "πιστευ"},
+      { lemma: "λέγω",     meaning: "to say/speak",      stem: "λεγ"   },
+      { lemma: "ἄγω",      meaning: "to lead/drive",     stem: "αγ"    },
+      { lemma: "ἄρχω",     meaning: "to rule/begin",     stem: "αρχ"   },
+      { lemma: "βλέπω",    meaning: "to see/look",       stem: "βλεπ"  },
+      { lemma: "βούλομαι", meaning: "to wish/want",      stem: "βουλ"  },
+      { lemma: "γιγνώσκω", meaning: "to know/perceive",  stem: "γιγνωσκ"},
+      { lemma: "διδάσκω",  meaning: "to teach",          stem: "διδασκ"},
+      { lemma: "εὑρίσκω",  meaning: "to find/discover",  stem: "ευρισκ"},
+      { lemma: "θύω",      meaning: "to sacrifice",      stem: "θυ"    },
+      { lemma: "κλέπτω",   meaning: "to steal",          stem: "κλεπτ" },
+      { lemma: "λαμβάνω",  meaning: "to take/seize",     stem: "λαμβαν"},
+      { lemma: "λείπω",    meaning: "to leave",          stem: "λειπ"  },
+      { lemma: "νομίζω",   meaning: "to consider/think", stem: "νομιζ" },
+      { lemma: "παύω",     meaning: "to stop/cease",     stem: "παυ"   },
+      { lemma: "πέμπω",    meaning: "to send",           stem: "πεμπ"  },
+      { lemma: "πράττω",   meaning: "to do/act",         stem: "πραττ" },
+      { lemma: "στρατεύω", meaning: "to march/campaign", stem: "στρατευ"},
+      { lemma: "τάττω",    meaning: "to arrange/order",  stem: "ταττ"  },
+      { lemma: "τρέπω",    meaning: "to turn",           stem: "τρεπ"  },
+      { lemma: "φέρω",     meaning: "to carry/bear",     stem: "φερ"   },
+      { lemma: "φεύγω",    meaning: "to flee",           stem: "φευγ"  },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  THEMATIC -ω VERBS — IMPERFECT
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "thematic_imperfect",
+    label: "Thematic -ω",
+    sublabel: "Imperfect Active Indicative",
+    type: "conjugation",
+    pattern: "thematic_imperfect",
+    words: [
+      // augmentedStem = ἐ + stem (with any vowel lengthening)
+      { lemma: "λύω",      meaning: "to loosen/destroy", stem: "λυ",     augmentedStem: "ἐλυ"    },
+      { lemma: "γράφω",    meaning: "to write",          stem: "γραφ",   augmentedStem: "ἔγραφ"  },
+      { lemma: "πιστεύω",  meaning: "to believe/trust",  stem: "πιστευ", augmentedStem: "ἐπίστευ"},
+      { lemma: "λέγω",     meaning: "to say/speak",      stem: "λεγ",    augmentedStem: "ἔλεγ"   },
+      { lemma: "ἄγω",      meaning: "to lead/drive",     stem: "αγ",     augmentedStem: "ἦγ"     },
+      { lemma: "ἄρχω",     meaning: "to rule/begin",     stem: "αρχ",    augmentedStem: "ἦρχ"    },
+      { lemma: "βλέπω",    meaning: "to see/look",       stem: "βλεπ",   augmentedStem: "ἔβλεπ"  },
+      { lemma: "διδάσκω",  meaning: "to teach",          stem: "διδασκ", augmentedStem: "ἐδίδασκ"},
+      { lemma: "θύω",      meaning: "to sacrifice",      stem: "θυ",     augmentedStem: "ἔθυ"    },
+      { lemma: "κλέπτω",   meaning: "to steal",          stem: "κλεπτ",  augmentedStem: "ἔκλεπτ" },
+      { lemma: "λαμβάνω",  meaning: "to take/seize",     stem: "λαμβαν", augmentedStem: "ἐλάμβαν"},
+      { lemma: "λείπω",    meaning: "to leave",          stem: "λειπ",   augmentedStem: "ἔλειπ"  },
+      { lemma: "νομίζω",   meaning: "to consider/think", stem: "νομιζ",  augmentedStem: "ἐνόμιζ" },
+      { lemma: "παύω",     meaning: "to stop/cease",     stem: "παυ",    augmentedStem: "ἔπαυ"   },
+      { lemma: "πέμπω",    meaning: "to send",           stem: "πεμπ",   augmentedStem: "ἔπεμπ"  },
+      { lemma: "πράττω",   meaning: "to do/act",         stem: "πραττ",  augmentedStem: "ἔπραττ" },
+      { lemma: "στρατεύω", meaning: "to march/campaign", stem: "στρατευ",augmentedStem: "ἐστράτευ"},
+      { lemma: "τάττω",    meaning: "to arrange/order",  stem: "ταττ",   augmentedStem: "ἔταττ"  },
+      { lemma: "τρέπω",    meaning: "to turn",           stem: "τρεπ",   augmentedStem: "ἔτρεπ"  },
+      { lemma: "φέρω",     meaning: "to carry/bear",     stem: "φερ",    augmentedStem: "ἔφερ"   },
+      { lemma: "φεύγω",    meaning: "to flee",           stem: "φευγ",   augmentedStem: "ἔφευγ"  },
+      { lemma: "βούλομαι", meaning: "to wish/want",      stem: "βουλ",   augmentedStem: "ἐβούλ"  },
+      { lemma: "εὑρίσκω",  meaning: "to find/discover",  stem: "ευρισκ", augmentedStem: "ηὕρισκ" },
+      { lemma: "πάσχω",    meaning: "to suffer",         stem: "πασχ",   augmentedStem: "ἔπασχ"  },
+      { lemma: "γιγνώσκω", meaning: "to know/perceive",  stem: "γιγνωσκ",augmentedStem: "ἐγίγνωσκ"},
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  THEMATIC -ω VERBS — FUTURE
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "thematic_future",
+    label: "Thematic -ω",
+    sublabel: "Future Active Indicative",
+    type: "conjugation",
+    pattern: "thematic_future",
+    words: [
+      // futureStem = stem used in the future (often stem + σ, with consonant changes)
+      { lemma: "λύω",      meaning: "to loosen/destroy", stem: "λυ",     futureStem: "λυσ"     },
+      { lemma: "γράφω",    meaning: "to write",          stem: "γραφ",   futureStem: "γράψ"    },
+      { lemma: "πιστεύω",  meaning: "to believe/trust",  stem: "πιστευ", futureStem: "πιστεύσ" },
+      { lemma: "λέγω",     meaning: "to say/speak",      stem: "λεγ",    futureStem: "λέξ"     },
+      { lemma: "ἄγω",      meaning: "to lead/drive",     stem: "αγ",     futureStem: "ἄξ"      },
+      { lemma: "ἄρχω",     meaning: "to rule/begin",     stem: "αρχ",    futureStem: "ἄρξ"     },
+      { lemma: "βλέπω",    meaning: "to see/look",       stem: "βλεπ",   futureStem: "βλέψ"    },
+      { lemma: "διδάσκω",  meaning: "to teach",          stem: "διδασκ", futureStem: "διδάξ"   },
+      { lemma: "θύω",      meaning: "to sacrifice",      stem: "θυ",     futureStem: "θύσ"     },
+      { lemma: "κλέπτω",   meaning: "to steal",          stem: "κλεπτ",  futureStem: "κλέψ"    },
+      { lemma: "νομίζω",   meaning: "to consider/think", stem: "νομιζ",  futureStem: "νομιῶ"   },
+      { lemma: "παύω",     meaning: "to stop/cease",     stem: "παυ",    futureStem: "παύσ"    },
+      { lemma: "πέμπω",    meaning: "to send",           stem: "πεμπ",   futureStem: "πέμψ"    },
+      { lemma: "πράττω",   meaning: "to do/act",         stem: "πραττ",  futureStem: "πράξ"    },
+      { lemma: "στρατεύω", meaning: "to march/campaign", stem: "στρατευ",futureStem: "στρατεύσ"},
+      { lemma: "τάττω",    meaning: "to arrange/order",  stem: "ταττ",   futureStem: "τάξ"     },
+      { lemma: "τρέπω",    meaning: "to turn",           stem: "τρεπ",   futureStem: "τρέψ"    },
+      { lemma: "φεύγω",    meaning: "to flee",           stem: "φευγ",   futureStem: "φεύξ"    },
+      { lemma: "λαμβάνω",  meaning: "to take/seize",     stem: "λαμβαν", futureStem: "λήψ"     },
+      { lemma: "λείπω",    meaning: "to leave",          stem: "λειπ",   futureStem: "λείψ"    },
+      { lemma: "φέρω",     meaning: "to carry/bear",     stem: "φερ",    futureStem: "οἴσ"     },
+      { lemma: "βούλομαι", meaning: "to wish/want",      stem: "βουλ",   futureStem: "βουλήσ"  },
+      { lemma: "εὑρίσκω",  meaning: "to find/discover",  stem: "ευρισκ", futureStem: "εὑρήσ"   },
+      { lemma: "πάσχω",    meaning: "to suffer",         stem: "πασχ",   futureStem: "πείσ"    },
+      { lemma: "γιγνώσκω", meaning: "to know/perceive",  stem: "γιγνωσκ",futureStem: "γνώσ"   },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  THEMATIC -ω VERBS — AORIST
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "thematic_aorist",
+    label: "Thematic -ω",
+    sublabel: "Aorist Active Indicative",
+    type: "conjugation",
+    pattern: "thematic_aorist",
+    words: [
+      // aoristStem = augmented aorist stem (ἐ + stem + σ, with consonant changes)
+      { lemma: "λύω",      meaning: "to loosen/destroy", stem: "λυ",     aoristStem: "ἔλυσ"    },
+      { lemma: "γράφω",    meaning: "to write",          stem: "γραφ",   aoristStem: "ἔγραψ"   },
+      { lemma: "πιστεύω",  meaning: "to believe/trust",  stem: "πιστευ", aoristStem: "ἐπίστευσ"},
+      { lemma: "λέγω",     meaning: "to say/speak",      stem: "λεγ",    aoristStem: "ἔλεξ"    },
+      { lemma: "ἄγω",      meaning: "to lead/drive",     stem: "αγ",     aoristStem: "ἤγαγ"    },
+      { lemma: "ἄρχω",     meaning: "to rule/begin",     stem: "αρχ",    aoristStem: "ἦρξ"     },
+      { lemma: "βλέπω",    meaning: "to see/look",       stem: "βλεπ",   aoristStem: "ἔβλεψ"   },
+      { lemma: "διδάσκω",  meaning: "to teach",          stem: "διδασκ", aoristStem: "ἐδίδαξ"  },
+      { lemma: "θύω",      meaning: "to sacrifice",      stem: "θυ",     aoristStem: "ἔθυσ"    },
+      { lemma: "κλέπτω",   meaning: "to steal",          stem: "κλεπτ",  aoristStem: "ἔκλεψ"   },
+      { lemma: "λαμβάνω",  meaning: "to take/seize",     stem: "λαμβαν", aoristStem: "ἔλαβ"    },
+      { lemma: "λείπω",    meaning: "to leave",          stem: "λειπ",   aoristStem: "ἔλιπ"    },
+      { lemma: "νομίζω",   meaning: "to consider/think", stem: "νομιζ",  aoristStem: "ἐνόμισ"  },
+      { lemma: "παύω",     meaning: "to stop/cease",     stem: "παυ",    aoristStem: "ἔπαυσ"   },
+      { lemma: "πέμπω",    meaning: "to send",           stem: "πεμπ",   aoristStem: "ἔπεμψ"   },
+      { lemma: "πράττω",   meaning: "to do/act",         stem: "πραττ",  aoristStem: "ἔπραξ"   },
+      { lemma: "στρατεύω", meaning: "to march/campaign", stem: "στρατευ",aoristStem: "ἐστράτευσ"},
+      { lemma: "τάττω",    meaning: "to arrange/order",  stem: "ταττ",   aoristStem: "ἔταξ"    },
+      { lemma: "τρέπω",    meaning: "to turn",           stem: "τρεπ",   aoristStem: "ἔτρεψ"   },
+      { lemma: "φέρω",     meaning: "to carry/bear",     stem: "φερ",    aoristStem: "ἤνεγκ"   },
+      { lemma: "φεύγω",    meaning: "to flee",           stem: "φευγ",   aoristStem: "ἔφυγ"    },
+      { lemma: "εὑρίσκω",  meaning: "to find/discover",  stem: "ευρισκ", aoristStem: "εὗρ"     },
+      { lemma: "πάσχω",    meaning: "to suffer",         stem: "πασχ",   aoristStem: "ἔπαθ"    },
+      { lemma: "γιγνώσκω", meaning: "to know/perceive",  stem: "γιγνωσκ",aoristStem: "ἔγνω"   },
+      { lemma: "λαμβάνω",  meaning: "to take/seize",     stem: "λαμβαν", aoristStem: "ἔλαβ"    },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  CONTRACT -άω VERBS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "contract_alpha",
+    label: "Contract -άω",
+    sublabel: "Present Active Indicative",
+    type: "conjugation",
+    pattern: "contract_alpha_present",
+    words: [
+      // stem = uncontracted stem (before -άω)
+      { lemma: "νικάω",    meaning: "to conquer/win",    stem: "νικ"   },
+      { lemma: "ὁράω",     meaning: "to see",            stem: "ορ"    },
+      { lemma: "τιμάω",    meaning: "to honour",         stem: "τιμ"   },
+      { lemma: "ἀγαπάω",   meaning: "to love/cherish",   stem: "ἀγαπ"  },
+      { lemma: "βοάω",     meaning: "to shout/cry out",  stem: "βο"    },
+      { lemma: "γελάω",    meaning: "to laugh",          stem: "γελ"   },
+      { lemma: "δράω",     meaning: "to do/act",         stem: "δρ"    },
+      { lemma: "ἐράω",     meaning: "to love (passionately)", stem: "ἐρ" },
+      { lemma: "ζάω",      meaning: "to live",           stem: "ζ"     },
+      { lemma: "ἡγέομαι",  meaning: "to lead/consider",  stem: "ἡγ"    },
+      { lemma: "θεάομαι",  meaning: "to gaze at/watch",  stem: "θε"    },
+      { lemma: "κολάζω",   meaning: "to punish",         stem: "κολαζ" },
+      { lemma: "κράζω",    meaning: "to cry out/croak",  stem: "κραζ"  },
+      { lemma: "μελετάω",  meaning: "to practise",       stem: "μελετ" },
+      { lemma: "νοέω",     meaning: "to think/perceive", stem: "νο"    },
+      { lemma: "πεινάω",   meaning: "to be hungry",      stem: "πειν"  },
+      { lemma: "πλανάω",   meaning: "to wander/mislead", stem: "πλαν"  },
+      { lemma: "σιγάω",    meaning: "to be silent",      stem: "σιγ"   },
+      { lemma: "σπάω",     meaning: "to pull/draw",      stem: "σπ"    },
+      { lemma: "τολμάω",   meaning: "to dare/endure",    stem: "τολμ"  },
+      { lemma: "χράομαι",  meaning: "to use/consult",    stem: "χρ"    },
+      { lemma: "ψάω",      meaning: "to touch lightly",  stem: "ψ"     },
+      { lemma: "ἀδικέω",   meaning: "to wrong/injure",   stem: "ἀδικ"  },
+      { lemma: "νικάω",    meaning: "to conquer",        stem: "νικ"   },
+      { lemma: "στρατηγέω",meaning: "to be general",     stem: "στρατηγ"},
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  CONTRACT -έω VERBS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "contract_epsilon",
+    label: "Contract -έω",
+    sublabel: "Present Active Indicative",
+    type: "conjugation",
+    pattern: "contract_epsilon_present",
+    words: [
+      { lemma: "φιλέω",    meaning: "to love/be fond of",stem: "φιλ"   },
+      { lemma: "ποιέω",    meaning: "to make/do",        stem: "ποι"   },
+      { lemma: "καλέω",    meaning: "to call/name",      stem: "καλ"   },
+      { lemma: "ζητέω",    meaning: "to seek/inquire",   stem: "ζητ"   },
+      { lemma: "δοκέω",    meaning: "to seem/think",     stem: "δοκ"   },
+      { lemma: "δηλόω",    meaning: "to show/make clear",stem: "δηλ"   },
+      { lemma: "αἰτέω",    meaning: "to ask for/demand", stem: "αἰτ"   },
+      { lemma: "ἀκολουθέω",meaning: "to follow",         stem: "ἀκολουθ"},
+      { lemma: "ἀξιόω",    meaning: "to think worthy",   stem: "ἀξι"   },
+      { lemma: "βοηθέω",   meaning: "to help/come to aid",stem: "βοηθ" },
+      { lemma: "δέω",      meaning: "to bind/lack",      stem: "δ"     },
+      { lemma: "εὐεργετέω",meaning: "to do good/benefit",stem: "εὐεργετ"},
+      { lemma: "θεωρέω",   meaning: "to observe/watch",  stem: "θεωρ"  },
+      { lemma: "κινέω",    meaning: "to move",           stem: "κιν"   },
+      { lemma: "λαλέω",    meaning: "to chat/babble",    stem: "λαλ"   },
+      { lemma: "μισέω",    meaning: "to hate",           stem: "μισ"   },
+      { lemma: "νοέω",     meaning: "to perceive/think", stem: "νο"    },
+      { lemma: "οἰκέω",    meaning: "to inhabit/dwell",  stem: "οἰκ"   },
+      { lemma: "παρέχω",   meaning: "to provide/supply", stem: "παρεχ" },
+      { lemma: "πλέω",     meaning: "to sail",           stem: "πλ"    },
+      { lemma: "ποθέω",    meaning: "to long for/miss",  stem: "ποθ"   },
+      { lemma: "συμβουλεύω",meaning:"to advise together",stem: "συμβουλευ"},
+      { lemma: "τηρέω",    meaning: "to watch over/keep",stem: "τηρ"   },
+      { lemma: "φρονέω",   meaning: "to think/be minded",stem: "φρον"  },
+      { lemma: "ὠφελέω",   meaning: "to help/benefit",   stem: "ὠφελ"  },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  CONTRACT -όω VERBS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "contract_omicron",
+    label: "Contract -όω",
+    sublabel: "Present Active Indicative",
+    type: "conjugation",
+    pattern: "contract_omicron_present",
+    words: [
+      { lemma: "δηλόω",    meaning: "to show/make clear", stem: "δηλ"   },
+      { lemma: "δουλόω",   meaning: "to enslave",         stem: "δουλ"  },
+      { lemma: "ἐλευθερόω",meaning: "to set free",        stem: "ἐλευθερ"},
+      { lemma: "πληρόω",   meaning: "to fill/fulfil",     stem: "πληρ"  },
+      { lemma: "σταυρόω",  meaning: "to crucify",         stem: "σταυρ" },
+      { lemma: "τελόω",    meaning: "to complete/pay",    stem: "τελ"   },
+      { lemma: "ἀξιόω",    meaning: "to think worthy",    stem: "ἀξι"   },
+      { lemma: "βεβαιόω",  meaning: "to confirm/secure",  stem: "βεβαι" },
+      { lemma: "δικαιόω",  meaning: "to justify/deem right",stem:"δικαι"},
+      { lemma: "ἡττόω",    meaning: "to defeat/overcome", stem: "ἡττ"   },
+      { lemma: "κυρόω",    meaning: "to ratify/validate", stem: "κυρ"   },
+      { lemma: "μισθόω",   meaning: "to hire/let for pay",stem: "μισθ"  },
+      { lemma: "νεκρόω",   meaning: "to put to death",    stem: "νεκρ"  },
+      { lemma: "ὁμοιόω",   meaning: "to make like/liken", stem: "ὁμοι"  },
+      { lemma: "ὁπλόω",    meaning: "to arm/equip",       stem: "ὁπλ"   },
+      { lemma: "ὀρθόω",    meaning: "to set upright",     stem: "ὀρθ"   },
+      { lemma: "παχύνω",   meaning: "to fatten/thicken",  stem: "παχυν" },
+      { lemma: "πηρόω",    meaning: "to maim/disable",    stem: "πηρ"   },
+      { lemma: "πυρόω",    meaning: "to burn/set on fire",stem: "πυρ"   },
+      { lemma: "ῥιζόω",    meaning: "to root/establish",  stem: "ῥιζ"   },
+      { lemma: "σκληρύνω", meaning: "to harden",          stem: "σκληρυν"},
+      { lemma: "σωρόω",    meaning: "to heap up/pile",    stem: "σωρ"   },
+      { lemma: "τυφλόω",   meaning: "to blind",           stem: "τυφλ"  },
+      { lemma: "ὑψόω",     meaning: "to raise/exalt",     stem: "ὑψ"    },
+      { lemma: "χρυσόω",   meaning: "to gild/overlay with gold",stem:"χρυσ"},
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  IRREGULAR: εἰμί (to be)
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "irreg_eimi",
+    label: "Irregular: εἰμί",
+    sublabel: "To Be — Present & Imperfect",
+    type: "irregular",
+    words: [
+      {
+        lemma: "εἰμί", meaning: "to be",
+        tables: [
+          {
+            tense: "Present",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["εἰμί",  "ἐσμέν"] },
+              { label: "2nd", answers: ["εἶ",    "ἐστέ"]  },
+              { label: "3rd", answers: ["ἐστί(ν)","εἰσί(ν)"] },
+            ],
+          },
+          {
+            tense: "Imperfect",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["ἦν",    "ἦμεν"]  },
+              { label: "2nd", answers: ["ἦσθα",  "ἦτε"]   },
+              { label: "3rd", answers: ["ἦν",    "ἦσαν"]  },
+            ],
+          },
+          {
+            tense: "Future",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["ἔσομαι","ἐσόμεθα"] },
+              { label: "2nd", answers: ["ἔσῃ",   "ἔσεσθε"]  },
+              { label: "3rd", answers: ["ἔσται", "ἔσονται"]  },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  IRREGULAR: εἶμι (to go)
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "irreg_eimi_go",
+    label: "Irregular: εἶμι",
+    sublabel: "To Go — Present & Imperfect",
+    type: "irregular",
+    words: [
+      {
+        lemma: "εἶμι", meaning: "to go",
+        tables: [
+          {
+            tense: "Present",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["εἶμι",  "ἴμεν"]  },
+              { label: "2nd", answers: ["εἶ",    "ἴτε"]   },
+              { label: "3rd", answers: ["εἶσι(ν)","ἴασι(ν)"] },
+            ],
+          },
+          {
+            tense: "Imperfect",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["ᾖα",    "ᾖμεν"]  },
+              { label: "2nd", answers: ["ᾔεισθα","ᾖτε"]   },
+              { label: "3rd", answers: ["ᾔει",   "ᾖσαν"]  },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  IRREGULAR: φημί (to say)
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "irreg_phemi",
+    label: "Irregular: φημί",
+    sublabel: "To Say — Present & Imperfect",
+    type: "irregular",
+    words: [
+      {
+        lemma: "φημί", meaning: "to say/assert",
+        tables: [
+          {
+            tense: "Present",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["φημί",  "φαμέν"] },
+              { label: "2nd", answers: ["φῄς",   "φατέ"]  },
+              { label: "3rd", answers: ["φησί(ν)","φασί(ν)"] },
+            ],
+          },
+          {
+            tense: "Imperfect",
+            headers: ["", "Singular", "Plural"],
+            rows: [
+              { label: "1st", answers: ["ἔφην",  "ἔφαμεν"] },
+              { label: "2nd", answers: ["ἔφης",  "ἔφατε"]  },
+              { label: "3rd", answers: ["ἔφη",   "ἔφασαν"] },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  1ST DECLENSION — η stem (feminine)
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "decl1_eta",
+    label: "1st Declension",
+    sublabel: "Feminine η-stem",
+    type: "declension",
+    pattern: "decl1_eta",
+    words: [
+      { lemma: "ψυχή, -ῆς",   meaning: "soul/life",        stem: "ψυχ"   },
+      { lemma: "ἀρχή, -ῆς",   meaning: "beginning/rule",   stem: "ἀρχ"   },
+      { lemma: "γῆ, γῆς",     meaning: "earth/land",       stem: "γ"     },
+      { lemma: "τιμή, -ῆς",   meaning: "honour/value",     stem: "τιμ"   },
+      { lemma: "φωνή, -ῆς",   meaning: "voice/sound",      stem: "φων"   },
+      { lemma: "εἰρήνη, -ης",  meaning: "peace",            stem: "εἰρην" },
+      { lemma: "νίκη, -ης",   meaning: "victory",          stem: "νικ"   },
+      { lemma: "τύχη, -ης",   meaning: "fortune/chance",   stem: "τυχ"   },
+      { lemma: "δίκη, -ης",   meaning: "justice/trial",    stem: "δικ"   },
+      { lemma: "ἐκκλησία,-ας", meaning: "assembly/church",  stem: "ἐκκλησι"},
+      { lemma: "θεά, -ᾶς",    meaning: "goddess",          stem: "θε"    },
+      { lemma: "θεραπεία,-ας", meaning: "service/healing",  stem: "θεραπει"},
+      { lemma: "κεφαλή, -ῆς", meaning: "head",             stem: "κεφαλ" },
+      { lemma: "μάχη, -ης",   meaning: "battle/fight",     stem: "μαχ"   },
+      { lemma: "νῆσος, -ου",  meaning: "island",           stem: "νησ"   },
+      { lemma: "ὁδός, -οῦ",   meaning: "road/way",         stem: "ὁδ"    },
+      { lemma: "οἰκία, -ας",  meaning: "house/household",  stem: "οἰκι"  },
+      { lemma: "πύλη, -ης",   meaning: "gate/entrance",    stem: "πυλ"   },
+      { lemma: "σκηνή, -ῆς",  meaning: "tent/stage",       stem: "σκην"  },
+      { lemma: "στρατηγία,-ας",meaning: "generalship",      stem: "στρατηγι"},
+      { lemma: "συμφορά,-ᾶς",  meaning: "misfortune/event", stem: "συμφορ"},
+      { lemma: "τέχνη, -ης",  meaning: "art/skill/craft",  stem: "τεχν"  },
+      { lemma: "τροφή, -ῆς",  meaning: "food/nourishment", stem: "τροφ"  },
+      { lemma: "χώρα, -ας",   meaning: "land/country",     stem: "χωρ"   },
+      { lemma: "ὥρα, -ας",    meaning: "hour/season",      stem: "ωρ"    },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  1ST DECLENSION — α stem (feminine, after ε/ι/ρ)
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "decl1_alpha",
+    label: "1st Declension",
+    sublabel: "Feminine α-stem",
+    type: "declension",
+    pattern: "decl1_alpha",
+    words: [
+      { lemma: "χώρα, -ας",    meaning: "land/country",     stem: "χωρ"    },
+      { lemma: "ἡμέρα, -ας",   meaning: "day",              stem: "ἡμερ"   },
+      { lemma: "γλῶττα, -ης",  meaning: "tongue/language",  stem: "γλωττ"  },
+      { lemma: "δόξα, -ης",    meaning: "opinion/glory",    stem: "δοξ"    },
+      { lemma: "θάλαττα,-ης",  meaning: "sea",              stem: "θαλαττ" },
+      { lemma: "μοῖρα, -ας",   meaning: "fate/portion",     stem: "μοιρ"   },
+      { lemma: "στρατιά, -ᾶς", meaning: "army",             stem: "στρατι" },
+      { lemma: "αἰτία, -ας",   meaning: "cause/blame",      stem: "αἰτι"   },
+      { lemma: "ἀλήθεια, -ας", meaning: "truth",            stem: "ἀληθει" },
+      { lemma: "ἀνάγκη, -ης",  meaning: "necessity/force",  stem: "ἀναγκ"  },
+      { lemma: "βουλή, -ῆς",   meaning: "will/council",     stem: "βουλ"   },
+      { lemma: "γνώμη, -ης",   meaning: "opinion/judgement",stem: "γνωμ"   },
+      { lemma: "ἐπιστολή,-ῆς", meaning: "letter/message",   stem: "ἐπιστολ"},
+      { lemma: "ζωή, -ῆς",     meaning: "life",             stem: "ζω"     },
+      { lemma: "θεραπεία,-ας",  meaning: "service/healing",  stem: "θεραπει"},
+      { lemma: "καρδία, -ας",  meaning: "heart",            stem: "καρδι"  },
+      { lemma: "κρίσις, -εως", meaning: "judgment/decision",stem: "κρισ"   },
+      { lemma: "λύπη, -ης",    meaning: "pain/grief",       stem: "λυπ"    },
+      { lemma: "μεγάλη",       meaning: "great (f.)",       stem: "μεγαλ"  },
+      { lemma: "παιδεία, -ας", meaning: "education/culture",stem: "παιδει" },
+      { lemma: "πολιτεία,-ας",  meaning: "citizenship/state",stem: "πολιτει"},
+      { lemma: "σοφία, -ας",   meaning: "wisdom",           stem: "σοφι"   },
+      { lemma: "σωτηρία,-ας",  meaning: "salvation/safety", stem: "σωτηρι" },
+      { lemma: "φιλία, -ας",   meaning: "friendship/love",  stem: "φιλι"   },
+      { lemma: "ψῆφος, -ου",   meaning: "pebble/vote",      stem: "ψηφ"    },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  2ND DECLENSION — masculine -ος
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "decl2_masc",
+    label: "2nd Declension",
+    sublabel: "Masculine -ος nouns",
+    type: "declension",
+    pattern: "decl2_masc",
+    words: [
+      { lemma: "λόγος, -ου",   meaning: "word/reason/speech",stem: "λογ"   },
+      { lemma: "ἄνθρωπος,-ου", meaning: "human being/man",   stem: "ἀνθρωπ"},
+      { lemma: "θεός, -οῦ",   meaning: "god",               stem: "θε"    },
+      { lemma: "νόμος, -ου",   meaning: "law/custom",        stem: "νομ"   },
+      { lemma: "πόλεμος,-ου",  meaning: "war",               stem: "πολεμ" },
+      { lemma: "φίλος, -ου",   meaning: "friend/dear",       stem: "φιλ"   },
+      { lemma: "ἀδελφός,-οῦ",  meaning: "brother",           stem: "ἀδελφ" },
+      { lemma: "ἄγγελος,-ου",  meaning: "messenger/angel",   stem: "ἀγγελ" },
+      { lemma: "βίος, -ου",    meaning: "life/lifestyle",    stem: "βι"    },
+      { lemma: "δῆμος, -ου",   meaning: "people/district",   stem: "δημ"   },
+      { lemma: "δοῦλος, -ου",  meaning: "slave",             stem: "δουλ"  },
+      { lemma: "ἵππος, -ου",   meaning: "horse",             stem: "ἱππ"   },
+      { lemma: "κίνδυνος,-ου", meaning: "danger/risk",       stem: "κινδυν"},
+      { lemma: "κόσμος, -ου",  meaning: "order/world",       stem: "κοσμ"  },
+      { lemma: "κύριος, -ου",  meaning: "lord/master",       stem: "κυρι"  },
+      { lemma: "λαός, -οῦ",    meaning: "people/nation",     stem: "λα"    },
+      { lemma: "λίθος, -ου",   meaning: "stone",             stem: "λιθ"   },
+      { lemma: "οὐρανός,-οῦ",  meaning: "sky/heaven",        stem: "οὐραν" },
+      { lemma: "ποταμός,-οῦ",  meaning: "river",             stem: "ποταμ" },
+      { lemma: "στρατηγός,-οῦ",meaning: "general/commander", stem: "στρατηγ"},
+      { lemma: "στρατός,-οῦ",  meaning: "army",              stem: "στρατ" },
+      { lemma: "τόπος, -ου",   meaning: "place/region",      stem: "τοπ"   },
+      { lemma: "τρόπος, -ου",  meaning: "manner/way",        stem: "τροπ"  },
+      { lemma: "χρόνος, -ου",  meaning: "time",              stem: "χρον"  },
+      { lemma: "ὄχλος, -ου",   meaning: "crowd/mob",         stem: "ὀχλ"   },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  2ND DECLENSION — neuter -ον
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "decl2_neut",
+    label: "2nd Declension",
+    sublabel: "Neuter -ον nouns",
+    type: "declension",
+    pattern: "decl2_neut",
+    words: [
+      { lemma: "ἔργον, -ου",   meaning: "work/deed",         stem: "ἐργ"   },
+      { lemma: "δῶρον, -ου",   meaning: "gift",              stem: "δωρ"   },
+      { lemma: "τέκνον, -ου",  meaning: "child",             stem: "τεκν"  },
+      { lemma: "ζῷον, -ου",    meaning: "animal/living being",stem:"ζω"    },
+      { lemma: "ὅπλον, -ου",   meaning: "tool/weapon",       stem: "ὁπλ"   },
+      { lemma: "βιβλίον,-ου",  meaning: "book/scroll",       stem: "βιβλι" },
+      { lemma: "δένδρον,-ου",  meaning: "tree",              stem: "δενδρ" },
+      { lemma: "εὐαγγέλιον,-ου",meaning:"good news/gospel",  stem:"εὐαγγελι"},
+      { lemma: "θαῦμα, -ατος", meaning: "wonder/miracle",    stem: "θαυμ"  },
+      { lemma: "ἱερόν, -οῦ",   meaning: "temple/sacred place",stem:"ἱερ"  },
+      { lemma: "μέρος, -ους",  meaning: "part/share",        stem: "μερ"   },
+      { lemma: "μνημεῖον,-ου", meaning: "monument/tomb",     stem: "μνημει"},
+      { lemma: "νόσημα,-ατος", meaning: "disease/illness",   stem: "νοσημ" },
+      { lemma: "ξίφος, -ους",  meaning: "sword",             stem: "ξιφ"   },
+      { lemma: "πεδίον, -ου",  meaning: "plain/flat land",   stem: "πεδι"  },
+      { lemma: "πλοῖον, -ου",  meaning: "boat/ship",         stem: "πλοι"  },
+      { lemma: "πρᾶγμα,-ατος", meaning: "deed/matter/thing", stem: "πραγμ" },
+      { lemma: "πρόσωπον,-ου", meaning: "face/person",       stem: "προσωπ"},
+      { lemma: "σημεῖον,-ου",  meaning: "sign/signal",       stem: "σημει" },
+      { lemma: "στάδιον,-ου",  meaning: "stadium/furlong",   stem: "σταδι" },
+      { lemma: "στόμα, -ατος", meaning: "mouth",             stem: "στομ"  },
+      { lemma: "σῶμα, -ατος",  meaning: "body",              stem: "σωμ"   },
+      { lemma: "τάλαντον,-ου", meaning: "talent (weight/coin)",stem:"ταλαντ"},
+      { lemma: "χρῆμα, -ατος", meaning: "thing/money (pl.)", stem: "χρημ"  },
+      { lemma: "ὄνομα, -ατος", meaning: "name",              stem: "ὀνομ"  },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  3RD DECLENSION — consonant stems
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "decl3",
+    label: "3rd Declension",
+    sublabel: "Consonant Stem Nouns",
+    type: "declension",
+    pattern: "decl3",
+    words: [
+      // nom_sg = nominative singular (must be given explicitly)
+      { lemma: "βασιλεύς,-έως", meaning: "king",            stem: "βασιλε",  nom_sg: "βασιλεύς" },
+      { lemma: "πόλις, -εως",  meaning: "city-state/city",  stem: "πολ",     nom_sg: "πόλις"    },
+      { lemma: "σῶμα, -ατος",  meaning: "body",             stem: "σωματ",   nom_sg: "σῶμα"     },
+      { lemma: "πατήρ, -τρός", meaning: "father",           stem: "πατρ",    nom_sg: "πατήρ"    },
+      { lemma: "μήτηρ, -τρός", meaning: "mother",           stem: "μητρ",    nom_sg: "μήτηρ"    },
+      { lemma: "ἀνήρ, ἀνδρός", meaning: "man/husband",      stem: "ἀνδρ",    nom_sg: "ἀνήρ"     },
+      { lemma: "γυνή, γυναικός",meaning: "woman/wife",      stem: "γυναικ",  nom_sg: "γυνή"     },
+      { lemma: "παῖς, παιδός", meaning: "child/boy/girl",   stem: "παιδ",    nom_sg: "παῖς"     },
+      { lemma: "νύξ, νυκτός",  meaning: "night",            stem: "νυκτ",    nom_sg: "νύξ"      },
+      { lemma: "πῦρ, πυρός",   meaning: "fire",             stem: "πυρ",     nom_sg: "πῦρ"      },
+      { lemma: "ὕδωρ, ὕδατος", meaning: "water",            stem: "ὑδατ",    nom_sg: "ὕδωρ"     },
+      { lemma: "ὄνομα,-ατος",  meaning: "name",             stem: "ὀνοματ",  nom_sg: "ὄνομα"    },
+      { lemma: "χείρ, χειρός", meaning: "hand",             stem: "χειρ",    nom_sg: "χείρ"     },
+      { lemma: "πούς, ποδός",  meaning: "foot",             stem: "ποδ",     nom_sg: "πούς"     },
+      { lemma: "ναῦς, νεώς",   meaning: "ship",             stem: "ναυ",     nom_sg: "ναῦς"     },
+      { lemma: "ἄστυ, ἄστεως", meaning: "town/city",        stem: "ἀστε",    nom_sg: "ἄστυ"     },
+      { lemma: "γέρων,-οντος", meaning: "old man/elder",    stem: "γεροντ",  nom_sg: "γέρων"    },
+      { lemma: "λέων, -οντος", meaning: "lion",             stem: "λεοντ",   nom_sg: "λέων"     },
+      { lemma: "δαίμων,-ονος", meaning: "divine spirit",    stem: "δαιμον",  nom_sg: "δαίμων"   },
+      { lemma: "εἰκών, -όνος", meaning: "image/likeness",   stem: "εἰκον",   nom_sg: "εἰκών"    },
+      { lemma: "ἡγεμών,-όνος", meaning: "leader/guide",     stem: "ἡγεμον",  nom_sg: "ἡγεμών"   },
+      { lemma: "ῥήτωρ,-ορος",  meaning: "orator/speaker",   stem: "ῥητορ",   nom_sg: "ῥήτωρ"    },
+      { lemma: "σωτήρ, -ῆρος", meaning: "saviour/deliverer",stem: "σωτηρ",   nom_sg: "σωτήρ"    },
+      { lemma: "φύλαξ,-ακος",  meaning: "guard/watchman",   stem: "φυλακ",   nom_sg: "φύλαξ"    },
+      { lemma: "χάρις, -ιτος", meaning: "grace/favour",     stem: "χαριτ",   nom_sg: "χάρις"    },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  PRONOUNS — explicit forms
+  // ══════════════════════════════════════════════════════════
+  {
+    id: "pronoun_autos",
+    label: "Pronouns: αὐτός",
+    sublabel: "Intensive / 3rd Person Pronoun",
+    type: "irregular",
+    words: [
+      {
+        lemma: "αὐτός, αὐτή, αὐτό", meaning: "self / he, she, it",
+        tables: [
+          {
+            tense: "Masculine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["αὐτός",  "αὐτοί"]  },
+              { label: "Genitive",   answers: ["αὐτοῦ",  "αὐτῶν"]  },
+              { label: "Dative",     answers: ["αὐτῷ",   "αὐτοῖς"] },
+              { label: "Accusative", answers: ["αὐτόν",  "αὐτούς"] },
+            ],
+          },
+          {
+            tense: "Feminine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["αὐτή",   "αὐταί"]  },
+              { label: "Genitive",   answers: ["αὐτῆς",  "αὐτῶν"]  },
+              { label: "Dative",     answers: ["αὐτῇ",   "αὐταῖς"] },
+              { label: "Accusative", answers: ["αὐτήν",  "αὐτάς"]  },
+            ],
+          },
+          {
+            tense: "Neuter",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["αὐτό",   "αὐτά"]   },
+              { label: "Genitive",   answers: ["αὐτοῦ",  "αὐτῶν"]  },
+              { label: "Dative",     answers: ["αὐτῷ",   "αὐτοῖς"] },
+              { label: "Accusative", answers: ["αὐτό",   "αὐτά"]   },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "pronoun_houtos",
+    label: "Pronouns: οὗτος",
+    sublabel: "Demonstrative — this/these",
+    type: "irregular",
+    words: [
+      {
+        lemma: "οὗτος, αὕτη, τοῦτο", meaning: "this / these",
+        tables: [
+          {
+            tense: "Masculine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["οὗτος",  "οὗτοι"]  },
+              { label: "Genitive",   answers: ["τούτου", "τούτων"] },
+              { label: "Dative",     answers: ["τούτῳ",  "τούτοις"]},
+              { label: "Accusative", answers: ["τοῦτον", "τούτους"]},
+            ],
+          },
+          {
+            tense: "Feminine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["αὕτη",   "αὗται"]  },
+              { label: "Genitive",   answers: ["ταύτης",  "τούτων"] },
+              { label: "Dative",     answers: ["ταύτῃ",   "ταύταις"]},
+              { label: "Accusative", answers: ["ταύτην",  "ταύτας"] },
+            ],
+          },
+          {
+            tense: "Neuter",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["τοῦτο",  "ταῦτα"]  },
+              { label: "Genitive",   answers: ["τούτου", "τούτων"] },
+              { label: "Dative",     answers: ["τούτῳ",  "τούτοις"]},
+              { label: "Accusative", answers: ["τοῦτο",  "ταῦτα"]  },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "pronoun_ekeinos",
+    label: "Pronouns: ἐκεῖνος",
+    sublabel: "Demonstrative — that/those",
+    type: "irregular",
+    words: [
+      {
+        lemma: "ἐκεῖνος, ἐκείνη, ἐκεῖνο", meaning: "that / those",
+        tables: [
+          {
+            tense: "Masculine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["ἐκεῖνος",  "ἐκεῖνοι"]  },
+              { label: "Genitive",   answers: ["ἐκείνου",  "ἐκείνων"]  },
+              { label: "Dative",     answers: ["ἐκείνῳ",   "ἐκείνοις"] },
+              { label: "Accusative", answers: ["ἐκεῖνον",  "ἐκείνους"] },
+            ],
+          },
+          {
+            tense: "Feminine",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["ἐκείνη",   "ἐκεῖναι"]  },
+              { label: "Genitive",   answers: ["ἐκείνης",  "ἐκείνων"]  },
+              { label: "Dative",     answers: ["ἐκείνῃ",   "ἐκείναις"] },
+              { label: "Accusative", answers: ["ἐκείνην",  "ἐκείνας"]  },
+            ],
+          },
+          {
+            tense: "Neuter",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["ἐκεῖνο",   "ἐκεῖνα"]   },
+              { label: "Genitive",   answers: ["ἐκείνου",  "ἐκείνων"]  },
+              { label: "Dative",     answers: ["ἐκείνῳ",   "ἐκείνοις"] },
+              { label: "Accusative", answers: ["ἐκεῖνο",   "ἐκεῖνα"]   },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "pronoun_personal",
+    label: "Pronouns: Personal",
+    sublabel: "1st & 2nd Person",
+    type: "irregular",
+    words: [
+      {
+        lemma: "ἐγώ / σύ", meaning: "I / you (sg.)",
+        tables: [
+          {
+            tense: "1st Person",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["ἐγώ",    "ἡμεῖς"]  },
+              { label: "Genitive",   answers: ["ἐμοῦ / μου","ἡμῶν"] },
+              { label: "Dative",     answers: ["ἐμοί / μοι","ἡμῖν"] },
+              { label: "Accusative", answers: ["ἐμέ / με","ἡμᾶς"]   },
+            ],
+          },
+          {
+            tense: "2nd Person",
+            headers: ["Case", "Singular", "Plural"],
+            rows: [
+              { label: "Nominative", answers: ["σύ",     "ὑμεῖς"]  },
+              { label: "Genitive",   answers: ["σοῦ / σου","ὑμῶν"]  },
+              { label: "Dative",     answers: ["σοί / σοι","ὑμῖν"]  },
+              { label: "Accusative", answers: ["σέ / σε", "ὑμᾶς"]   },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+
+// For Greek, we do a more aggressive normalize: strip all diacritics entirely
+function normalize(str) {
+  return str.trim().toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f\u0370-\u03ff\u1f00-\u1fff]/g, (c) => {
+      // keep basic Greek letters, strip combining marks
+      return c;
+    })
+    // Actually: strip combining diacritical marks only
+    .replace(/[\u0300-\u036f]/g, "")
+    // Normalize final sigma
+    .replace(/ς/g, "σ")
+    // Strip breathings and accents already handled above via NFD decomposition
+    ;
+}
+
+// Two strings match if stripped of all accents/breathings/final sigma distinction
+function greekMatch(input, answer) {
+  const strip = (s) => s.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/ς/g, "σ")
+    .replace(/\s*\/\s*.*/g, "") // allow partial match for alternate forms like "ἐμοῦ / μου"
+    .trim();
+  const a = strip(input);
+  const b = strip(answer);
+  if (!a) return "empty";
+  // also allow matching any of the "/" separated alternatives
+  const alts = answer.split("/").map(s => strip(s.trim()));
+  return (a === b || alts.includes(a)) ? "correct" : "wrong";
+}
+
+function getAnswers(category, word) {
+  const patterns = category.type === "conjugation" ? CONJ_PATTERNS : DECL_PATTERNS;
+  const pattern = patterns[category.pattern];
+  return pattern.rows.map((row) =>
+    row.suffixes.map((suf, ci) => {
+      if (suf === null) return word.nom_sg || "";
+      // Pick correct stem based on tense
+      let stem = word.stem;
+      if (pattern.augment && word.augmentedStem) stem = word.augmentedStem;
+      if (pattern.useFutureStem && word.futureStem) stem = word.futureStem;
+      if (pattern.useAoristStem && word.aoristStem) stem = word.aoristStem;
+      return stem + suf;
+    })
+  );
+}
+
+// ─── STYLE CONSTANTS ──────────────────────────────────────────────────────────
+
+const TAG = {
+  conjugation: { bg: "#1a3a5c", text: "#7ec8f0" },
+  irregular:   { bg: "#2d1a4a", text: "#c4a0f0" },
+  declension:  { bg: "#0f2e20", text: "#7ed8a4" },
+};
+
+// ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
+
+function ScoreBar({ score, total, submitted }) {
+  if (!submitted) return null;
+  const pct = Math.round((score / total) * 100);
+  const grade =
+    pct === 100 ? { label: "Ἄριστα!",  color: "#2d8a5f" }
+    : pct >= 80  ? { label: "Εὖγε!",    color: "#4a9c6a" }
+    : pct >= 60  ? { label: "Μέτριος",  color: "#8a7a14" }
+    :              { label: "Μελέτα!",  color: "#9b3535" };
+  return (
+    <div style={{ padding:"12px 24px", background:"#0d1e35", borderBottom:"1px solid #1e3a5c", display:"flex", alignItems:"center", gap:"16px" }}>
+      <div style={{ fontFamily:"'Cinzel',serif", fontSize:"18px", fontWeight:"700", color:grade.color, minWidth:"120px" }}>{grade.label}</div>
+      <div style={{ flex:1 }}>
+        <div style={{ height:"5px", background:"#1a2e45", borderRadius:"3px", overflow:"hidden" }}>
+          <div style={{ height:"100%", width:`${pct}%`, background:grade.color, borderRadius:"3px", transition:"width 0.6s ease" }} />
+        </div>
+      </div>
+      <div style={{ fontSize:"14px", color:"#7a9ab5", fontWeight:"500", minWidth:"80px", textAlign:"right" }}>{score}/{total} · {pct}%</div>
+    </div>
+  );
+}
+
+function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onInput }) {
+  return (
+    <table style={{ width:"100%", borderCollapse:"collapse" }}>
+      <thead>
+        <tr>
+          {headers.map((h,i) => (
+            <th key={i} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", textTransform:"uppercase", color:"#4a7ab5", padding:"7px 10px", textAlign:i===0?"left":"center", borderBottom:"1px solid #1e3a5c", fontWeight:"600" }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, ri) => (
+          <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(30,60,100,0.15)" }}>
+            <td style={{ padding:"8px 10px", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"0.5px", color:"#5a8ab5", borderBottom:"1px solid #162840", whiteSpace:"nowrap", fontWeight:"500" }}>{row.label}</td>
+            {answers[ri].map((answer, ci) => {
+              const key = `${ri}-${ci}`;
+              const val = inputs[key] || "";
+              const status = submitted ? greekMatch(val, answer) : null;
+              return (
+                <td key={ci} style={{ padding:"5px 8px", textAlign:"center", borderBottom:"1px solid #162840",
+                  background: !status?"transparent": status==="correct"?"rgba(45,140,95,0.12)": status==="wrong"?"rgba(155,53,53,0.12)":"rgba(100,140,200,0.08)" }}>
+                  <div style={{ position:"relative" }}>
+                    <input type="text" value={val} onChange={(e) => onInput(key, e.target.value)}
+                      style={{ width:"100%", minWidth:"90px", padding:"5px 6px",
+                        fontFamily:"'EB Garamond',serif", fontSize:"17px", textAlign:"center",
+                        background: !status?"#0d1e35": status==="correct"?"rgba(45,140,95,0.1)": status==="wrong"?"rgba(155,53,53,0.1)":"rgba(100,140,200,0.1)",
+                        border:"1px solid",
+                        borderColor: !status?"#1e3a5c": status==="correct"?"#2d8a5f": status==="wrong"?"#9b3535":"#4a7ab5",
+                        borderRadius:"2px", outline:"none", color:"#d0e8ff", transition:"border-color 0.2s, background 0.2s" }} />
+                    {submitted && status==="wrong" && showAnswers && (
+                      <div style={{ position:"absolute", bottom:"-16px", left:"50%", transform:"translateX(-50%)", fontSize:"12px", color:"#2d8a5f", fontStyle:"italic", whiteSpace:"nowrap", pointerEvents:"none", zIndex:1 }}>{answer}</div>
+                    )}
+                  </div>
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+// ─── MATCHING MODE ────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const PAIRS_PER_ROUND = 8;
+
+const MATCH_COLORS = [
+  { light:"rgba(251,191,36,0.12)",  border:"#d97706", text:"#fcd34d" },
+  { light:"rgba(96,165,250,0.12)",  border:"#2563eb", text:"#93c5fd" },
+  { light:"rgba(52,211,153,0.12)",  border:"#059669", text:"#6ee7b7" },
+  { light:"rgba(248,113,113,0.12)", border:"#dc2626", text:"#fca5a5" },
+  { light:"rgba(192,132,252,0.12)", border:"#7c3aed", text:"#d8b4fe" },
+  { light:"rgba(251,146,60,0.12)",  border:"#ea580c", text:"#fdba74" },
+  { light:"rgba(34,211,238,0.12)",  border:"#0891b2", text:"#67e8f9" },
+  { light:"rgba(163,230,53,0.12)",  border:"#65a30d", text:"#bef264" },
+];
+
+function buildMatchPool() {
+  const pool = [];
+  CATEGORIES.forEach(cat => cat.words.forEach(w => {
+    pool.push({ left: w.lemma, right: w.meaning });
+  }));
+  return pool;
+}
+
+function MatchingMode() {
+  const allPairs = React.useMemo(() => buildMatchPool(), []);
+  const [round, setRound]     = React.useState(0);
+  const [left, setLeft]       = React.useState([]);
+  const [right, setRight]     = React.useState([]);
+  const [matched, setMatched] = React.useState({});
+  const [selL, setSelL]       = React.useState(null);
+  const [selR, setSelR]       = React.useState(null);
+  const [wrong, setWrong]     = React.useState({l:null, r:null});
+  const [done, setDone]       = React.useState(false);
+  const [corr, setCorr]       = React.useState(0);
+  const [att, setAtt]         = React.useState(0);
+
+  const startRound = React.useCallback((r) => {
+    const start = (r * PAIRS_PER_ROUND) % allPairs.length;
+    const slice = Array.from({length:PAIRS_PER_ROUND}, (_,i) => ({
+      ...allPairs[(start+i) % allPairs.length], id: i
+    }));
+    setLeft(shuffle(slice.map(p => ({id:p.id, text:p.left}))));
+    setRight(shuffle(slice.map(p => ({id:p.id, text:p.right}))));
+    setMatched({}); setSelL(null); setSelR(null);
+    setWrong({l:null,r:null}); setDone(false);
+  }, [allPairs]);
+
+  React.useEffect(() => { startRound(0); }, []);
+
+  React.useEffect(() => {
+    if (selL===null || selR===null) return;
+    setAtt(a => a+1);
+    if (selL === selR) {
+      const ci = Object.keys(matched).length % MATCH_COLORS.length;
+      const nm = {...matched, [selL]: ci};
+      setMatched(nm); setCorr(c => c+1);
+      setSelL(null); setSelR(null);
+      if (Object.keys(nm).length === PAIRS_PER_ROUND) setTimeout(() => setDone(true), 300);
+    } else {
+      setWrong({l:selL, r:selR});
+      setTimeout(() => { setWrong({l:null,r:null}); setSelL(null); setSelR(null); }, 650);
+    }
+  }, [selL, selR]);
+
+  const mc = Object.keys(matched).length;
+  const acc = att > 0 ? Math.round((corr/att)*100) : null;
+
+  const tile = (id, side) => {
+    const isM = matched[id] !== undefined;
+    const c = isM ? MATCH_COLORS[matched[id]] : null;
+    const isSel = side==="l" ? selL===id : selR===id;
+    const isW   = side==="l" ? wrong.l===id : wrong.r===id;
+    return {
+      padding:"10px 8px", border:"1.5px solid",
+      borderColor: isM?c.border : isW?"#9b3535" : isSel?"#7ec8f0" : "#1e3a5c",
+      borderRadius:"4px",
+      background: isM?c.light : isW?"rgba(155,53,53,0.1)" : isSel?"rgba(126,200,240,0.08)" : "#0d1e35",
+      color: isM?c.text : isW?"#c87070" : isSel?"#c8dff0" : "#8ab0d0",
+      cursor: isM?"default":"pointer", transition:"all 0.15s", textAlign:"center",
+      userSelect:"none", opacity:isM?0.6:1, textDecoration:isM?"line-through":"none",
+      minHeight:"50px", display:"flex", alignItems:"center", justifyContent:"center",
+    };
+  };
+
+  return (
+    <div style={{ marginTop:"16px" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"12px" }}>
+        <div style={{ flex:1, height:"4px", background:"#1e3a5c", borderRadius:"2px", overflow:"hidden" }}>
+          <div style={{ height:"100%", width:`${(mc/PAIRS_PER_ROUND)*100}%`, background:"#4a7ab5", transition:"width 0.4s" }} />
+        </div>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", color:"#4a7ab5", whiteSpace:"nowrap" }}>
+          {mc}/{PAIRS_PER_ROUND}{acc!==null ? ` · ${acc}% acc` : ""}
+        </div>
+      </div>
+      {!done && <div style={{ textAlign:"center", marginBottom:"10px", color:"#3a5a80", fontSize:"12px", fontStyle:"italic" }}>Click a Greek word, then its English meaning</div>}
+      {done && (
+        <div style={{ textAlign:"center", padding:"16px", background:"linear-gradient(180deg,#060e1e,#0a1628)", border:"1px solid #1e4a80", borderRadius:"4px", marginBottom:"14px" }}>
+          <div style={{ fontFamily:"'EB Garamond',serif", fontSize:"20px", color:"#c8dff0", fontWeight:"600", marginBottom:"4px" }}>
+            {acc===100 ? "Ἄριστα! 🏛️" : acc>=80 ? "Εὖγε! ✓" : acc>=60 ? "Μέτριος" : "Μελέτα!"}
+          </div>
+          <div style={{ color:"#3a5a80", fontSize:"12px", marginBottom:"12px" }}>{acc}% accuracy</div>
+          <button onClick={() => { setRound(r => { const n=r+1; startRound(n); return n; }); }} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 22px", background:"#1a4a80", color:"#c8dff0", border:"none", borderRadius:"2px", cursor:"pointer" }}>
+            NEXT ROUND →
+          </button>
+        </div>
+      )}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", color:"#3a5a80", textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid #1e3a5c" }}>GREEK</div>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", color:"#3a5a80", textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid #1e3a5c" }}>ENGLISH</div>
+        {left.map((item, i) => (
+          <React.Fragment key={item.id}>
+            <div onClick={() => !matched[item.id] && wrong.l===null && setSelL(item.id)} style={tile(item.id,"l")}>
+              <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"16px" }}>{item.text}</span>
+            </div>
+            <div onClick={() => !matched[right[i].id] && wrong.l===null && setSelR(right[i].id)} style={tile(right[i].id,"r")}>
+              <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"14px", fontStyle:"italic" }}>{right[i].text}</span>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── READER DATA & COMPONENTS ────────────────────────────────────────────────
+
+const PASSAGES = [
+  {
+    id:"plato_apology_17a", title:"Ἀπολογία 17a", author:"Πλάτων",
+    work:"Ἀπολογία Σωκράτους", date:"c. 399 BC (written c. 390s BC)",
+    intro:"The opening of Plato's Apology — Socrates addresses the jury of 500 Athenians at his trial. He disclaims rhetorical skill and asks to be judged only on the truth of what he says.",
+    lines:[
+      [
+        {w:"Ὅτι",      lemma:"ὅτι (conjunction)",      pos:"conj", parse:"Subordinating conjunction (introduces indirect statement)", eng:"that / how", note:"Here ὅτι introduces an indirect statement: 'how my accusers affected you'."},
+        " ",
+        {w:"μέν",      lemma:"μέν",                     pos:"part", parse:"Particle (anticipates δέ in the following clause)", eng:"on the one hand", note:"μέν...δέ is a standard Greek antithesis: 'on the one hand...on the other'."},
+        " ",
+        {w:"ὑμεῖς",   lemma:"σύ (2nd pl.)",             pos:"pron", parse:"Nominative plural (subject of πεπόνθατε)", eng:"you (the jurors)"},
+        " ",
+        {w:"ὦ",        lemma:"ὦ",                       pos:"part", parse:"Interjection (precedes vocative)", eng:"O", note:"ὦ is regularly used before vocatives in Greek, especially in formal address."},
+        " ",
+        {w:"ἄνδρες",  lemma:"ἀνήρ, ἀνδρός (m.)",       pos:"noun", parse:"Vocative plural", eng:"men / gentlemen"},
+        " ",
+        {w:"Ἀθηναῖοι",lemma:"Ἀθηναῖος, -α, -ον",       pos:"noun", parse:"Vocative plural (agrees with ἄνδρες)", eng:"Athenians", note:"ἄνδρες Ἀθηναῖοι is the standard formal address to an Athenian audience."},
+        ","
+      ],
+      [
+        {w:"πεπόνθατε",lemma:"πάσχω",                   pos:"verb", parse:"Perfect indicative active, 2nd plural", eng:"you have been affected / you have experienced", note:"Perfect of πάσχω. The perfect tense emphasises the present state resulting from a past action — the jury is still under the influence of the accusers."},
+        " ",
+        {w:"ὑπὸ",     lemma:"ὑπό",                     pos:"prep", parse:"Preposition + genitive (agent with passive sense)", eng:"by"},
+        " ",
+        {w:"τῶν",     lemma:"ὁ, ἡ, τό",                pos:"art",  parse:"Genitive plural masculine (article with κατηγόρων)", eng:"my"},
+        " ",
+        {w:"ἐμῶν",    lemma:"ἐμός, -ή, -όν (possessive)",pos:"adj", parse:"Genitive plural masculine (agrees with κατηγόρων)", eng:"my own", note:"The possessive adjective ἐμός is more emphatic than the genitive pronoun μου."},
+        " ",
+        {w:"κατηγόρων",lemma:"κατήγορος, -ου (m.)",     pos:"noun", parse:"Genitive plural (object of ὑπό)", eng:"accusers"},
+        ","
+      ],
+      [
+        {w:"οὐκ",     lemma:"οὐ / οὐκ",                 pos:"adv",  parse:"Negation particle (οὐκ before vowel)", eng:"not"},
+        " ",
+        {w:"οἶδα",    lemma:"οἶδα (perfect with present meaning)", pos:"verb", parse:"Perfect indicative active, 1st singular (present sense)", eng:"I know", note:"οἶδα is a defective perfect used with present meaning: 'I know' (not 'I have known')."},
+        "·",
+        " ",
+        {w:"ἐγὼ",     lemma:"ἐγώ",                     pos:"pron", parse:"Nominative singular (emphatic subject)", eng:"I (myself)", note:"The explicit pronoun ἐγώ is emphatic — contrasting himself with his accusers."},
+        " ",
+        {w:"δ'",      lemma:"δέ",                       pos:"part", parse:"Particle (elided δέ, contrasts with μέν above)", eng:"but / on the other hand"},
+        " ",
+        {w:"οὖν",     lemma:"οὖν",                     pos:"part", parse:"Particle (inferential)", eng:"therefore / at any rate", note:"οὖν here is transitional-inferential: 'well then' or 'as it is'."},
+        " ",
+        {w:"καὶ",     lemma:"καί",                     pos:"conj", parse:"Coordinating conjunction", eng:"also / even"},
+        " ",
+        {w:"αὐτὸς",  lemma:"αὐτός, -ή, -ό",            pos:"pron", parse:"Nominative singular masculine (intensive, agrees with ἐγώ)", eng:"myself", note:"αὐτός in attributive position = 'same'; in predicate position (as here) = 'self'."},
+        " ",
+        {w:"ὑφ'",    lemma:"ὑπό",                     pos:"prep", parse:"Preposition + genitive (elided before rough breathing)", eng:"by"},
+        " ",
+        {w:"ἐμαυτοῦ",lemma:"ἐμαυτοῦ, -ῆς (reflexive)", pos:"pron", parse:"Genitive singular masculine (reflexive, object of ὑφ')", eng:"myself"},
+        " ",
+        {w:"οὐδέν",  lemma:"οὐδείς, οὐδεμία, οὐδέν",   pos:"pron", parse:"Accusative singular neuter (object of εἰρήκειν, sc.)", eng:"nothing"},
+        " ",
+        {w:"ῥητορικόν",lemma:"ῥητορικός, -ή, -όν",     pos:"adj",  parse:"Accusative singular neuter (agrees with οὐδέν)", eng:"rhetorical", note:"ῥητορικός refers to formal oratory — the kind practiced in the courts by professional speakers (λογογράφοι)."},
+        "."
+      ],
+    ],
+  },
+  {
+    id:"homer_iliad_1_1", title:"Ἰλιάς Α 1–7", author:"Ὅμηρος",
+    work:"Ἰλιάς", date:"c. 8th century BC",
+    intro:"The proem of the Iliad — the invocation of the Muse and announcement of the poem's subject: the wrath of Achilles and the suffering it caused.",
+    lines:[
+      [
+        {w:"Μῆνιν",   lemma:"μῆνις, μήνιτος (f.)",     pos:"noun", parse:"Accusative singular (emphatic opening position, object of ἄειδε)", eng:"wrath / rage", note:"The famous first word — μῆνιν, wrath, comes first. This is the entire subject of the Iliad. Compare Vergil's Arma opening."},
+        " ",
+        {w:"ἄειδε",  lemma:"ἀείδω / ᾄδω",              pos:"verb", parse:"Present imperative active, 2nd singular", eng:"sing!", note:"An imperative addressed to the Muse. Homer commands rather than requests — the Muse is the true singer, the poet merely her instrument."},
+        ","
+        ,
+        " ",
+        {w:"θεά",    lemma:"θεά, -ᾶς (f.)",            pos:"noun", parse:"Vocative singular", eng:"goddess", note:"The Muse is addressed in the vocative. Homer does not name her here — she is simply 'goddess'."},
+        ","
+      ],
+      [
+        {w:"Πηληϊάδεω",lemma:"Πηληϊάδης, -ου (m.) (patronymic)",pos:"noun",parse:"Genitive singular (depends on μῆνιν)", eng:"of the son of Peleus", note:"A patronymic adjective: 'son of Peleus'. This is the Ionic/Epic genitive singular in -εω rather than Attic -ου."},
+        " ",
+        {w:"Ἀχιλῆος", lemma:"Ἀχιλλεύς, -έως (m.)",     pos:"noun", parse:"Genitive singular (in apposition to Πηληϊάδεω)", eng:"of Achilles"},
+        ","
+      ],
+      [
+        {w:"οὐλομένην",lemma:"ὄλλυμι / ὀλόμενος",      pos:"part", parse:"Present middle participle, accusative singular feminine (agrees with μῆνιν)", eng:"the accursed / the destructive", note:"οὐλομένην is a participial adjective modifying μῆνιν. The middle participle suggests the wrath destroys itself as well as others."},
+        ","
+        ,
+        " ",
+        {w:"ἣ",       lemma:"ὅς, ἥ, ὅ (relative)",     pos:"pron", parse:"Nominative singular feminine (relative, refers to μῆνιν)", eng:"which"},
+        " ",
+        {w:"μυρί'",   lemma:"μυρίος, -α, -ον",         pos:"adj",  parse:"Accusative plural neuter (elided μυρία, object of θῆκε)", eng:"countless / ten thousand", note:"μυρίος literally means 10,000, then idiomatically 'countless'."},
+        " ",
+        {w:"Ἀχαιοῖς", lemma:"Ἀχαιός, -οῦ (m.)",       pos:"noun", parse:"Dative plural (dative of disadvantage)", eng:"upon the Achaeans / Greeks", note:"Dative of disadvantage — the countless woes are placed upon the Achaeans."},
+        " ",
+        {w:"ἄλγε'",  lemma:"ἄλγος, -εος (n.)",         pos:"noun", parse:"Accusative plural neuter (elided ἄλγεα, object of θῆκε)", eng:"pains / woes"},
+        " ",
+        {w:"ἔθηκεν", lemma:"τίθημι",                   pos:"verb", parse:"Aorist indicative active, 3rd singular", eng:"caused / placed / made", note:"Aorist of τίθημι: 'caused' or 'placed upon'. A single completed action — the wrath set in motion all the suffering."},
+        ","
+      ],
+      [
+        {w:"πολλὰς",  lemma:"πολύς, πολλή, πολύ",      pos:"adj",  parse:"Accusative plural feminine (agrees with ψυχάς)", eng:"many"},
+        " ",
+        {w:"δ'",      lemma:"δέ",                       pos:"part", parse:"Particle (elided δέ, continuing narrative)", eng:"and / moreover"},
+        " ",
+        {w:"ἰφθίμους",lemma:"ἴφθιμος, -ον",            pos:"adj",  parse:"Accusative plural feminine (agrees with ψυχάς)", eng:"mighty / valiant", note:"A Homeric epithet — ἴφθιμος means strong, mighty. It appears most often with ψυχή here and with the shades of the dead."},
+        " ",
+        {w:"ψυχὰς",  lemma:"ψυχή, -ῆς (f.)",           pos:"noun", parse:"Accusative plural (object of ἔθηκε, sc.)", eng:"souls / lives", note:"ψυχή in Homer means the life-soul, the shade that descends to Hades at death — not yet the philosophical soul of Plato."},
+        " ",
+        {w:"Ἄϊδι",   lemma:"Ἅιδης, -ου (m.)",          pos:"noun", parse:"Dative singular (dative of direction / place where)", eng:"to Hades", note:"Ἄϊδι is the dative of Ἅιδης without the article — a common Homeric form. Hades receives the souls sent down by the wrath."},
+        " ",
+        {w:"προΐαψεν",lemma:"προϊάπτω",                 pos:"verb", parse:"Aorist indicative active, 3rd singular", eng:"hurled down / sent forth", note:"A vivid compound: προ- (forward/down) + ἰάπτω (to hurl). The wrath actively hurls souls to Hades."},
+        ","
+      ],
+      [
+        {w:"ἡρώων",  lemma:"ἥρως, -ωος (m.)",           pos:"noun", parse:"Genitive plural (depends on ψυχάς)", eng:"of heroes"},
+        ","
+        ,
+        " ",
+        {w:"αὐτοὺς", lemma:"αὐτός, -ή, -ό",            pos:"pron", parse:"Accusative plural masculine (object of θῆκε, sc.; contrasts with ψυχάς)", eng:"their bodies (themselves)", note:"αὐτούς contrasts with ψυχάς: the souls go to Hades, while the bodies themselves (αὐτούς) are left for dogs and birds."},
+        " ",
+        {w:"δὲ",     lemma:"δέ",                        pos:"part", parse:"Particle (continues antithesis with ψυχάς)", eng:"but / while"},
+        " ",
+        {w:"ἑλώρια", lemma:"ἑλώριον, -ου (n.)",        pos:"noun", parse:"Accusative plural neuter (predicate object)", eng:"spoils / prey"},
+        " ",
+        {w:"τεῦχε",  lemma:"τεύχω",                    pos:"verb", parse:"Imperfect indicative active, 3rd singular", eng:"was making / rendered", note:"Imperfect of τεύχω — an ongoing process contrasting with the punctual aorists above."},
+        " ",
+        {w:"κύνεσσιν",lemma:"κύων, κυνός (m./f.)",     pos:"noun", parse:"Dative plural (dative of advantage/recipient)", eng:"for dogs", note:"The dative of advantage: the bodies were made prey for dogs — a horrifying desecration in Homeric culture."},
+        ","
+      ],
+    ],
+  },
+  {
+    id:"thucydides_1_1", title:"Ἱστορίαι Α 1.1", author:"Θουκυδίδης",
+    work:"Ἱστορία τοῦ Πελοποννησιακοῦ Πολέμου", date:"c. 431–400 BC",
+    intro:"The opening sentence of Thucydides' History of the Peloponnesian War — a model of Greek prose style. Thucydides immediately establishes his subject, method, and claim to importance.",
+    lines:[
+      [
+        {w:"Θουκυδίδης",lemma:"Θουκυδίδης, -ου (m.)",  pos:"noun", parse:"Nominative singular (subject)", eng:"Thucydides", note:"Thucydides begins by naming himself — immediately establishing authorial identity, unlike Homer who invokes the Muse."},
+        " ",
+        {w:"Ἀθηναῖος",lemma:"Ἀθηναῖος, -α, -ον",      pos:"adj",  parse:"Nominative singular masculine (agrees with Θουκυδίδης)", eng:"an Athenian"},
+        " ",
+        {w:"ξυνέγραψε", lemma:"συγγράφω",              pos:"verb", parse:"Aorist indicative active, 3rd singular (ξυν- = Attic ξύν/σύν)", eng:"wrote up / compiled", note:"ξυνέγραψε = συνέγραψε. The aorist implies a completed work. This verb is distinctive — not ἔγραψε (wrote) but ξυνέγραψε (compiled, organised into a whole)."},
+        " ",
+        {w:"τὸν",      lemma:"ὁ, ἡ, τό",               pos:"art",  parse:"Accusative singular masculine (article with πόλεμον)", eng:"the"},
+        " ",
+        {w:"πόλεμον",  lemma:"πόλεμος, -ου (m.)",      pos:"noun", parse:"Accusative singular (object of ξυνέγραψε)", eng:"war"},
+        " ",
+        {w:"τῶν",      lemma:"ὁ, ἡ, τό",               pos:"art",  parse:"Genitive plural (article with Πελοποννησίων and Ἀθηναίων)", eng:"of the"},
+        " ",
+        {w:"Πελοποννησίων",lemma:"Πελοποννήσιος, -α, -ον",pos:"noun",parse:"Genitive plural (objective genitive, depends on πόλεμον)", eng:"of the Peloponnesians"},
+        " ",
+        {w:"καὶ",      lemma:"καί",                     pos:"conj", parse:"Coordinating conjunction", eng:"and"},
+        " ",
+        {w:"Ἀθηναίων", lemma:"Ἀθηναῖος, -α, -ον",     pos:"noun", parse:"Genitive plural (coordinate with Πελοποννησίων)", eng:"of the Athenians"},
+        ","
+      ],
+      [
+        {w:"ὡς",       lemma:"ὡς",                     pos:"conj", parse:"Subordinating conjunction (introduces indirect statement / temporal clause)", eng:"how / when", note:"ὡς here introduces the indirect statement explaining what Thucydides wrote: he wrote the war, beginning from the moment it started."},
+        " ",
+        {w:"ἐπολέμησαν",lemma:"πολεμέω",               pos:"verb", parse:"Aorist indicative active, 3rd plural", eng:"they waged war / they fought"},
+        " ",
+        {w:"πρὸς",     lemma:"πρός",                   pos:"prep", parse:"Preposition + accusative (opposition / against)", eng:"against"},
+        " ",
+        {w:"ἀλλήλους", lemma:"ἀλλήλων (reciprocal pronoun)", pos:"pron", parse:"Accusative plural masculine (object of ἐπολέμησαν)", eng:"each other / one another"},
+        ","
+      ],
+      [
+        {w:"ἀρξάμενος", lemma:"ἄρχω",                  pos:"part", parse:"Aorist middle participle, nominative singular masculine (agrees with Θουκυδίδης)", eng:"beginning / having begun", note:"The participle agrees with the subject Θουκυδίδης — he himself began writing immediately when the war started. The middle voice of ἄρχω means 'to begin (doing something)'."},
+        " ",
+        {w:"εὐθὺς",    lemma:"εὐθύς",                  pos:"adv",  parse:"Adverb of time", eng:"immediately / straightaway", note:"εὐθύς emphasises that Thucydides began at once — this is part of his methodological claim to accuracy."},
+        " ",
+        {w:"κατ'",     lemma:"κατά",                   pos:"prep", parse:"Preposition + accusative (elided before vowel)", eng:"at / from the beginning of"},
+        " ",
+        {w:"ἀρχάς",   lemma:"ἀρχή, -ῆς (f.)",          pos:"noun", parse:"Accusative plural (object of κατ')", eng:"the beginning / the outset", note:"κατ' ἀρχάς is an idiomatic phrase: 'from the very beginning'. ἀρχάς is accusative plural of ἀρχή."},
+        ","
+      ],
+      [
+        {w:"ἐλπίσας",  lemma:"ἐλπίζω",                 pos:"part", parse:"Aorist active participle, nominative singular masculine (agrees with Θουκυδίδης)", eng:"having expected / because he expected", note:"Causal participle: Thucydides began writing because he expected (ἐλπίσας) it would be great."},
+        " ",
+        {w:"μέγαν",   lemma:"μέγας, μεγάλη, μέγα",     pos:"adj",  parse:"Accusative singular masculine (predicate with ἔσεσθαι, agrees with πόλεμον sc.)", eng:"great / important"},
+        " ",
+        {w:"τε",       lemma:"τε",                     pos:"part", parse:"Enclitic particle (correlative with καί following)", eng:"both", note:"τε...καί = 'both...and' — a standard Greek correlative pair."},
+        " ",
+        {w:"ἔσεσθαι",  lemma:"εἰμί",                   pos:"verb", parse:"Future infinitive (indirect statement after ἐλπίσας)", eng:"to be / would be", note:"Indirect statement after a verb of thinking/expecting uses the infinitive in Greek. ἔσεσθαι is the future infinitive of εἰμί."},
+        " ",
+        {w:"καὶ",      lemma:"καί",                    pos:"conj", parse:"Coordinating conjunction (completes τε...καί)", eng:"and"},
+        " ",
+        {w:"ἀξιολογώτατον",lemma:"ἀξιόλογος, -ον",    pos:"adj",  parse:"Accusative singular masculine (superlative, agrees with implied subject of ἔσεσθαι)", eng:"most worthy of record / most noteworthy", note:"Superlative of ἀξιόλογος (worthy of mention). Thucydides' bold opening claim: this war is the most important ever fought."},
+        " ",
+        {w:"τῶν",      lemma:"ὁ, ἡ, τό",              pos:"art",  parse:"Genitive plural (article, partitive genitive with superlative)", eng:"of all"},
+        " ",
+        {w:"προγεγενημένων",lemma:"προγίγνομαι",       pos:"part", parse:"Perfect middle/passive participle, genitive plural neuter (partitive genitive with superlative)", eng:"of those that had previously occurred", note:"Perfect participle of προγίγνομαι: 'having come before'. The perfect emphasises the completed state — all wars that have already happened."},
+        "."
+      ],
+    ],
+  },
+];
+
+const POS_COLORS_G = {
+  noun: {bg:"rgba(30,100,160,0.15)", border:"#1a6aaa"},
+  verb: {bg:"rgba(30,100,70,0.15)",  border:"#1a7a50"},
+  adj:  {bg:"rgba(100,40,140,0.15)", border:"#7a3aaa"},
+  adv:  {bg:"rgba(160,110,20,0.15)", border:"#aa8020"},
+  prep: {bg:"rgba(160,40,40,0.15)",  border:"#aa3030"},
+  conj: {bg:"rgba(40,120,120,0.15)", border:"#308080"},
+  pron: {bg:"rgba(40,80,160,0.15)",  border:"#3060c0"},
+  part: {bg:"rgba(160,80,20,0.15)",  border:"#c06010"},
+  art:  {bg:"rgba(60,60,60,0.15)",   border:"#606060"},
+  num:  {bg:"rgba(100,60,0,0.15)",   border:"#804800"},
+};
+
+function WordTokenG({ token, activeId, setActiveId, idx }) {
+  const isActive = activeId === idx;
+  const pc = POS_COLORS_G[token.pos] || POS_COLORS_G.noun;
+  return (
+    <span style={{ position:"relative", display:"inline" }}>
+      <span onClick={()=>setActiveId(isActive?null:idx)} onMouseEnter={()=>setActiveId(idx)} onMouseLeave={()=>setActiveId(null)}
+        style={{ cursor:"pointer", borderBottom:isActive?"2px solid #7ec8f0":"2px solid transparent", color:isActive?"#4a7ab5":"#c8dff0", background:isActive?"rgba(126,200,240,0.08)":"transparent", borderRadius:"2px", padding:"0 1px", transition:"all 0.1s" }}>
+        {token.w}
+      </span>
+      {isActive && (
+        <span style={{ position:"absolute", bottom:"calc(100% + 10px)", left:"50%", transform:"translateX(-50%)", zIndex:200, width:"268px", background:"#060e1e", border:"1px solid #1e4a80", borderRadius:"5px", boxShadow:"0 8px 32px rgba(0,0,0,0.6)", padding:"12px 14px", pointerEvents:"none" }}>
+          <span style={{ position:"absolute", bottom:"-6px", left:"50%", width:"10px", height:"10px", background:"#060e1e", border:"1px solid #1e4a80", borderTop:"none", borderLeft:"none", transform:"translateX(-50%) rotate(45deg)", display:"block" }} />
+          <div style={{ display:"flex", alignItems:"baseline", gap:"8px", marginBottom:"7px", flexWrap:"wrap" }}>
+            <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"18px", color:"#c8dff0", fontWeight:"500" }}>{token.w}</span>
+            <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"12px", color:"#6a9ac0", fontStyle:"italic" }}>{token.lemma}</span>
+          </div>
+          <div style={{ marginBottom:"6px" }}>
+            <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1.5px", textTransform:"uppercase", padding:"2px 7px", borderRadius:"10px", background:pc.bg, border:"1px solid "+pc.border, color:pc.border }}>{token.pos}</span>
+          </div>
+          <div style={{ fontFamily:"'EB Garamond',serif", fontSize:"12px", color:"#7a9ab8", marginBottom:"5px", lineHeight:"1.4" }}>
+            <span style={{ fontFamily:"'Cinzel',serif", fontSize:"7px", letterSpacing:"1px", color:"#3a5a78", textTransform:"uppercase", marginRight:"5px" }}>Form</span>{token.parse}
+          </div>
+          <div style={{ fontFamily:"'EB Garamond',serif", fontSize:"13px", color:"#c8dff0", marginBottom:token.note?"7px":"0", lineHeight:"1.4" }}>
+            <span style={{ fontFamily:"'Cinzel',serif", fontSize:"7px", letterSpacing:"1px", color:"#3a5a78", textTransform:"uppercase", marginRight:"5px" }}>Meaning</span>"{token.eng}"
+          </div>
+          {token.note && (
+            <div style={{ fontFamily:"'EB Garamond',serif", fontSize:"11px", fontStyle:"italic", color:"#4a6a88", borderTop:"1px solid #1e3a5c", paddingTop:"6px", lineHeight:"1.5" }}>
+              <span style={{ fontFamily:"'Cinzel',serif", fontSize:"7px", letterSpacing:"1px", color:"#2a4a68", textTransform:"uppercase", marginRight:"5px", fontStyle:"normal" }}>Note</span>{token.note}
+            </div>
+          )}
+        </span>
+      )}
+    </span>
+  );
+}
+
+function ReaderMode() {
+  const [pidx, setPidx] = React.useState(0);
+  const [activeId, setActiveId] = React.useState(null);
+  const passage = PASSAGES[pidx];
+  let wc = 0;
+  return (
+    <div style={{ marginTop:"16px" }}>
+      <div style={{ display:"flex", flexWrap:"wrap", gap:"6px", marginBottom:"14px" }}>
+        {PASSAGES.map((p,i) => (
+          <button key={p.id} onClick={()=>{ setPidx(i); setActiveId(null); }} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"5px 14px", border:"1px solid", borderColor:i===pidx?"#4a7ab5":"#1e3a5c", borderRadius:"20px", background:i===pidx?"#0a1e35":"transparent", color:i===pidx?"#7ec8f0":"#4a7ab5", cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap" }}>
+            {p.author} · {p.title}
+          </button>
+        ))}
+      </div>
+      <div style={{ background:"#0d1e35", border:"1px solid #1e3a5c", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.4)", padding:"24px 28px" }}>
+        <div style={{ marginBottom:"14px", paddingBottom:"12px", borderBottom:"1px solid #162840" }}>
+          <h2 style={{ fontFamily:"'Cinzel',serif", fontSize:"17px", fontWeight:"700", color:"#c8dff0", marginBottom:"3px" }}>{passage.title}</h2>
+          <div style={{ fontFamily:"'EB Garamond',serif", fontStyle:"italic", fontSize:"13px", color:"#4a7ab5" }}>{passage.author} · <em>{passage.work}</em> · {passage.date}</div>
+          {passage.intro && <div style={{ marginTop:"8px", fontFamily:"'EB Garamond',serif", fontSize:"13px", color:"#3a5a80", lineHeight:"1.6", fontStyle:"italic" }}>{passage.intro}</div>}
+        </div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:"4px", marginBottom:"14px" }}>
+          {Object.entries(POS_COLORS_G).map(([pos,c])=>(
+            <span key={pos} style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", textTransform:"uppercase", padding:"2px 6px", borderRadius:"10px", background:c.bg, border:"1px solid "+c.border, color:c.border }}>{pos}</span>
+          ))}
+          <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"12px", color:"#3a5a80", fontStyle:"italic", marginLeft:"6px", alignSelf:"center" }}>hover or tap any word</span>
+        </div>
+        <div style={{ fontFamily:"'EB Garamond',serif", fontSize:"22px", lineHeight:"2.4", color:"#c8dff0", marginBottom:"18px" }}>
+          {passage.lines.map((line,li)=>(
+            <span key={li}>
+              {line.map((token,ti)=>{
+                if (typeof token==="string") return <span key={ti} style={{color:"#3a5a80"}}>{token}</span>;
+                const id=wc++;
+                return <WordTokenG key={ti} token={token} activeId={activeId} setActiveId={setActiveId} idx={id} />;
+              })}
+              {li<passage.lines.length-1 && " "}
+            </span>
+          ))}
+        </div>
+        <details>
+          <summary style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:"#4a7ab5", cursor:"pointer", userSelect:"none", textTransform:"uppercase" }}>▸ Full Word List</summary>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px,1fr))", gap:"4px", marginTop:"10px" }}>
+            {passage.lines.flat().filter(t=>typeof t==="object").map((token,i)=>{
+              const pc=POS_COLORS_G[token.pos]||POS_COLORS_G.noun;
+              return (
+                <div key={i} style={{ display:"flex", alignItems:"baseline", gap:"6px", padding:"5px 9px", background:"rgba(30,80,140,0.06)", border:"1px solid #162840", borderRadius:"3px" }}>
+                  <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"15px", color:"#4a7ab5", minWidth:"80px" }}>{token.w}</span>
+                  <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", padding:"1px 5px", borderRadius:"8px", background:pc.bg, border:"1px solid "+pc.border, color:pc.border, whiteSpace:"nowrap" }}>{token.pos}</span>
+                  <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"12px", color:"#4a7ab5", fontStyle:"italic" }}>{token.eng}</span>
+                </div>
+              );
+            })}
+          </div>
+        </details>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+
+function App() {
+  const [mode, setMode] = React.useState("tables");
+  const [catIdx, setCatIdx] = React.useState(0);
+  const [wordIdx, setWordIdx] = React.useState(0);
+  const [inputs, setInputs] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+  const [showAnswers, setShowAnswers] = React.useState(false);
+
+  const category = CATEGORIES[catIdx];
+  const word = category.words[wordIdx];
+  const tag = TAG[category.type];
+
+  const tableData = React.useMemo(() => {
+    if (category.type === "irregular") return word.tables.map(t => ({
+      ...t, answers: t.rows.map(r => r.answers)
+    }));
+    const patterns = category.type === "conjugation" ? CONJ_PATTERNS : DECL_PATTERNS;
+    const pattern = patterns[category.pattern];
+    return [{ tense: null, headers: pattern.headers, rows: pattern.rows, answers: getAnswers(category, word) }];
+  }, [catIdx, wordIdx]);
+
+  const allCells = tableData.flatMap((t,ti) =>
+    t.answers.flatMap((row,ri) => row.map((_,ci) => `${ti}-${ri}-${ci}`))
+  );
+  const total = allCells.length;
+  const filledCount = allCells.filter(k => inputs[k]?.trim()).length;
+  const score = submitted ? allCells.filter(k => {
+    const [ti,ri,ci] = k.split("-").map(Number);
+    return greekMatch(inputs[k]||"", tableData[ti].answers[ri][ci]) === "correct";
+  }).length : 0;
+
+  const handleInput = (ti, key, val) => {
+    setInputs(p => ({ ...p, [`${ti}-${key}`]: val }));
+    if (submitted) setSubmitted(false);
+  };
+  const reset = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
+  const goWord = (dir) => { setWordIdx((wordIdx + dir + category.words.length) % category.words.length); reset(); };
+  const goCategory = (idx) => { setCatIdx(idx); setWordIdx(0); reset(); };
+
+  return (
+    <div style={{ minHeight:"100vh", background:"#0a1628", backgroundImage:"radial-gradient(ellipse at 20% 0%,rgba(30,80,160,0.15) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(60,20,120,0.1) 0%,transparent 60%)", fontFamily:"'EB Garamond','Georgia',serif", color:"#c8dff0", paddingBottom:"60px" }}>
+
+      {/* Header */}
+      <header style={{ borderBottom:"2px solid #1e4a80", background:"linear-gradient(180deg,#060e1e 0%,#0a1628 100%)", padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px" }}>
+        <div>
+          <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", color:"#4a7ab5", marginBottom:"4px" }}>ΕΛΛΗΝΙΚΗ ΓΡΑΜΜΑΤΙΚΗ</div>
+          <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"22px", fontWeight:"700", color:"#c8dff0", margin:0, letterSpacing:"1px" }}>Greek Practice Tables</h1>
+        </div>
+        <div style={{ marginLeft:"auto", fontStyle:"italic", color:"#3a5a80", fontSize:"13px", paddingBottom:"2px" }}>ἡ μελέτη τὴν τέχνην ποιεῖ</div>
+      </header>
+
+      <div style={{ maxWidth:"900px", margin:"0 auto", padding:"0 20px" }}>
+
+        {/* Mode tabs */}
+        <div style={{ display:"flex", marginTop:"24px", borderBottom:"2px solid #1e3a5c" }}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"]].map(([m,label]) => (
+            <button key={m} onClick={()=>setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 20px", border:"none", borderBottom:mode===m?"2px solid #7ec8f0":"2px solid transparent", marginBottom:"-2px", background:mode===m?"#0d1e35":"transparent", color:mode===m?"#7ec8f0":"#4a7ab5", cursor:"pointer", fontWeight:mode===m?"600":"400", transition:"all 0.15s" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* MATCHING MODE */}
+        {mode === "matching" && <MatchingMode />}
+
+        {/* READER MODE */}
+        {mode === "reader" && <ReaderMode />}
+
+        {/* TABLES MODE */}
+        {mode === "tables" && <div>
+
+        {/* Category pills */}
+        <div style={{ marginTop:"20px", display:"flex", flexWrap:"wrap", gap:"5px" }}>
+          {CATEGORIES.map((cat, i) => {
+            const tc = TAG[cat.type];
+            const active = i === catIdx;
+            return (
+              <button key={cat.id} onClick={() => goCategory(i)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"4px 11px", border:"1px solid", borderColor: active?tc.text+"88":"#1e3a5c", borderRadius:"20px", background: active?tc.bg:"transparent", color: active?tc.text:"#4a7ab5", cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap" }}>
+                {cat.label}
+                <span style={{ fontFamily:"'EB Garamond',serif", fontWeight:"400", marginLeft:"4px", opacity:0.7, fontSize:"9px" }}>{cat.sublabel}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Main card */}
+        <div style={{ marginTop:"16px", background:"#0d1e35", border:"1px solid #1e3a5c", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.4)", overflow:"hidden" }}>
+
+          {/* Card header */}
+          <div style={{ background:"linear-gradient(180deg,#060e1e 0%,#0a1628 100%)", padding:"13px 22px", borderBottom:"2px solid #1e4a80", display:"flex", alignItems:"center", gap:"14px" }}>
+            <button onClick={() => goWord(-1)} style={{ background:"rgba(30,80,160,0.15)", border:"1px solid #1e4a80", borderRadius:"2px", color:"#7ec8f0", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>‹</button>
+            <div style={{ flex:1 }}>
+              <div style={{ display:"flex", alignItems:"baseline", gap:"10px", flexWrap:"wrap" }}>
+                <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"20px", fontWeight:"600", color:"#c8dff0" }}>{word.lemma}</span>
+                <span style={{ fontStyle:"italic", color:"#5a8ab0", fontSize:"14px" }}>— {word.meaning}</span>
+              </div>
+              <div style={{ display:"flex", alignItems:"center", gap:"8px", marginTop:"3px" }}>
+                <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1.5px", padding:"2px 7px", borderRadius:"10px", background:tag.bg, color:tag.text, border:`1px solid ${tag.text}44` }}>{category.type.toUpperCase()}</span>
+                <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", color:"#3a5a80", letterSpacing:"1px" }}>{category.sublabel.toUpperCase()}</span>
+              </div>
+            </div>
+            <div style={{ textAlign:"center", color:"#3a5a80", fontSize:"11px", flexShrink:0 }}>
+              <div style={{ fontFamily:"'Cinzel',serif", fontSize:"15px", color:"#7ec8f0", fontWeight:"600" }}>{wordIdx+1}</div>
+              <div>of {category.words.length}</div>
+            </div>
+            <button onClick={() => goWord(1)} style={{ background:"rgba(30,80,160,0.15)", border:"1px solid #1e4a80", borderRadius:"2px", color:"#7ec8f0", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>›</button>
+          </div>
+
+          <ScoreBar score={score} total={total} submitted={submitted} />
+
+          {/* Tables */}
+          <div style={{ padding:"16px 22px", display:"flex", flexDirection:"column", gap:"26px" }}>
+            {tableData.map((t, ti) => {
+              const subInputs = {};
+              Object.entries(inputs).forEach(([k,v]) => {
+                const [tIdx,...rest] = k.split("-");
+                if (Number(tIdx)===ti) subInputs[rest.join("-")] = v;
+              });
+              return (
+                <div key={ti}>
+                  {t.tense && (
+                    <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:"#4a7ab5", marginBottom:"9px", textTransform:"uppercase", borderLeft:"3px solid #1e4a80", paddingLeft:"9px" }}>{t.tense}</div>
+                  )}
+                  <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={subInputs} submitted={submitted} showAnswers={showAnswers} onInput={(key,val) => handleInput(ti,key,val)} />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Controls */}
+          <div style={{ padding:"13px 22px 17px", borderTop:"1px solid #162840", display:"flex", alignItems:"center", gap:"9px", flexWrap:"wrap" }}>
+            <button onClick={() => setSubmitted(true)} disabled={filledCount===0} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 20px", background: filledCount===0?"#1a2e45":"#1a4a80", color:"#c8dff0", border:"none", borderRadius:"2px", cursor:filledCount===0?"default":"pointer" }}>
+              GRADE ({filledCount}/{total})
+            </button>
+            <button onClick={reset} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 16px", background:"transparent", color:"#4a7ab5", border:"1px solid #1e3a5c", borderRadius:"2px", cursor:"pointer" }}>RESET</button>
+            {submitted && score < total && (
+              <button onClick={() => setShowAnswers(v => !v)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 16px", background:"transparent", color: showAnswers?"#2d8a5f":"#9b3535", border:"1px solid", borderColor: showAnswers?"#2d8a5f":"#1e3a5c", borderRadius:"2px", cursor:"pointer" }}>
+                {showAnswers ? "HIDE ANSWERS" : "SHOW ANSWERS"}
+              </button>
+            )}
+            <div style={{ marginLeft:"auto", display:"flex", gap:"7px" }}>
+              <button onClick={() => goWord(-1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 13px", background:"transparent", color:"#4a7ab5", border:"1px solid #1e3a5c", borderRadius:"2px", cursor:"pointer" }}>← PREV</button>
+              <button onClick={() => goWord(1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 13px", background:"#1a4a80", color:"#c8dff0", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT →</button>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop:"14px", fontSize:"12px", color:"#3a5a80", fontStyle:"italic", textAlign:"center" }}>
+          Accents & breathings optional — the app accepts forms with or without diacritics
+        </div>
+        </div>}
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

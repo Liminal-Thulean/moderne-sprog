@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sanskrit Practice Tables</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Sanskrit:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0e0a14; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(180,100,220,0.3); }
+  button { transition: all 0.15s; }
+  button:hover { opacity: 0.85; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #1a1220; }
+  ::-webkit-scrollbar-thumb { background: #7a3a9a; border-radius: 3px; }
+  .deva { font-family: 'Tiro Devanagari Sanskrit', serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+// ═══════════════════════════════════════════════════════════
+//  SANSKRIT PRACTICE TABLES
+//  Devanagari shown above, IAST below.
+//  Students fill in IAST (diacritics optional).
+//
+//  TO ADD WORDS: copy any entry in a words: [...] array and edit.
+//  NOUN format:  { dv, iast, meaning, stem }
+//  VERB format:  { dv, iast, meaning, stem, augStem }
+//  IRREG format: words have explicit `tables` with `answers` arrays
+// ═══════════════════════════════════════════════════════════
+
+// ─── DECLENSION PATTERNS ─────────────────────────────────
+
+const DECL = {
+  a_masc: {
+    headers: ["Case", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "Nominative",   s: ["aḥ",   "au",     "āḥ"]      },
+      { label: "Accusative",   s: ["am",    "au",     "ān"]      },
+      { label: "Instrumental", s: ["ena",   "ābhyām", "aiḥ"]     },
+      { label: "Dative",       s: ["āya",   "ābhyām", "ebhyaḥ"]  },
+      { label: "Ablative",     s: ["āt",    "ābhyām", "ebhyaḥ"]  },
+      { label: "Genitive",     s: ["asya",  "ayoḥ",   "ānām"]    },
+      { label: "Locative",     s: ["e",     "ayoḥ",   "eṣu"]     },
+      { label: "Vocative",     s: ["a",     "au",     "āḥ"]      },
+    ],
+  },
+  a_neut: {
+    headers: ["Case", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "Nominative",   s: ["am",    "e",      "āni"]     },
+      { label: "Accusative",   s: ["am",    "e",      "āni"]     },
+      { label: "Instrumental", s: ["ena",   "ābhyām", "aiḥ"]     },
+      { label: "Dative",       s: ["āya",   "ābhyām", "ebhyaḥ"]  },
+      { label: "Ablative",     s: ["āt",    "ābhyām", "ebhyaḥ"]  },
+      { label: "Genitive",     s: ["asya",  "ayoḥ",   "ānām"]    },
+      { label: "Locative",     s: ["e",     "ayoḥ",   "eṣu"]     },
+      { label: "Vocative",     s: ["a",     "e",      "āni"]     },
+    ],
+  },
+  aa_fem: {
+    headers: ["Case", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "Nominative",   s: ["ā",     "e",      "āḥ"]      },
+      { label: "Accusative",   s: ["ām",    "e",      "āḥ"]      },
+      { label: "Instrumental", s: ["ayā",   "ābhyām", "ābhiḥ"]   },
+      { label: "Dative",       s: ["āyai",  "ābhyām", "ābhyaḥ"]  },
+      { label: "Ablative",     s: ["āyāḥ",  "ābhyām", "ābhyaḥ"]  },
+      { label: "Genitive",     s: ["āyāḥ",  "ayoḥ",   "ānām"]    },
+      { label: "Locative",     s: ["āyām",  "ayoḥ",   "āsu"]     },
+      { label: "Vocative",     s: ["e",     "e",      "āḥ"]      },
+    ],
+  },
+  i_masc: {
+    headers: ["Case", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "Nominative",   s: ["iḥ",   "ī",      "ayaḥ"]    },
+      { label: "Accusative",   s: ["im",    "ī",      "īn"]      },
+      { label: "Instrumental", s: ["inā",   "ibhyām", "ibhiḥ"]   },
+      { label: "Dative",       s: ["aye",   "ibhyām", "ibhyaḥ"]  },
+      { label: "Ablative",     s: ["eḥ",   "ibhyām", "ibhyaḥ"]  },
+      { label: "Genitive",     s: ["eḥ",   "yoḥ",    "īnām"]    },
+      { label: "Locative",     s: ["au",    "yoḥ",    "iṣu"]     },
+      { label: "Vocative",     s: ["e",     "ī",      "ayaḥ"]    },
+    ],
+  },
+  u_masc: {
+    headers: ["Case", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "Nominative",   s: ["uḥ",   "ū",      "avaḥ"]    },
+      { label: "Accusative",   s: ["um",    "ū",      "ūn"]      },
+      { label: "Instrumental", s: ["unā",   "ubhyām", "ubhiḥ"]   },
+      { label: "Dative",       s: ["ave",   "ubhyām", "ubhyaḥ"]  },
+      { label: "Ablative",     s: ["oḥ",   "ubhyām", "ubhyaḥ"]  },
+      { label: "Genitive",     s: ["oḥ",   "voḥ",    "ūnām"]    },
+      { label: "Locative",     s: ["au",    "voḥ",    "uṣu"]     },
+      { label: "Vocative",     s: ["o",     "ū",      "avaḥ"]    },
+    ],
+  },
+};
+
+// ─── CONJUGATION PATTERNS ────────────────────────────────
+
+const CONJ = {
+  present: {
+    tense: "Present (laṭ)",
+    headers: ["Person", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "3rd", s: ["ati",  "ataḥ",  "anti"]  },
+      { label: "2nd", s: ["asi",  "athaḥ", "atha"]  },
+      { label: "1st", s: ["āmi",  "āvaḥ",  "āmaḥ"]  },
+    ],
+  },
+  imperfect: {
+    tense: "Imperfect (laṅ)",
+    headers: ["Person", "Singular", "Dual", "Plural"],
+    augment: true,
+    rows: [
+      { label: "3rd", s: ["at",   "atām",  "an"]    },
+      { label: "2nd", s: ["aḥ",  "atam",  "ata"]   },
+      { label: "1st", s: ["am",   "āva",   "āma"]   },
+    ],
+  },
+  future: {
+    tense: "Future (lṛṭ)",
+    headers: ["Person", "Singular", "Dual", "Plural"],
+    rows: [
+      { label: "3rd", s: ["iṣyati",  "iṣyataḥ", "iṣyanti"]  },
+      { label: "2nd", s: ["iṣyasi",  "iṣyathaḥ","iṣyatha"]  },
+      { label: "1st", s: ["iṣyāmi",  "iṣyāvaḥ", "iṣyāmaḥ"]  },
+    ],
+  },
+};
+
+// ─── VOCABULARY ──────────────────────────────────────────
+// Each category has 10 words to start — easy to expand later
+
+const CATEGORIES = [
+
+  // ── a-stem masculine nouns ──
+  {
+    id: "noun_a_masc", label: "a-stem Nouns", sublabel: "Masculine (-aḥ)",
+    type: "declension", pattern: "a_masc",
+    words: [
+      { dv: "नर",    iast: "nara",   meaning: "man",              stem: "nar"   },
+      { dv: "देव",   iast: "deva",   meaning: "god / deity",      stem: "dev"   },
+      { dv: "पुत्र", iast: "putra",  meaning: "son",              stem: "putr"  },
+      { dv: "लोक",   iast: "loka",   meaning: "world / people",   stem: "lok"   },
+      { dv: "योग",   iast: "yoga",   meaning: "yoga / union",     stem: "yog"   },
+      { dv: "धर्म",  iast: "dharma", meaning: "duty / law",       stem: "dharm" },
+      { dv: "काल",   iast: "kāla",   meaning: "time / death",     stem: "kāl"   },
+      { dv: "मार्ग", iast: "mārga",  meaning: "path / road",      stem: "mārgr" },
+      { dv: "शब्द",  iast: "śabda",  meaning: "word / sound",     stem: "śabd"  },
+      { dv: "अश्व",  iast: "aśva",   meaning: "horse",            stem: "aśv"   },
+    ],
+  },
+
+  // ── a-stem neuter nouns ──
+  {
+    id: "noun_a_neut", label: "a-stem Nouns", sublabel: "Neuter (-am)",
+    type: "declension", pattern: "a_neut",
+    words: [
+      { dv: "कर्म",  iast: "karma",  meaning: "action / karma",   stem: "karm"  },
+      { dv: "फल",    iast: "phala",  meaning: "fruit / result",   stem: "phal"  },
+      { dv: "ज्ञान", iast: "jñāna",  meaning: "knowledge",        stem: "jñān"  },
+      { dv: "मन",    iast: "mana",   meaning: "mind",             stem: "man"   },
+      { dv: "सत्य",  iast: "satya",  meaning: "truth",            stem: "saty"  },
+      { dv: "सुख",   iast: "sukha",  meaning: "happiness",        stem: "sukh"  },
+      { dv: "दुःख",  iast: "duḥkha", meaning: "suffering",        stem: "duḥkh" },
+      { dv: "गृह",   iast: "gṛha",   meaning: "house / home",     stem: "gṛh"   },
+      { dv: "वन",    iast: "vana",   meaning: "forest",           stem: "van"   },
+      { dv: "नाम",   iast: "nāma",   meaning: "name",             stem: "nām"   },
+    ],
+  },
+
+  // ── ā-stem feminine nouns ──
+  {
+    id: "noun_aa_fem", label: "ā-stem Nouns", sublabel: "Feminine (-ā)",
+    type: "declension", pattern: "aa_fem",
+    words: [
+      { dv: "कथा",   iast: "kathā",  meaning: "story / tale",     stem: "kath"  },
+      { dv: "सेना",  iast: "senā",   meaning: "army",             stem: "sen"   },
+      { dv: "भाषा",  iast: "bhāṣā",  meaning: "language",         stem: "bhāṣ"  },
+      { dv: "माया",  iast: "māyā",   meaning: "illusion",         stem: "māy"   },
+      { dv: "विद्या",iast: "vidyā",  meaning: "knowledge",        stem: "vidy"  },
+      { dv: "पूजा",  iast: "pūjā",   meaning: "worship",          stem: "pūj"   },
+      { dv: "शक्ति", iast: "śakti",  meaning: "power / energy",   stem: "śakt"  },
+      { dv: "शान्ति",iast: "śānti",  meaning: "peace",            stem: "śānt"  },
+      { dv: "भक्ति", iast: "bhakti", meaning: "devotion",         stem: "bhakt" },
+      { dv: "माता",  iast: "mātā",   meaning: "mother",           stem: "māt"   },
+    ],
+  },
+
+  // ── i-stem nouns ──
+  {
+    id: "noun_i", label: "i-stem Nouns", sublabel: "Masculine / Feminine (-iḥ)",
+    type: "declension", pattern: "i_masc",
+    words: [
+      { dv: "कवि",   iast: "kavi",   meaning: "poet",             stem: "kav"   },
+      { dv: "मुनि",  iast: "muni",   meaning: "sage / ascetic",   stem: "mun"   },
+      { dv: "ऋषि",   iast: "ṛṣi",   meaning: "seer / rishi",     stem: "ṛṣ"    },
+      { dv: "हरि",   iast: "hari",   meaning: "Viṣṇu / lion",     stem: "har"   },
+      { dv: "पति",   iast: "pati",   meaning: "lord / husband",   stem: "pat"   },
+      { dv: "गति",   iast: "gati",   meaning: "motion / path",    stem: "gat"   },
+      { dv: "मति",   iast: "mati",   meaning: "thought / mind",   stem: "mat"   },
+      { dv: "सिद्धि",iast:"siddhi",  meaning: "accomplishment",   stem: "siddh" },
+      { dv: "कीर्ति",iast:"kīrti",   meaning: "fame / glory",     stem: "kīrt"  },
+      { dv: "भक्ति", iast: "bhakti", meaning: "devotion",         stem: "bhakt" },
+    ],
+  },
+
+  // ── u-stem nouns ──
+  {
+    id: "noun_u", label: "u-stem Nouns", sublabel: "Masculine (-uḥ)",
+    type: "declension", pattern: "u_masc",
+    words: [
+      { dv: "पशु",   iast: "paśu",   meaning: "animal / creature",stem: "paś"   },
+      { dv: "गुरु",  iast: "guru",   meaning: "teacher",          stem: "gur"   },
+      { dv: "साधु",  iast: "sādhu",  meaning: "holy man",         stem: "sādh"  },
+      { dv: "शत्रु", iast: "śatru",  meaning: "enemy",            stem: "śatr"  },
+      { dv: "विष्णु",iast: "viṣṇu",  meaning: "Viṣṇu",           stem: "viṣṇ"  },
+      { dv: "मृत्यु",iast: "mṛtyu",  meaning: "death",            stem: "mṛty"  },
+      { dv: "सेतु",  iast: "setu",   meaning: "bridge",           stem: "set"   },
+      { dv: "हेतु",  iast: "hetu",   meaning: "cause / reason",   stem: "het"   },
+      { dv: "मधु",   iast: "madhu",  meaning: "honey / sweet",    stem: "madh"  },
+      { dv: "धातु",  iast: "dhātu",  meaning: "element / root",   stem: "dhāt"  },
+    ],
+  },
+
+  // ── Thematic verbs — present ──
+  {
+    id: "verb_present", label: "Thematic Verbs", sublabel: "Present Active (laṭ)",
+    type: "conjugation", pattern: "present",
+    words: [
+      { dv: "पठ्",   iast: "paṭh",  meaning: "to read / study",  stem: "paṭh"  },
+      { dv: "वद्",   iast: "vad",   meaning: "to speak / say",   stem: "vad"   },
+      { dv: "लिख्",  iast: "likh",  meaning: "to write",         stem: "likh"  },
+      { dv: "नम्",   iast: "nam",   meaning: "to bow / honour",  stem: "nam"   },
+      { dv: "भव्",   iast: "bhav",  meaning: "to become / be",   stem: "bhav"  },
+      { dv: "जय्",   iast: "jay",   meaning: "to conquer / win", stem: "jay"   },
+      { dv: "पच्",   iast: "pac",   meaning: "to cook",          stem: "pac"   },
+      { dv: "त्यज्", iast: "tyaj",  meaning: "to abandon",       stem: "tyaj"  },
+      { dv: "रक्ष्", iast: "rakṣ",  meaning: "to protect",       stem: "rakṣ"  },
+      { dv: "पूज्",  iast: "pūj",   meaning: "to worship",       stem: "pūj"   },
+    ],
+  },
+
+  // ── Thematic verbs — imperfect ──
+  {
+    id: "verb_imperfect", label: "Thematic Verbs", sublabel: "Imperfect Active (laṅ)",
+    type: "conjugation", pattern: "imperfect",
+    words: [
+      { dv: "पठ्",   iast: "paṭh",  meaning: "to read / study",  stem: "paṭh",  augStem: "apaṭh"  },
+      { dv: "वद्",   iast: "vad",   meaning: "to speak / say",   stem: "vad",   augStem: "avad"   },
+      { dv: "लिख्",  iast: "likh",  meaning: "to write",         stem: "likh",  augStem: "alikh"  },
+      { dv: "नम्",   iast: "nam",   meaning: "to bow",           stem: "nam",   augStem: "anam"   },
+      { dv: "भव्",   iast: "bhav",  meaning: "to become",        stem: "bhav",  augStem: "abhav"  },
+      { dv: "जय्",   iast: "jay",   meaning: "to conquer",       stem: "jay",   augStem: "ajay"   },
+      { dv: "पच्",   iast: "pac",   meaning: "to cook",          stem: "pac",   augStem: "apac"   },
+      { dv: "त्यज्", iast: "tyaj",  meaning: "to abandon",       stem: "tyaj",  augStem: "atyaj"  },
+      { dv: "रक्ष्", iast: "rakṣ",  meaning: "to protect",       stem: "rakṣ",  augStem: "arakṣ"  },
+      { dv: "पूज्",  iast: "pūj",   meaning: "to worship",       stem: "pūj",   augStem: "apūj"   },
+    ],
+  },
+
+  // ── Thematic verbs — future ──
+  {
+    id: "verb_future", label: "Thematic Verbs", sublabel: "Future Active (lṛṭ)",
+    type: "conjugation", pattern: "future",
+    words: [
+      { dv: "पठ्",   iast: "paṭh",  meaning: "to read / study",  stem: "paṭh"  },
+      { dv: "वद्",   iast: "vad",   meaning: "to speak / say",   stem: "vad"   },
+      { dv: "लिख्",  iast: "likh",  meaning: "to write",         stem: "likh"  },
+      { dv: "नम्",   iast: "nam",   meaning: "to bow",           stem: "nam"   },
+      { dv: "भव्",   iast: "bhav",  meaning: "to become",        stem: "bhav"  },
+      { dv: "जय्",   iast: "jay",   meaning: "to conquer",       stem: "jay"   },
+      { dv: "पच्",   iast: "pac",   meaning: "to cook",          stem: "pac"   },
+      { dv: "त्यज्", iast: "tyaj",  meaning: "to abandon",       stem: "tyaj"  },
+      { dv: "रक्ष्", iast: "rakṣ",  meaning: "to protect",       stem: "rakṣ"  },
+      { dv: "पूज्",  iast: "pūj",   meaning: "to worship",       stem: "pūj"   },
+    ],
+  },
+
+  // ── Irregular: as (to be) ──
+  {
+    id: "irreg_as", label: "Irregular: अस्", sublabel: "as — to be",
+    type: "irregular",
+    words: [{
+      dv: "अस्", iast: "as", meaning: "to be",
+      tables: [
+        { tense: "Present (laṭ)", headers: ["Person","Singular","Dual","Plural"], rows: [
+          { label: "3rd", answers: ["asti",  "staḥ",  "santi"] },
+          { label: "2nd", answers: ["asi",   "sthaḥ", "stha"]  },
+          { label: "1st", answers: ["asmi",  "svaḥ",  "smaḥ"]  },
+        ]},
+        { tense: "Imperfect (laṅ)", headers: ["Person","Singular","Dual","Plural"], rows: [
+          { label: "3rd", answers: ["āsīt",  "āstām", "āsan"]  },
+          { label: "2nd", answers: ["āsīḥ",  "āstam", "āsta"]  },
+          { label: "1st", answers: ["āsam",  "āsva",  "āsma"]  },
+        ]},
+      ],
+    }],
+  },
+
+  // ── Irregular: kṛ (to do) ──
+  {
+    id: "irreg_kr", label: "Irregular: कृ", sublabel: "kṛ — to do / make",
+    type: "irregular",
+    words: [{
+      dv: "कृ", iast: "kṛ", meaning: "to do / make",
+      tables: [
+        { tense: "Present (laṭ)", headers: ["Person","Singular","Dual","Plural"], rows: [
+          { label: "3rd", answers: ["karoti",  "kurutaḥ",  "kurvanti"] },
+          { label: "2nd", answers: ["karoṣi",  "kuruthaḥ", "kurutha"]  },
+          { label: "1st", answers: ["karomi",  "kurvaḥ",   "kurmaḥ"]   },
+        ]},
+        { tense: "Imperfect (laṅ)", headers: ["Person","Singular","Dual","Plural"], rows: [
+          { label: "3rd", answers: ["akarot",  "akurutām", "akurvan"]  },
+          { label: "2nd", answers: ["akaroḥ",  "akurutam", "akuruta"]  },
+          { label: "1st", answers: ["akaram",  "akurva",   "akurma"]   },
+        ]},
+      ],
+    }],
+  },
+
+  // ── Pronouns: personal ──
+  {
+    id: "pronoun_personal", label: "Personal Pronouns", sublabel: "1st & 2nd Person",
+    type: "irregular",
+    words: [{
+      dv: "अहम् / त्वम्", iast: "aham / tvam", meaning: "I / you",
+      tables: [
+        { tense: "1st Person (asmad-)", headers: ["Case","Singular","Dual","Plural"], rows: [
+          { label: "Nominative",   answers: ["aham",    "āvām",    "vayam"]      },
+          { label: "Accusative",   answers: ["mām",     "āvām",    "asmān"]      },
+          { label: "Instrumental", answers: ["mayā",    "āvābhyām","asmābhiḥ"]   },
+          { label: "Dative",       answers: ["mahyam",  "āvābhyām","asmabhyam"]  },
+          { label: "Ablative",     answers: ["mat",     "āvābhyām","asmat"]       },
+          { label: "Genitive",     answers: ["mama",    "āvayoḥ",  "asmākam"]    },
+          { label: "Locative",     answers: ["mayi",    "āvayoḥ",  "asmāsu"]     },
+        ]},
+        { tense: "2nd Person (yuṣmad-)", headers: ["Case","Singular","Dual","Plural"], rows: [
+          { label: "Nominative",   answers: ["tvam",    "yuvām",   "yūyam"]      },
+          { label: "Accusative",   answers: ["tvām",    "yuvām",   "yuṣmān"]     },
+          { label: "Instrumental", answers: ["tvayā",   "yuvābhyām","yuṣmābhiḥ"] },
+          { label: "Dative",       answers: ["tubhyam", "yuvābhyām","yuṣmabhyam"]},
+          { label: "Ablative",     answers: ["tvat",    "yuvābhyām","yuṣmat"]    },
+          { label: "Genitive",     answers: ["tava",    "yuvayoḥ", "yuṣmākam"]   },
+          { label: "Locative",     answers: ["tvayi",   "yuvayoḥ", "yuṣmāsu"]   },
+        ]},
+      ],
+    }],
+  },
+
+  // ── Pronouns: tad (he/she/it/that) ──
+  {
+    id: "pronoun_tad", label: "Demonstrative: तद्", sublabel: "tad — he / she / it / that",
+    type: "irregular",
+    words: [{
+      dv: "तद्", iast: "tad", meaning: "he / she / it / that",
+      tables: [
+        { tense: "Masculine (saḥ)", headers: ["Case","Singular","Dual","Plural"], rows: [
+          { label: "Nominative",   answers: ["saḥ",    "tau",     "te"]       },
+          { label: "Accusative",   answers: ["tam",    "tau",     "tān"]      },
+          { label: "Instrumental", answers: ["tena",   "tābhyām", "taiḥ"]    },
+          { label: "Dative",       answers: ["tasmai", "tābhyām", "tebhyaḥ"] },
+          { label: "Ablative",     answers: ["tasmāt", "tābhyām", "tebhyaḥ"] },
+          { label: "Genitive",     answers: ["tasya",  "tayoḥ",   "teṣām"]   },
+          { label: "Locative",     answers: ["tasmin", "tayoḥ",   "teṣu"]    },
+        ]},
+        { tense: "Neuter (tat)", headers: ["Case","Singular","Dual","Plural"], rows: [
+          { label: "Nominative",   answers: ["tat",    "te",      "tāni"]    },
+          { label: "Accusative",   answers: ["tat",    "te",      "tāni"]    },
+          { label: "Instrumental", answers: ["tena",   "tābhyām", "taiḥ"]    },
+          { label: "Dative",       answers: ["tasmai", "tābhyām", "tebhyaḥ"] },
+          { label: "Ablative",     answers: ["tasmāt", "tābhyām", "tebhyaḥ"] },
+          { label: "Genitive",     answers: ["tasya",  "tayoḥ",   "teṣām"]   },
+          { label: "Locative",     answers: ["tasmin", "tayoḥ",   "teṣu"]    },
+        ]},
+      ],
+    }],
+  },
+];
+
+// ─── HELPERS ─────────────────────────────────────────────
+
+function normalize(s) {
+  return s.trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/ā/g,"a").replace(/ī/g,"i").replace(/ū/g,"u")
+    .replace(/ṭ/g,"t").replace(/ḍ/g,"d").replace(/ṇ/g,"n")
+    .replace(/ś/g,"s").replace(/ṣ/g,"s")
+    .replace(/ḥ/g,"h").replace(/ṃ/g,"m")
+    .replace(/ṛ/g,"r").replace(/ṅ/g,"n").replace(/ñ/g,"n")
+    .trim();
+}
+
+function checkAnswer(input, answer) {
+  if (!input.trim()) return "empty";
+  const alts = answer.split("/").map(a => normalize(a.trim()));
+  return alts.includes(normalize(input)) ? "correct" : "wrong";
+}
+
+function getAnswers(cat, word) {
+  const pat = cat.type === "conjugation" ? CONJ[cat.pattern] : DECL[cat.pattern];
+  return pat.rows.map(row =>
+    row.s.map(suf => {
+      const stem = (pat.augment && word.augStem) ? word.augStem : word.stem;
+      return stem + suf;
+    })
+  );
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// ─── COLORS ──────────────────────────────────────────────
+
+const C = {
+  bg: "#0e0a14", surface: "#1a1224", border: "#2e1e44",
+  purple: "#9b59d0", purpleLight: "#c4a0f0", purpleDim: "#6a3a9a",
+  gold: "#d4a840", text: "#e8dff5", textMuted: "#6a5a8a",
+  correct: "#2d8a5f", wrong: "#9b2335",
+};
+
+const TAG = {
+  declension:  { bg: "#0f1e30", text: "#7ec8f0" },
+  conjugation: { bg: "#1a1030", text: "#c4a0f0" },
+  irregular:   { bg: "#2a1040", text: "#f0c0a0" },
+};
+
+const PAIR_COLORS = [
+  { light:"rgba(251,191,36,0.15)",  border:"#d97706", text:"#fcd34d" },
+  { light:"rgba(167,139,250,0.15)", border:"#7c3aed", text:"#c4b5fd" },
+  { light:"rgba(52,211,153,0.15)",  border:"#059669", text:"#6ee7b7" },
+  { light:"rgba(248,113,113,0.15)", border:"#dc2626", text:"#fca5a5" },
+  { light:"rgba(96,165,250,0.15)",  border:"#2563eb", text:"#93c5fd" },
+  { light:"rgba(251,146,60,0.15)",  border:"#ea580c", text:"#fdba74" },
+  { light:"rgba(34,211,238,0.15)",  border:"#0891b2", text:"#67e8f9" },
+  { light:"rgba(163,230,53,0.15)",  border:"#65a30d", text:"#bef264" },
+];
+
+// ─── SCORE BAR ────────────────────────────────────────────
+
+function ScoreBar({ score, total, submitted }) {
+  if (!submitted) return null;
+  const pct = Math.round((score/total)*100);
+  const grade =
+    pct===100 ? { label:"सुन्दरम्!", color: C.correct }
+    : pct>=80  ? { label:"साधु!",    color: "#4a9c6a" }
+    : pct>=60  ? { label:"मध्यम्",   color: "#8a7014" }
+    :            { label:"पुनः पठ!", color: C.wrong   };
+  return (
+    <div style={{ padding:"11px 22px", background:"#110d1a", borderBottom:"1px solid "+C.border, display:"flex", alignItems:"center", gap:"14px" }}>
+      <div className="deva" style={{ fontSize:"17px", fontWeight:"600", color:grade.color, minWidth:"120px" }}>{grade.label}</div>
+      <div style={{ flex:1 }}>
+        <div style={{ height:"4px", background:"#2e1e44", borderRadius:"2px", overflow:"hidden" }}>
+          <div style={{ height:"100%", width:`${pct}%`, background:grade.color, borderRadius:"2px", transition:"width 0.6s" }} />
+        </div>
+      </div>
+      <div style={{ fontSize:"13px", color:C.textMuted, minWidth:"70px", textAlign:"right" }}>{score}/{total} · {pct}%</div>
+    </div>
+  );
+}
+
+// ─── TABLE GRID ───────────────────────────────────────────
+
+function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onInput }) {
+  return (
+    <table style={{ width:"100%", borderCollapse:"collapse" }}>
+      <thead>
+        <tr>{headers.map((h,i) => (
+          <th key={i} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", textTransform:"uppercase", color:C.textMuted, padding:"7px 8px", textAlign:i===0?"left":"center", borderBottom:"1px solid "+C.border }}>{h}</th>
+        ))}</tr>
+      </thead>
+      <tbody>
+        {rows.map((row,ri) => (
+          <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(80,40,120,0.06)" }}>
+            <td style={{ padding:"7px 8px", fontFamily:"'Cinzel',serif", fontSize:"10px", color:C.textMuted, borderBottom:"1px solid #1e1230", whiteSpace:"nowrap" }}>{row.label}</td>
+            {answers[ri].map((answer,ci) => {
+              const key = `${ri}-${ci}`;
+              const val = inputs[key]||"";
+              const st = submitted ? checkAnswer(val,answer) : null;
+              return (
+                <td key={ci} style={{ padding:"4px 5px", textAlign:"center", borderBottom:"1px solid #1e1230",
+                  background:!st?"transparent":st==="correct"?"rgba(45,138,95,0.1)":"rgba(155,35,53,0.1)" }}>
+                  <div style={{ position:"relative" }}>
+                    <input type="text" value={val} onChange={e => onInput(key, e.target.value)}
+                      style={{ width:"100%", minWidth:"70px", padding:"4px 5px",
+                        fontFamily:"'EB Garamond',serif", fontSize:"13px", textAlign:"center",
+                        background: !st?"#130e1e":st==="correct"?"rgba(45,138,95,0.08)":"rgba(155,35,53,0.08)",
+                        border:"1px solid", borderColor:!st?C.border:st==="correct"?C.correct:C.wrong,
+                        borderRadius:"2px", outline:"none", color:C.text, transition:"all 0.2s" }} />
+                    {submitted && st==="wrong" && showAnswers && (
+                      <div style={{ position:"absolute", bottom:"-15px", left:"50%", transform:"translateX(-50%)", fontSize:"10px", color:C.correct, fontStyle:"italic", whiteSpace:"nowrap", zIndex:1 }}>{answer}</div>
+                    )}
+                  </div>
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+// ─── MATCHING MODE ────────────────────────────────────────
+
+const PAIRS = 8;
+
+function MatchingMode() {
+  const pool = React.useMemo(() => {
+    const p = [];
+    CATEGORIES.forEach(cat => cat.words.forEach(w => {
+      p.push({ left: w.dv + " / " + w.iast, right: w.meaning });
+    }));
+    return p;
+  }, []);
+
+  const [round, setRound] = React.useState(0);
+  const [left, setLeft]   = React.useState([]);
+  const [right, setRight] = React.useState([]);
+  const [matched, setMatched] = React.useState({});
+  const [selL, setSelL]   = React.useState(null);
+  const [selR, setSelR]   = React.useState(null);
+  const [wrong, setWrong] = React.useState({l:null,r:null});
+  const [done, setDone]   = React.useState(false);
+  const [corr, setCorr]   = React.useState(0);
+  const [att, setAtt]     = React.useState(0);
+
+  const startRound = React.useCallback((r) => {
+    const start = (r * PAIRS) % pool.length;
+    const slice = Array.from({length:PAIRS},(_,i)=>({...pool[(start+i)%pool.length],id:i}));
+    setLeft(shuffle(slice.map(p=>({id:p.id,text:p.left}))));
+    setRight(shuffle(slice.map(p=>({id:p.id,text:p.right}))));
+    setMatched({}); setSelL(null); setSelR(null);
+    setWrong({l:null,r:null}); setDone(false);
+  },[pool]);
+
+  React.useEffect(()=>{ startRound(0); },[]);
+
+  React.useEffect(()=>{
+    if (selL===null||selR===null) return;
+    setAtt(a=>a+1);
+    if (selL===selR) {
+      const ci = Object.keys(matched).length % PAIR_COLORS.length;
+      const nm = {...matched, [selL]:ci};
+      setMatched(nm); setCorr(c=>c+1);
+      setSelL(null); setSelR(null);
+      if (Object.keys(nm).length===PAIRS) setTimeout(()=>setDone(true),300);
+    } else {
+      setWrong({l:selL,r:selR});
+      setTimeout(()=>{ setWrong({l:null,r:null}); setSelL(null); setSelR(null); },650);
+    }
+  },[selL,selR]);
+
+  const mc = Object.keys(matched).length;
+  const acc = att>0 ? Math.round((corr/att)*100) : null;
+
+  const tile = (id, side) => {
+    const isM = matched[id]!==undefined;
+    const c = isM ? PAIR_COLORS[matched[id]] : null;
+    const isSel = side==="l"?selL===id:selR===id;
+    const isW = side==="l"?wrong.l===id:wrong.r===id;
+    return {
+      padding:"9px 8px", border:"1.5px solid",
+      borderColor: isM?c.border:isW?C.wrong:isSel?C.gold:C.border,
+      borderRadius:"4px",
+      background: isM?c.light:isW?"rgba(155,35,53,0.12)":isSel?"rgba(212,168,64,0.1)":C.surface,
+      color: isM?c.text:isW?C.wrong:isSel?C.gold:C.text,
+      cursor:isM?"default":"pointer", transition:"all 0.15s", textAlign:"center",
+      userSelect:"none", opacity:isM?0.6:1, textDecoration:isM?"line-through":"none",
+      minHeight:"50px", display:"flex", alignItems:"center", justifyContent:"center",
+    };
+  };
+
+  return (
+    <div>
+      <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"12px" }}>
+        <div style={{ flex:1, height:"4px", background:"#2e1e44", borderRadius:"2px", overflow:"hidden" }}>
+          <div style={{ height:"100%", width:`${(mc/PAIRS)*100}%`, background:C.purpleDim, transition:"width 0.4s" }} />
+        </div>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", color:C.textMuted, whiteSpace:"nowrap" }}>
+          {mc}/{PAIRS}{acc!==null?` · ${acc}% acc`:""}
+        </div>
+      </div>
+      {!done && <div style={{ textAlign:"center", marginBottom:"10px", color:C.textMuted, fontSize:"12px", fontStyle:"italic" }}>Click a Sanskrit word, then its English meaning</div>}
+      {done && (
+        <div style={{ textAlign:"center", padding:"14px", background:"linear-gradient(180deg,#2a1040,#1a0830)", border:"1px solid "+C.purpleDim, borderRadius:"4px", marginBottom:"14px" }}>
+          <div className="deva" style={{ fontSize:"18px", color:C.purpleLight, fontWeight:"700", marginBottom:"4px" }}>
+            {acc===100?"सुन्दरम्! 🪷":acc>=80?"साधु! ✓":"पुनः पठ!"}
+          </div>
+          <div style={{ color:C.textMuted, fontSize:"12px", marginBottom:"10px" }}>{acc}% accuracy</div>
+          <button onClick={()=>{ setRound(r=>{ const n=r+1; startRound(n); return n; }); }} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 20px", background:C.purpleDim, color:"#f0e8ff", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT ROUND →</button>
+        </div>
+      )}
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"7px 14px" }}>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", color:C.textMuted, textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid "+C.border }}>SANSKRIT</div>
+        <div style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", color:C.textMuted, textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid "+C.border }}>ENGLISH</div>
+        {left.map((item,i)=>(
+          <React.Fragment key={item.id}>
+            <div onClick={()=>!matched[item.id]&&wrong.l===null&&setSelL(item.id)} style={tile(item.id,"l")}>
+              <span className="deva" style={{ fontSize:"14px" }}>{item.text}</span>
+            </div>
+            <div onClick={()=>!matched[right[i].id]&&wrong.l===null&&setSelR(right[i].id)} style={tile(right[i].id,"r")}>
+              <span style={{ fontFamily:"'EB Garamond',serif", fontSize:"14px", fontStyle:"italic" }}>{right[i].text}</span>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────
+
+function App() {
+  const [mode, setMode]         = React.useState("tables");
+  const [catIdx, setCatIdx]     = React.useState(0);
+  const [wordIdx, setWordIdx]   = React.useState(0);
+  const [inputs, setInputs]     = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+  const [showAnswers, setShowAnswers] = React.useState(false);
+
+  const cat  = CATEGORIES[catIdx];
+  const word = cat.words[wordIdx];
+  const tag  = TAG[cat.type];
+
+  const tableData = React.useMemo(() => {
+    if (cat.type === "irregular") return word.tables.map(t => ({
+      ...t, answers: t.rows.map(r => r.answers)
+    }));
+    const pat = cat.type === "conjugation" ? CONJ[cat.pattern] : DECL[cat.pattern];
+    return [{ tense: pat.tense||null, headers: pat.headers, rows: pat.rows, answers: getAnswers(cat,word) }];
+  },[catIdx,wordIdx]);
+
+  const allKeys = tableData.flatMap((t,ti) =>
+    t.answers.flatMap((row,ri) => row.map((_,ci) => `${ti}-${ri}-${ci}`))
+  );
+  const total       = allKeys.length;
+  const filledCount = allKeys.filter(k => inputs[k]?.trim()).length;
+  const score       = submitted ? allKeys.filter(k => {
+    const [ti,ri,ci] = k.split("-").map(Number);
+    return checkAnswer(inputs[k]||"", tableData[ti].answers[ri][ci]) === "correct";
+  }).length : 0;
+
+  const handleInput = (ti, key, val) => {
+    setInputs(p => ({...p, [`${ti}-${key}`]: val}));
+    if (submitted) setSubmitted(false);
+  };
+  const reset    = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
+  const goWord   = (d) => { setWordIdx((wordIdx+d+cat.words.length)%cat.words.length); reset(); };
+  const goCat    = (i) => { setCatIdx(i); setWordIdx(0); reset(); };
+
+  return (
+    <div style={{ minHeight:"100vh", background:C.bg, fontFamily:"'EB Garamond',serif", color:C.text, paddingBottom:"60px" }}>
+
+      {/* Header */}
+      <header style={{ borderBottom:"2px solid #2e1e44", background:"linear-gradient(180deg,#080610,#0e0a14)", padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px" }}>
+        <div>
+          <div className="deva" style={{ fontSize:"11px", letterSpacing:"3px", color:C.purpleDim, marginBottom:"4px" }}>संस्कृत व्याकरण</div>
+          <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"22px", fontWeight:"700", color:C.purpleLight, margin:0, letterSpacing:"1px" }}>Sanskrit Practice Tables</h1>
+        </div>
+        <div style={{ marginLeft:"auto", fontStyle:"italic", color:C.textMuted, fontSize:"13px", paddingBottom:"2px" }}>
+          अभ्यासः परमो धर्मः
+        </div>
+      </header>
+
+      <div style={{ maxWidth:"880px", margin:"0 auto", padding:"0 20px" }}>
+
+        {/* Mode tabs */}
+        <div style={{ display:"flex", marginTop:"20px", borderBottom:"2px solid #2e1e44" }}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"]].map(([m,label])=>(
+            <button key={m} onClick={()=>setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 20px", border:"none", borderBottom:mode===m?"2px solid "+C.purpleLight:"2px solid transparent", marginBottom:"-2px", background:mode===m?C.surface:"transparent", color:mode===m?C.purpleLight:C.textMuted, cursor:"pointer", fontWeight:mode===m?"600":"400" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Matching mode */}
+        {mode === "matching" && (
+          <div style={{ marginTop:"16px", background:C.surface, border:"1px solid #2e1e44", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.5)", padding:"20px 22px" }}>
+            <MatchingMode />
+          </div>
+        )}
+
+        {/* Tables mode */}
+        {mode === "tables" && <>
+
+          {/* Category pills */}
+          <div style={{ marginTop:"16px", display:"flex", flexWrap:"wrap", gap:"5px" }}>
+            {CATEGORIES.map((c,i) => {
+              const tc = TAG[c.type];
+              const active = i===catIdx;
+              return (
+                <button key={c.id} onClick={()=>goCat(i)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"4px 11px", border:"1px solid", borderColor:active?tc.text+"88":"#2e1e44", borderRadius:"20px", background:active?tc.bg:"transparent", color:active?tc.text:C.textMuted, cursor:"pointer", whiteSpace:"nowrap" }}>
+                  {c.label}
+                  <span style={{ opacity:0.65, marginLeft:"4px", fontSize:"9px" }}>{c.sublabel}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Card */}
+          <div style={{ marginTop:"14px", background:C.surface, border:"1px solid #2e1e44", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.5)", overflow:"hidden" }}>
+
+            {/* Card header */}
+            <div style={{ background:"linear-gradient(180deg,#080610,#0e0a14)", padding:"13px 22px", borderBottom:"2px solid #2e1e44", display:"flex", alignItems:"center", gap:"14px" }}>
+              <button onClick={()=>goWord(-1)} style={{ background:"rgba(155,89,208,0.1)", border:"1px solid #2e1e44", borderRadius:"2px", color:C.purpleLight, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>‹</button>
+              <div style={{ flex:1 }}>
+                <div style={{ display:"flex", alignItems:"baseline", gap:"10px", flexWrap:"wrap" }}>
+                  <span className="deva" style={{ fontSize:"22px", color:C.purpleLight }}>{word.dv}</span>
+                  <span style={{ fontFamily:"'EB Garamond',serif", fontStyle:"italic", fontSize:"16px", color:C.textMuted }}>
+                    {cat.type!=="irregular" ? word.iast : word.iast}
+                  </span>
+                  <span style={{ fontStyle:"italic", color:"#8a7aaa", fontSize:"14px" }}>— {word.meaning}</span>
+                </div>
+                <div style={{ display:"flex", gap:"8px", marginTop:"4px" }}>
+                  <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1.5px", padding:"2px 7px", borderRadius:"10px", background:tag.bg, color:tag.text, border:`1px solid ${tag.text}44` }}>{cat.type.toUpperCase()}</span>
+                  <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", color:C.textMuted, letterSpacing:"1px" }}>{cat.sublabel.toUpperCase()}</span>
+                </div>
+              </div>
+              <div style={{ textAlign:"center", color:C.textMuted, fontSize:"11px", flexShrink:0 }}>
+                <div style={{ fontFamily:"'Cinzel',serif", fontSize:"15px", color:C.purpleLight, fontWeight:"600" }}>{wordIdx+1}</div>
+                <div>of {cat.words.length}</div>
+              </div>
+              <button onClick={()=>goWord(1)} style={{ background:"rgba(155,89,208,0.1)", border:"1px solid #2e1e44", borderRadius:"2px", color:C.purpleLight, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>›</button>
+            </div>
+
+            <ScoreBar score={score} total={total} submitted={submitted} />
+
+            {/* Tables */}
+            <div style={{ padding:"16px 22px", display:"flex", flexDirection:"column", gap:"24px" }}>
+              {tableData.map((t,ti) => {
+                const sub = {};
+                Object.entries(inputs).forEach(([k,v])=>{ const [tIdx,...r]=k.split("-"); if(Number(tIdx)===ti) sub[r.join("-")]=v; });
+                return (
+                  <div key={ti}>
+                    {t.tense && <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:C.purpleDim, marginBottom:"8px", textTransform:"uppercase", borderLeft:"3px solid "+C.purpleDim, paddingLeft:"9px" }}>{t.tense}</div>}
+                    <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={sub} submitted={submitted} showAnswers={showAnswers} onInput={(key,val)=>handleInput(ti,key,val)} />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Controls */}
+            <div style={{ padding:"12px 22px 16px", borderTop:"1px solid #1e1230", display:"flex", alignItems:"center", gap:"8px", flexWrap:"wrap" }}>
+              <button onClick={()=>setSubmitted(true)} disabled={filledCount===0} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 18px", background:filledCount===0?"#1e1230":C.purpleDim, color:filledCount===0?C.textMuted:"#f0e8ff", border:"none", borderRadius:"2px", cursor:filledCount===0?"default":"pointer" }}>
+                GRADE ({filledCount}/{total})
+              </button>
+              <button onClick={reset} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:C.textMuted, border:"1px solid #2e1e44", borderRadius:"2px", cursor:"pointer" }}>RESET</button>
+              {submitted && score<total && (
+                <button onClick={()=>setShowAnswers(v=>!v)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:showAnswers?C.correct:C.wrong, border:"1px solid", borderColor:showAnswers?C.correct:"#2e1e44", borderRadius:"2px", cursor:"pointer" }}>
+                  {showAnswers?"HIDE ANSWERS":"SHOW ANSWERS"}
+                </button>
+              )}
+              <div style={{ marginLeft:"auto", display:"flex", gap:"6px" }}>
+                <button onClick={()=>goWord(-1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:"transparent", color:C.textMuted, border:"1px solid #2e1e44", borderRadius:"2px", cursor:"pointer" }}>← PREV</button>
+                <button onClick={()=>goWord(1)}  style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:C.purpleDim, color:"#f0e8ff", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT →</button>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop:"12px", fontSize:"11px", color:C.textMuted, fontStyle:"italic", textAlign:"center" }}>
+            Diacritics optional · ā=a · ī=i · ū=u · ś/ṣ=s · ṭ/ṭh=t/th · ḥ=h · ṛ=r
+          </div>
+        </>}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
