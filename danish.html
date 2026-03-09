@@ -1,731 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Danish Practice Tables</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dansk — Language Nexus</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f0f4f0; }
-  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(180,30,30,0.25); }
-  button { transition: all 0.15s; }
-  button:hover { opacity: 0.88; }
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #e8ece8; }
-  ::-webkit-scrollbar-thumb { background: #c8403a; border-radius: 3px; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f0;
+  --surface:#ffffff;
+  --surface2:#f0ede6;
+  --border:rgba(0,0,0,0.08);
+  --border2:rgba(0,0,0,0.14);
+  --text:#1c1917;
+  --text2:#57534e;
+  --text3:#a8a29e;
+  --red:#c8403a;
+  --red-light:rgba(200,64,58,0.08);
+  --red-border:rgba(200,64,58,0.25);
+  --green:#2d7a50;
+  --green-light:rgba(45,122,80,0.08);
+  --green-border:rgba(45,122,80,0.25);
+  --gold:#b8860b;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.12),0 4px 8px rgba(0,0,0,0.06);
+  --radius:6px;
+  --radius-lg:10px;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
+button{cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+button:disabled{opacity:0.45;cursor:not-allowed}
+input{font-family:'DM Sans',sans-serif}
+input:focus{outline:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--red);padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
+.topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+.topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
+.topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.back-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;letter-spacing:1px;padding:5px 14px;border-radius:20px;text-transform:uppercase}
+.back-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* ── MODULE MAP ── */
+.map-container{max-width:860px;margin:0 auto;padding:40px 20px 80px;width:100%}
+.map-hero{margin-bottom:48px}
+.map-hero h1{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,56px);font-weight:300;font-style:italic;color:var(--text);line-height:1.1;margin-bottom:10px}
+.map-hero p{font-size:15px;color:var(--text2);max-width:520px;line-height:1.65}
+.module-block{margin-bottom:32px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.module-header{padding:18px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.module-header:hover{background:var(--surface2)}
+.module-badge{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.module-badge-inner{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:#fff}
+.module-info{flex:1}
+.module-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px}
+.module-sub{font-size:12px;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase;font-weight:500}
+.module-cefr{font-family:'DM Mono',monospace;font-size:11px;padding:3px 9px;border-radius:12px;border:1px solid;font-weight:500;flex-shrink:0}
+.module-chevron{color:var(--text3);font-size:14px;transition:transform 0.2s;flex-shrink:0}
+.module-chevron.open{transform:rotate(180deg)}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border)}
+.unit-card{background:var(--surface);padding:16px 18px;cursor:pointer;transition:background 0.15s;position:relative;overflow:hidden}
+.unit-card:hover:not(.locked){background:#faf8f5}
+.unit-card.locked{cursor:default;opacity:0.55}
+.unit-card.complete::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
+.unit-card.in-progress::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.unit-week{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.unit-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.unit-theme{font-size:11px;color:var(--text3);line-height:1.4}
+.unit-status{display:flex;align-items:center;gap:4px;margin-top:8px}
+.unit-status-dot{width:6px;height:6px;border-radius:50%}
+.unit-status-label{font-size:10px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.lock-icon{position:absolute;top:14px;right:14px;font-size:13px;opacity:0.4}
+.progress-ring{position:absolute;top:12px;right:12px}
+
+/* ── UNIT VIEW ── */
+.unit-container{max-width:760px;margin:0 auto;padding:32px 20px 80px;width:100%}
+.unit-header{margin-bottom:32px}
+.unit-header-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.unit-header-module{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.unit-header-sep{color:var(--text3);font-size:11px}
+.unit-header-cefr{font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;border:1px solid var(--border2);color:var(--text2)}
+.unit-title-big{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,40px);font-weight:400;font-style:italic;color:var(--text);margin-bottom:6px;line-height:1.1}
+.unit-theme-big{font-size:14px;color:var(--text2);margin-bottom:20px}
+.unit-progress-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.unit-progress-fill{height:100%;background:var(--red);border-radius:2px;transition:width 0.5s ease}
+.unit-progress-label{font-size:11px;color:var(--text3);text-align:right}
+
+/* ── SECTION TABS ── */
+.section-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.section-tab{font-size:11px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);letter-spacing:0.3px;white-space:nowrap}
+.section-tab:hover{background:var(--surface2)}
+.section-tab.active{background:var(--red);border-color:var(--red);color:#fff}
+.section-tab.complete{border-color:var(--green-border);color:var(--green)}
+.section-tab.complete.active{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.section-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.section-type-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:1.5px;padding:3px 9px;border-radius:10px;background:var(--surface2);color:var(--text3);text-transform:uppercase;flex-shrink:0}
+.section-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);flex:1}
+.section-score-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;flex-shrink:0}
+.section-body{padding:22px}
+.section-instruction{font-size:13px;color:var(--text2);margin-bottom:18px;font-style:italic;line-height:1.5}
+
+/* ── VOCAB INTRO ── */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.vocab-card{padding:12px 14px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.vocab-da{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px}
+.vocab-en{font-size:12px;color:var(--text2);margin-bottom:6px}
+.vocab-example{font-size:11px;color:var(--text3);font-style:italic;line-height:1.4;border-top:1px solid var(--border);padding-top:6px;margin-top:4px}
+
+/* ── MATCHING ── */
+.matching-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.match-col-header{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);text-align:center}
+.match-tile{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);text-align:center;user-select:none;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.15s}
+.match-tile.selectable:hover{border-color:var(--red);background:var(--red-light);cursor:pointer}
+.match-tile.selected{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
+.match-tile.wrong{border-color:var(--red);background:var(--red-light);animation:shake 0.4s ease}
+.match-tile.matched{opacity:0.45;text-decoration:line-through;cursor:default}
+.match-tile.da-tile{font-family:'Fraunces',serif;font-size:15px;font-weight:600}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ── MULTIPLE CHOICE ── */
+.mc-question{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.mc-question:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.mc-prompt{font-size:14px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.5}
+.mc-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mc-option{padding:9px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);font-size:13px;color:var(--text);text-align:left;transition:all 0.15s}
+.mc-option:hover:not(:disabled){border-color:var(--red);background:var(--red-light)}
+.mc-option.selected{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:500}
+.mc-option.correct{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:500}
+.mc-option.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:500}
+
+/* ── FILL BLANK ── */
+.fill-item{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:16px;padding:14px 16px;background:var(--surface2);border-radius:var(--radius);font-size:15px;border:1px solid var(--border)}
+.fill-item:last-child{margin-bottom:0}
+.fill-text{font-family:'Fraunces',serif;font-size:16px;color:var(--text)}
+.fill-input{font-family:'Fraunces',serif;font-size:16px;width:120px;padding:2px 8px;border-bottom:2px solid var(--border2);background:transparent;color:var(--text);border-top:none;border-left:none;border-right:none;border-radius:0;text-align:center}
+.fill-input:focus{border-bottom-color:var(--red)}
+.fill-input.correct{border-bottom-color:var(--green);color:var(--green)}
+.fill-input.wrong{border-bottom-color:var(--red);color:var(--red)}
+.fill-hint{font-size:10px;color:var(--text3);font-style:italic;margin-left:4px}
+.fill-correction{font-size:11px;color:var(--green);margin-left:6px;font-weight:500}
+
+/* ── SENTENCE CONSTRUCTION (DRAG) ── */
+.sc-item{margin-bottom:20px;padding:16px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.sc-item:last-child{margin-bottom:0}
+.sc-translation{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:12px}
+.sc-drop-zone{min-height:48px;border:2px dashed var(--border2);border-radius:var(--radius);padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;background:var(--surface);transition:border-color 0.15s}
+.sc-drop-zone.correct{border-color:var(--green);border-style:solid;background:var(--green-light)}
+.sc-drop-zone.wrong{border-color:var(--red);border-style:solid}
+.sc-tiles{display:flex;flex-wrap:wrap;gap:6px}
+.sc-tile{font-family:'Fraunces',serif;font-size:15px;font-weight:500;padding:5px 12px;background:var(--surface);border:1.5px solid var(--border2);border-radius:20px;cursor:grab;user-select:none;transition:all 0.15s;color:var(--text)}
+.sc-tile:hover{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.sc-tile.placed{background:var(--red);border-color:var(--red);color:#fff;cursor:pointer}
+.sc-tile.placed:hover{background:#a83330}
+.sc-tile.punct{opacity:0.7;font-style:italic}
+
+/* ── GRAMMAR TABLE ── */
+.grammar-explanation{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;padding:12px 16px;background:var(--surface2);border-radius:var(--radius);border-left:3px solid var(--red)}
+.grammar-table{width:100%;border-collapse:collapse;font-size:14px}
+.grammar-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:8px 12px;border-bottom:1px solid var(--border);text-align:center;background:var(--surface2)}
+.grammar-table th:first-child{text-align:left}
+.grammar-table td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+.grammar-table td:first-child{font-size:12px;color:var(--text2);font-style:italic;text-align:left;padding-left:12px;white-space:nowrap}
+.grammar-table tr:last-child td{border-bottom:none}
+.grammar-input{width:100%;max-width:100px;text-align:center;padding:5px 8px;font-family:'Fraunces',serif;font-size:15px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text)}
+.grammar-input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-light)}
+.grammar-input.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.grammar-input.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.grammar-correction{font-size:11px;color:var(--green);display:block;margin-top:2px}
+
+/* ── TRANSLATION ── */
+.translation-item{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-bottom:12px;padding:14px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.translation-item:last-child{margin-bottom:0}
+.translation-prompt{font-family:'Fraunces',serif;font-size:15px;color:var(--text);font-style:italic;padding-right:8px;line-height:1.4}
+.translation-input{width:100%;padding:8px 12px;font-family:'Fraunces',serif;font-size:15px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface);color:var(--text)}
+.translation-input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-light)}
+.translation-input.correct{border-color:var(--green);background:var(--green-light)}
+.translation-input.wrong{border-color:var(--red);background:var(--red-light)}
+.translation-correction{font-size:11px;color:var(--green);margin-top:4px;display:block}
+
+/* ── READING ── */
+.reading-text{font-family:'Fraunces',serif;font-size:17px;line-height:1.9;color:var(--text);margin-bottom:20px;padding:20px;background:var(--surface2);border-radius:var(--radius);border-left:3px solid var(--red)}
+.glossary{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.gloss-item{font-size:11px;padding:3px 10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text2)}
+.gloss-da{font-weight:600;color:var(--text)}
+
+/* ── CULTURAL NOTE ── */
+.cultural-card{background:linear-gradient(135deg,#fdf6ec,#fef9f0);border:1px solid #e8d5a0;border-radius:var(--radius-lg);padding:24px}
+.cultural-flag{font-size:32px;margin-bottom:12px}
+.cultural-heading{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px}
+.cultural-text{font-size:14px;color:var(--text2);line-height:1.75}
+
+/* ── LISTENING PLACEHOLDER ── */
+.listening-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:12px;background:var(--surface2);border-radius:var(--radius);border:2px dashed var(--border2)}
+.listening-icon{font-size:40px;opacity:0.4}
+.listening-label{font-family:'Fraunces',serif;font-size:16px;color:var(--text3)}
+.listening-sub{font-size:12px;color:var(--text3);max-width:300px;line-height:1.5}
+
+/* ── UNIT COMPLETE ── */
+.complete-screen{max-width:520px;margin:0 auto;padding:60px 20px;text-align:center}
+.complete-icon{font-size:56px;margin-bottom:20px}
+.complete-title{font-family:'Fraunces',serif;font-size:36px;font-weight:400;font-style:italic;color:var(--text);margin-bottom:8px}
+.complete-sub{font-size:14px;color:var(--text2);margin-bottom:32px;line-height:1.6}
+.score-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:28px;text-align:left;box-shadow:var(--shadow-sm)}
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.score-row:last-child{border-bottom:none}
+.score-label{color:var(--text2)}
+.score-val{font-weight:600;font-family:'DM Mono',monospace;font-size:12px}
+.score-val.pass{color:var(--green)}
+.score-val.fail{color:var(--red)}
+.score-overall{padding-top:12px;margin-top:4px;border-top:2px solid var(--border);font-size:15px;font-weight:600}
+.complete-actions{display:flex;gap:10px;justify-content:center}
+
+/* ── BUTTONS ── */
+.btn{font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.8px;padding:9px 22px;border-radius:4px;border:none;text-transform:uppercase}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover:not(:disabled){background:#a83330}
+.btn-secondary{background:transparent;color:var(--text2);border:1.5px solid var(--border2)}
+.btn-secondary:hover:not(:disabled){background:var(--surface2)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover:not(:disabled){background:#235f3e}
+.check-bar{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.35s ease both}
+@keyframes pop{0%{transform:scale(0.95)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.pop{animation:pop 0.25s ease both}
+
+/* ── RESPONSIVE ── */
+@media(max-width:560px){
+  .mc-options{grid-template-columns:1fr}
+  .translation-item{grid-template-columns:1fr}
+  .matching-grid{gap:6px 10px}
+  .vocab-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  DANISH PRACTICE TABLES
-//  Direction: English prompt shown → student fills in Danish forms
-//
-//  HOW TO ADD VOCABULARY:
-//  Find the category you want and copy an existing word entry.
-//
-//  NOUN format:
-//  { en: "English", indef_sg: "et/en hund", def_sg: "hunden", indef_pl: "hunde", def_pl: "hundene" }
-//
-//  VERB format:
-//  { en: "to run", infinitive: "at løbe", present: "løber", past: "løb", future: "vil løbe", perfect: "har løbet" }
-//
-//  ADJECTIVE format:
-//  { en: "big", common: "stor", neuter: "stort", plural: "store", definite: "store" }
-//
-//  PRONOUN: edit the explicit `rows` arrays directly.
-// ═══════════════════════════════════════════════════════════════════════════
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
 
-// ─── VOCABULARY ─────────────────────────────────────────────────────────────
-
-const CATEGORIES = [
-
-  // ══════════════════════════════════════════════════════
-  //  NOUNS — EVERYDAY (food, home, body)
-  // ══════════════════════════════════════════════════════
-  {
-    id: "nouns_everyday",
-    label: "Everyday Nouns",
-    sublabel: "Food, Home & Body",
-    type: "noun",
-    words: [
-      // ADD NEW EVERYDAY NOUNS HERE
-      { en: "bread",        indef_sg: "et brød",      def_sg: "brødet",     indef_pl: "brød",       def_pl: "brødene"     },
-      { en: "water",        indef_sg: "et vand",      def_sg: "vandet",     indef_pl: "vand",       def_pl: "vandene"     },
-      { en: "milk",         indef_sg: "en mælk",      def_sg: "mælken",     indef_pl: "—",          def_pl: "—"           },
-      { en: "apple",        indef_sg: "et æble",      def_sg: "æblet",      indef_pl: "æbler",      def_pl: "æblerne"     },
-      { en: "fish",         indef_sg: "en fisk",      def_sg: "fisken",     indef_pl: "fisk",       def_pl: "fiskene"     },
-      { en: "meat",         indef_sg: "et kød",       def_sg: "kødet",      indef_pl: "—",          def_pl: "—"           },
-      { en: "egg",          indef_sg: "et æg",        def_sg: "ægget",      indef_pl: "æg",         def_pl: "æggene"      },
-      { en: "cheese",       indef_sg: "en ost",       def_sg: "osten",      indef_pl: "oste",       def_pl: "ostene"      },
-      { en: "coffee",       indef_sg: "en kaffe",     def_sg: "kaffen",     indef_pl: "—",          def_pl: "—"           },
-      { en: "house",        indef_sg: "et hus",       def_sg: "huset",      indef_pl: "huse",       def_pl: "husene"      },
-      { en: "door",         indef_sg: "en dør",       def_sg: "døren",      indef_pl: "døre",       def_pl: "dørene"      },
-      { en: "window",       indef_sg: "et vindue",    def_sg: "vinduet",    indef_pl: "vinduer",    def_pl: "vinduerne"   },
-      { en: "table",        indef_sg: "et bord",      def_sg: "bordet",     indef_pl: "borde",      def_pl: "bordene"     },
-      { en: "chair",        indef_sg: "en stol",      def_sg: "stolen",     indef_pl: "stole",      def_pl: "stolene"     },
-      { en: "bed",          indef_sg: "en seng",      def_sg: "sengen",     indef_pl: "senge",      def_pl: "sengene"     },
-      { en: "hand",         indef_sg: "en hånd",      def_sg: "hånden",     indef_pl: "hænder",     def_pl: "hænderne"    },
-      { en: "eye",          indef_sg: "et øje",       def_sg: "øjet",       indef_pl: "øjne",       def_pl: "øjnene"      },
-      { en: "head",         indef_sg: "et hoved",     def_sg: "hovedet",    indef_pl: "hoveder",    def_pl: "hovederne"   },
-      { en: "foot",         indef_sg: "en fod",       def_sg: "foden",      indef_pl: "fødder",     def_pl: "fødderne"    },
-      { en: "heart",        indef_sg: "et hjerte",    def_sg: "hjertet",    indef_pl: "hjerter",    def_pl: "hjerterne"   },
-      { en: "book",         indef_sg: "en bog",       def_sg: "bogen",      indef_pl: "bøger",      def_pl: "bøgerne"     },
-      { en: "car",          indef_sg: "en bil",       def_sg: "bilen",      indef_pl: "biler",      def_pl: "bilerne"     },
-      { en: "street",       indef_sg: "en gade",      def_sg: "gaden",      indef_pl: "gader",      def_pl: "gaderne"     },
-      { en: "school",       indef_sg: "en skole",     def_sg: "skolen",     indef_pl: "skoler",     def_pl: "skolerne"    },
-      { en: "city",         indef_sg: "en by",        def_sg: "byen",       indef_pl: "byer",       def_pl: "byerne"      },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  NOUNS — PEOPLE & RELATIONSHIPS
-  // ══════════════════════════════════════════════════════
-  {
-    id: "nouns_people",
-    label: "People & Relationships",
-    sublabel: "Family & Professions",
-    type: "noun",
-    words: [
-      // ADD NEW PEOPLE NOUNS HERE
-      { en: "man",          indef_sg: "en mand",      def_sg: "manden",     indef_pl: "mænd",       def_pl: "mændene"     },
-      { en: "woman",        indef_sg: "en kvinde",    def_sg: "kvinden",    indef_pl: "kvinder",    def_pl: "kvinderne"   },
-      { en: "child",        indef_sg: "et barn",      def_sg: "barnet",     indef_pl: "børn",       def_pl: "børnene"     },
-      { en: "boy",          indef_sg: "en dreng",     def_sg: "drengen",    indef_pl: "drenge",     def_pl: "drengene"    },
-      { en: "girl",         indef_sg: "en pige",      def_sg: "pigen",      indef_pl: "piger",      def_pl: "pigerne"     },
-      { en: "friend",       indef_sg: "en ven",       def_sg: "vennen",     indef_pl: "venner",     def_pl: "vennerne"    },
-      { en: "mother",       indef_sg: "en mor",       def_sg: "moren",      indef_pl: "mødre",      def_pl: "mødrene"     },
-      { en: "father",       indef_sg: "en far",       def_sg: "faren",      indef_pl: "fædre",      def_pl: "fædrene"     },
-      { en: "brother",      indef_sg: "en bror",      def_sg: "broren",     indef_pl: "brødre",     def_pl: "brødrene"    },
-      { en: "sister",       indef_sg: "en søster",    def_sg: "søsteren",   indef_pl: "søstre",     def_pl: "søstrene"    },
-      { en: "son",          indef_sg: "en søn",       def_sg: "sønnen",     indef_pl: "sønner",     def_pl: "sønnerne"    },
-      { en: "daughter",     indef_sg: "en datter",    def_sg: "datteren",   indef_pl: "døtre",      def_pl: "døtrene"     },
-      { en: "husband",      indef_sg: "en mand",      def_sg: "manden",     indef_pl: "mænd",       def_pl: "mændene"     },
-      { en: "wife",         indef_sg: "en kone",      def_sg: "konen",      indef_pl: "koner",      def_pl: "konerne"     },
-      { en: "teacher",      indef_sg: "en lærer",     def_sg: "læreren",    indef_pl: "lærere",     def_pl: "lærerne"     },
-      { en: "doctor",       indef_sg: "en læge",      def_sg: "lægen",      indef_pl: "læger",      def_pl: "lægerne"     },
-      { en: "student",      indef_sg: "en studerende",def_sg: "den studerende",indef_pl:"studerende",def_pl:"de studerende"},
-      { en: "colleague",    indef_sg: "en kollega",   def_sg: "kollegaen",  indef_pl: "kolleger",   def_pl: "kollegerne"  },
-      { en: "neighbour",    indef_sg: "en nabo",      def_sg: "naboen",     indef_pl: "naboer",     def_pl: "naboerne"    },
-      { en: "guest",        indef_sg: "en gæst",      def_sg: "gæsten",     indef_pl: "gæster",     def_pl: "gæsterne"    },
-      { en: "king",         indef_sg: "en konge",     def_sg: "kongen",     indef_pl: "konger",     def_pl: "kongerne"    },
-      { en: "queen",        indef_sg: "en dronning",  def_sg: "dronningen", indef_pl: "dronninger", def_pl: "dronningerne"},
-      { en: "soldier",      indef_sg: "en soldat",    def_sg: "soldaten",   indef_pl: "soldater",   def_pl: "soldaterne"  },
-      { en: "writer",       indef_sg: "en forfatter", def_sg: "forfatteren",indef_pl: "forfattere", def_pl: "forfatterne" },
-      { en: "person",       indef_sg: "en person",    def_sg: "personen",   indef_pl: "personer",   def_pl: "personerne"  },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  NOUNS — TIME & NATURE
-  // ══════════════════════════════════════════════════════
-  {
-    id: "nouns_time_nature",
-    label: "Time & Nature",
-    sublabel: "Days, Seasons & Weather",
-    type: "noun",
-    words: [
-      // ADD NEW TIME/NATURE NOUNS HERE
-      { en: "day",          indef_sg: "en dag",       def_sg: "dagen",      indef_pl: "dage",       def_pl: "dagene"      },
-      { en: "week",         indef_sg: "en uge",       def_sg: "ugen",       indef_pl: "uger",       def_pl: "ugerne"      },
-      { en: "month",        indef_sg: "en måned",     def_sg: "måneden",    indef_pl: "måneder",    def_pl: "månederne"   },
-      { en: "year",         indef_sg: "et år",        def_sg: "året",       indef_pl: "år",         def_pl: "årene"       },
-      { en: "morning",      indef_sg: "en morgen",    def_sg: "morgenen",   indef_pl: "morgener",   def_pl: "morgenerne"  },
-      { en: "evening",      indef_sg: "en aften",     def_sg: "aftenen",    indef_pl: "aftener",    def_pl: "aftenerne"   },
-      { en: "night",        indef_sg: "en nat",       def_sg: "natten",     indef_pl: "nætter",     def_pl: "nætterne"    },
-      { en: "spring",       indef_sg: "en forår",     def_sg: "foråret",    indef_pl: "forår",      def_pl: "forårene"    },
-      { en: "summer",       indef_sg: "en sommer",    def_sg: "sommeren",   indef_pl: "somre",      def_pl: "somrene"     },
-      { en: "autumn",       indef_sg: "en efterår",   def_sg: "efteråret",  indef_pl: "efterår",    def_pl: "efterårene"  },
-      { en: "winter",       indef_sg: "en vinter",    def_sg: "vinteren",   indef_pl: "vintre",     def_pl: "vintrene"    },
-      { en: "sun",          indef_sg: "en sol",       def_sg: "solen",      indef_pl: "sole",       def_pl: "solene"      },
-      { en: "moon",         indef_sg: "en måne",      def_sg: "månen",      indef_pl: "måner",      def_pl: "månerne"     },
-      { en: "star",         indef_sg: "en stjerne",   def_sg: "stjernen",   indef_pl: "stjerner",   def_pl: "stjernerne"  },
-      { en: "rain",         indef_sg: "en regn",      def_sg: "regnen",     indef_pl: "—",          def_pl: "—"           },
-      { en: "snow",         indef_sg: "en sne",       def_sg: "sneen",      indef_pl: "—",          def_pl: "—"           },
-      { en: "wind",         indef_sg: "en vind",      def_sg: "vinden",     indef_pl: "vinde",      def_pl: "vindene"     },
-      { en: "sea",          indef_sg: "et hav",       def_sg: "havet",      indef_pl: "have",       def_pl: "havene"      },
-      { en: "river",        indef_sg: "en flod",      def_sg: "floden",     indef_pl: "floder",     def_pl: "floderne"    },
-      { en: "forest",       indef_sg: "en skov",      def_sg: "skoven",     indef_pl: "skove",      def_pl: "skovene"     },
-      { en: "mountain",     indef_sg: "et bjerg",     def_sg: "bjerget",    indef_pl: "bjerge",     def_pl: "bjergene"    },
-      { en: "sky",          indef_sg: "en himmel",    def_sg: "himlen",     indef_pl: "himle",      def_pl: "himlene"     },
-      { en: "flower",       indef_sg: "en blomst",    def_sg: "blomsten",   indef_pl: "blomster",   def_pl: "blomstene"   },
-      { en: "tree",         indef_sg: "et træ",       def_sg: "træet",      indef_pl: "træer",      def_pl: "træerne"     },
-      { en: "animal",       indef_sg: "et dyr",       def_sg: "dyret",      indef_pl: "dyr",        def_pl: "dyrene"      },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  VERBS — MOTION
-  // ══════════════════════════════════════════════════════
-  {
-    id: "verbs_motion",
-    label: "Verbs: Motion",
-    sublabel: "Present, Past & Future",
-    type: "verb",
-    words: [
-      // ADD NEW MOTION VERBS HERE
-      // Format: { en, infinitive, present, past, future, perfect }
-      { en: "to go / walk",   infinitive: "at gå",      present: "går",      past: "gik",       future: "vil gå",      perfect: "har gået"      },
-      { en: "to run",         infinitive: "at løbe",    present: "løber",    past: "løb",       future: "vil løbe",    perfect: "har løbet"     },
-      { en: "to come",        infinitive: "at komme",   present: "kommer",   past: "kom",       future: "vil komme",   perfect: "er kommet"     },
-      { en: "to travel",      infinitive: "at rejse",   present: "rejser",   past: "rejste",    future: "vil rejse",   perfect: "har rejst"     },
-      { en: "to drive",       infinitive: "at køre",    present: "kører",    past: "kørte",     future: "vil køre",    perfect: "har kørt"      },
-      { en: "to fly",         infinitive: "at flyve",   present: "flyver",   past: "fløj",      future: "vil flyve",   perfect: "har fløjet"    },
-      { en: "to swim",        infinitive: "at svømme",  present: "svømmer",  past: "svømmede",  future: "vil svømme",  perfect: "har svømmet"   },
-      { en: "to jump",        infinitive: "at hoppe",   present: "hopper",   past: "hoppede",   future: "vil hoppe",   perfect: "har hoppet"    },
-      { en: "to fall",        infinitive: "at falde",   present: "falder",   past: "faldt",     future: "vil falde",   perfect: "er faldet"     },
-      { en: "to climb",       infinitive: "at klatre",  present: "klatrer",  past: "klatrede",  future: "vil klatre",  perfect: "har klatret"   },
-      { en: "to stop",        infinitive: "at stoppe",  present: "stopper",  past: "stoppede",  future: "vil stoppe",  perfect: "har stoppet"   },
-      { en: "to arrive",      infinitive: "at ankomme", present: "ankommer", past: "ankom",     future: "vil ankomme", perfect: "er ankommet"   },
-      { en: "to leave",       infinitive: "at forlade", present: "forlader", past: "forlod",    future: "vil forlade", perfect: "har forladt"   },
-      { en: "to turn",        infinitive: "at dreje",   present: "drejer",   past: "drejede",   future: "vil dreje",   perfect: "har drejet"    },
-      { en: "to enter",       infinitive: "at gå ind",  present: "går ind",  past: "gik ind",   future: "vil gå ind",  perfect: "er gået ind"   },
-      { en: "to exit",        infinitive: "at gå ud",   present: "går ud",   past: "gik ud",    future: "vil gå ud",   perfect: "er gået ud"    },
-      { en: "to carry",       infinitive: "at bære",    present: "bærer",    past: "bar",       future: "vil bære",    perfect: "har båret"     },
-      { en: "to bring",       infinitive: "at bringe",  present: "bringer",  past: "bragte",    future: "vil bringe",  perfect: "har bragt"     },
-      { en: "to follow",      infinitive: "at følge",   present: "følger",   past: "fulgte",    future: "vil følge",   perfect: "har fulgt"     },
-      { en: "to return",      infinitive: "at vende tilbage", present: "vender tilbage", past: "vendte tilbage", future: "vil vende tilbage", perfect: "har vendt tilbage" },
-      { en: "to push",        infinitive: "at skubbe",  present: "skubber",  past: "skubbede",  future: "vil skubbe",  perfect: "har skubbet"   },
-      { en: "to pull",        infinitive: "at trække",  present: "trækker",  past: "trak",      future: "vil trække",  perfect: "har trukket"   },
-      { en: "to throw",       infinitive: "at kaste",   present: "kaster",   past: "kastede",   future: "vil kaste",   perfect: "har kastet"    },
-      { en: "to ride",        infinitive: "at ride",    present: "rider",    past: "red",       future: "vil ride",    perfect: "har redet"     },
-      { en: "to sail",        infinitive: "at sejle",   present: "sejler",   past: "sejlede",   future: "vil sejle",   perfect: "har sejlet"    },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  VERBS — COMMUNICATION
-  // ══════════════════════════════════════════════════════
-  {
-    id: "verbs_communication",
-    label: "Verbs: Communication",
-    sublabel: "Present, Past & Future",
-    type: "verb",
-    words: [
-      // ADD NEW COMMUNICATION VERBS HERE
-      { en: "to say",         infinitive: "at sige",    present: "siger",    past: "sagde",     future: "vil sige",    perfect: "har sagt"      },
-      { en: "to speak",       infinitive: "at tale",    present: "taler",    past: "talte",     future: "vil tale",    perfect: "har talt"      },
-      { en: "to ask",         infinitive: "at spørge",  present: "spørger",  past: "spurgte",   future: "vil spørge",  perfect: "har spurgt"    },
-      { en: "to answer",      infinitive: "at svare",   present: "svarer",   past: "svarede",   future: "vil svare",   perfect: "har svaret"    },
-      { en: "to listen",      infinitive: "at lytte",   present: "lytter",   past: "lyttede",   future: "vil lytte",   perfect: "har lyttet"    },
-      { en: "to hear",        infinitive: "at høre",    present: "hører",    past: "hørte",     future: "vil høre",    perfect: "har hørt"      },
-      { en: "to read",        infinitive: "at læse",    present: "læser",    past: "læste",     future: "vil læse",    perfect: "har læst"      },
-      { en: "to write",       infinitive: "at skrive",  present: "skriver",  past: "skrev",     future: "vil skrive",  perfect: "har skrevet"   },
-      { en: "to call",        infinitive: "at ringe",   present: "ringer",   past: "ringede",   future: "vil ringe",   perfect: "har ringet"    },
-      { en: "to meet",        infinitive: "at møde",    present: "møder",    past: "mødte",     future: "vil møde",    perfect: "har mødt"      },
-      { en: "to think",       infinitive: "at tænke",   present: "tænker",   past: "tænkte",    future: "vil tænke",   perfect: "har tænkt"     },
-      { en: "to know",        infinitive: "at vide",    present: "ved",      past: "vidste",    future: "vil vide",    perfect: "har vidst"     },
-      { en: "to understand",  infinitive: "at forstå",  present: "forstår",  past: "forstod",   future: "vil forstå",  perfect: "har forstået"  },
-      { en: "to explain",     infinitive: "at forklare",present: "forklarer",past: "forklarede",future: "vil forklare",perfect: "har forklaret" },
-      { en: "to promise",     infinitive: "at love",    present: "lover",    past: "lovede",    future: "vil love",    perfect: "har lovet"     },
-      { en: "to forget",      infinitive: "at glemme",  present: "glemmer",  past: "glemte",    future: "vil glemme",  perfect: "har glemt"     },
-      { en: "to remember",    infinitive: "at huske",   present: "husker",   past: "huskede",   future: "vil huske",   perfect: "har husket"    },
-      { en: "to show",        infinitive: "at vise",    present: "viser",    past: "viste",     future: "vil vise",    perfect: "har vist"      },
-      { en: "to teach",       infinitive: "at undervise",present:"underviser",past:"underviste", future:"vil undervise",perfect:"har undervist"  },
-      { en: "to learn",       infinitive: "at lære",    present: "lærer",    past: "lærte",     future: "vil lære",    perfect: "har lært"      },
-      { en: "to laugh",       infinitive: "at grine",   present: "griner",   past: "grinede",   future: "vil grine",   perfect: "har grinet"    },
-      { en: "to cry",         infinitive: "at græde",   present: "græder",   past: "græd",      future: "vil græde",   perfect: "har grædt"     },
-      { en: "to greet",       infinitive: "at hilse",   present: "hilser",   past: "hilste",    future: "vil hilse",   perfect: "har hilst"     },
-      { en: "to thank",       infinitive: "at takke",   present: "takker",   past: "takkede",   future: "vil takke",   perfect: "har takket"    },
-      { en: "to sing",        infinitive: "at synge",   present: "synger",   past: "sang",      future: "vil synge",   perfect: "har sunget"    },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  VERBS — DAILY LIFE
-  // ══════════════════════════════════════════════════════
-  {
-    id: "verbs_daily",
-    label: "Verbs: Daily Life",
-    sublabel: "Present, Past & Future",
-    type: "verb",
-    words: [
-      // ADD NEW DAILY LIFE VERBS HERE
-      { en: "to eat",         infinitive: "at spise",   present: "spiser",   past: "spiste",    future: "vil spise",   perfect: "har spist"     },
-      { en: "to drink",       infinitive: "at drikke",  present: "drikker",  past: "drak",      future: "vil drikke",  perfect: "har drukket"   },
-      { en: "to sleep",       infinitive: "at sove",    present: "sover",    past: "sov",       future: "vil sove",    perfect: "har sovet"     },
-      { en: "to wake up",     infinitive: "at vågne",   present: "vågner",   past: "vågnede",   future: "vil vågne",   perfect: "er vågnet"     },
-      { en: "to work",        infinitive: "at arbejde", present: "arbejder", past: "arbejdede", future: "vil arbejde", perfect: "har arbejdet"  },
-      { en: "to buy",         infinitive: "at købe",    present: "køber",    past: "købte",     future: "vil købe",    perfect: "har købt"      },
-      { en: "to pay",         infinitive: "at betale",  present: "betaler",  past: "betalte",   future: "vil betale",  perfect: "har betalt"    },
-      { en: "to open",        infinitive: "at åbne",    present: "åbner",    past: "åbnede",    future: "vil åbne",    perfect: "har åbnet"     },
-      { en: "to close",       infinitive: "at lukke",   present: "lukker",   past: "lukkede",   future: "vil lukke",   perfect: "har lukket"    },
-      { en: "to give",        infinitive: "at give",    present: "giver",    past: "gav",       future: "vil give",    perfect: "har givet"     },
-      { en: "to take",        infinitive: "at tage",    present: "tager",    past: "tog",       future: "vil tage",    perfect: "har taget"     },
-      { en: "to find",        infinitive: "at finde",   present: "finder",   past: "fandt",     future: "vil finde",   perfect: "har fundet"    },
-      { en: "to lose",        infinitive: "at tabe",    present: "taber",    past: "tabte",     future: "vil tabe",    perfect: "har tabt"      },
-      { en: "to help",        infinitive: "at hjælpe",  present: "hjælper",  past: "hjalp",     future: "vil hjælpe",  perfect: "har hjulpet"   },
-      { en: "to need",        infinitive: "at have brug for", present: "har brug for", past: "havde brug for", future: "vil have brug for", perfect: "har haft brug for" },
-      { en: "to want",        infinitive: "at ville",   present: "vil",      past: "ville",     future: "vil ville",   perfect: "har villet"    },
-      { en: "to have",        infinitive: "at have",    present: "har",      past: "havde",     future: "vil have",    perfect: "har haft"      },
-      { en: "to be",          infinitive: "at være",    present: "er",       past: "var",       future: "vil være",    perfect: "har været"     },
-      { en: "to become",      infinitive: "at blive",   present: "bliver",   past: "blev",      future: "vil blive",   perfect: "er blevet"     },
-      { en: "to make / do",   infinitive: "at lave",    present: "laver",    past: "lavede",    future: "vil lave",    perfect: "har lavet"     },
-      { en: "to see",         infinitive: "at se",      present: "ser",      past: "så",        future: "vil se",      perfect: "har set"       },
-      { en: "to look at",     infinitive: "at kigge på",present: "kigger på",past: "kiggede på",future:"vil kigge på", perfect: "har kigget på" },
-      { en: "to wait",        infinitive: "at vente",   present: "venter",   past: "ventede",   future: "vil vente",   perfect: "har ventet"    },
-      { en: "to begin",       infinitive: "at begynde", present: "begynder", past: "begyndte",  future: "vil begynde", perfect: "har begyndt"   },
-      { en: "to finish",      infinitive: "at afslutte",present: "afslutter",past: "afsluttede",future:"vil afslutte", perfect: "har afsluttet" },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  ADJECTIVES
-  // ══════════════════════════════════════════════════════
-  {
-    id: "adjectives",
-    label: "Adjectives",
-    sublabel: "Agreement: Common / Neuter / Plural / Definite",
-    type: "adjective",
-    words: [
-      // ADD NEW ADJECTIVES HERE
-      // Format: { en, common, neuter, plural, definite }
-      { en: "big / large",    common: "stor",       neuter: "stort",      plural: "store",      definite: "store"     },
-      { en: "small",          common: "lille",      neuter: "lille",      plural: "små",        definite: "lille"     },
-      { en: "good",           common: "god",        neuter: "godt",       plural: "gode",       definite: "gode"      },
-      { en: "bad",            common: "dårlig",     neuter: "dårligt",    plural: "dårlige",    definite: "dårlige"   },
-      { en: "new",            common: "ny",         neuter: "nyt",        plural: "nye",        definite: "nye"       },
-      { en: "old",            common: "gammel",     neuter: "gammelt",    plural: "gamle",      definite: "gamle"     },
-      { en: "long",           common: "lang",       neuter: "langt",      plural: "lange",      definite: "lange"     },
-      { en: "short",          common: "kort",       neuter: "kort",       plural: "korte",      definite: "korte"     },
-      { en: "fast / quick",   common: "hurtig",     neuter: "hurtigt",    plural: "hurtige",    definite: "hurtige"   },
-      { en: "slow",           common: "langsom",    neuter: "langsomt",   plural: "langsomme",  definite: "langsomme" },
-      { en: "hot",            common: "varm",       neuter: "varmt",      plural: "varme",      definite: "varme"     },
-      { en: "cold",           common: "kold",       neuter: "koldt",      plural: "kolde",      definite: "kolde"     },
-      { en: "beautiful",      common: "smuk",       neuter: "smukt",      plural: "smukke",     definite: "smukke"    },
-      { en: "ugly",           common: "grim",       neuter: "grimt",      plural: "grimme",     definite: "grimme"    },
-      { en: "happy",          common: "glad",       neuter: "glad",       plural: "glade",      definite: "glade"     },
-      { en: "sad",            common: "trist",      neuter: "trist",      plural: "triste",     definite: "triste"    },
-      { en: "easy",           common: "nem",        neuter: "nemt",       plural: "nemme",      definite: "nemme"     },
-      { en: "difficult",      common: "svær",       neuter: "svært",      plural: "svære",      definite: "svære"     },
-      { en: "important",      common: "vigtig",     neuter: "vigtigt",    plural: "vigtige",    definite: "vigtige"   },
-      { en: "interesting",    common: "interessant",neuter: "interessant",plural: "interessante",definite: "interessante"},
-      { en: "free",           common: "fri",        neuter: "frit",       plural: "frie",       definite: "frie"      },
-      { en: "open",           common: "åben",       neuter: "åbent",      plural: "åbne",       definite: "åbne"      },
-      { en: "right / correct",common: "rigtig",     neuter: "rigtigt",    plural: "rigtige",    definite: "rigtige"   },
-      { en: "different",      common: "forskellig", neuter: "forskelligt",plural: "forskellige", definite: "forskellige"},
-      { en: "alone",          common: "alene",      neuter: "alene",      plural: "alene",      definite: "alene"     },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════
-  //  PRONOUNS — explicit paradigms
-  // ══════════════════════════════════════════════════════
-  {
-    id: "pronouns_personal",
-    label: "Pronouns: Personal",
-    sublabel: "Subject & Object Forms",
-    type: "pronoun",
-    words: [
-      {
-        en: "Personal Pronouns",
-        tables: [
-          {
-            label: "Subject (Nominative)",
-            headers: ["Person", "Singular", "Plural"],
-            rows: [
-              { label: "1st",      prompt: ["I",   "we"],    answers: ["jeg",  "vi"]   },
-              { label: "2nd",      prompt: ["you (sg.)", "you (pl.)"], answers: ["du", "I"] },
-              { label: "3rd m.",   prompt: ["he",  "they"],  answers: ["han",  "de"]   },
-              { label: "3rd f.",   prompt: ["she", "they"],  answers: ["hun",  "de"]   },
-              { label: "3rd n.",   prompt: ["it",  "they"],  answers: ["den / det", "de"] },
-            ],
-          },
-          {
-            label: "Object (Accusative)",
-            headers: ["Person", "Singular", "Plural"],
-            rows: [
-              { label: "1st",      prompt: ["me",   "us"],   answers: ["mig",  "os"]   },
-              { label: "2nd",      prompt: ["you",  "you"],  answers: ["dig",  "jer"]  },
-              { label: "3rd m.",   prompt: ["him",  "them"], answers: ["ham",  "dem"]  },
-              { label: "3rd f.",   prompt: ["her",  "them"], answers: ["hende","dem"]  },
-              { label: "3rd n.",   prompt: ["it",   "them"], answers: ["den / det", "dem"] },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "pronouns_possessive",
-    label: "Pronouns: Possessive",
-    sublabel: "Agreement with Noun Gender",
-    type: "pronoun",
-    words: [
-      {
-        en: "Possessive Pronouns",
-        tables: [
-          {
-            label: "Common (en-words)",
-            headers: ["Person", "Singular", "Plural"],
-            rows: [
-              { label: "my",       prompt: ["my (en)",   "our (en)"],  answers: ["min",   "vores"]  },
-              { label: "your",     prompt: ["your (en)", "your (en)"], answers: ["din",   "jeres"]  },
-              { label: "his",      prompt: ["his (en)",  "their (en)"],answers: ["hans",  "deres"]  },
-              { label: "her",      prompt: ["her (en)",  "their (en)"],answers: ["hendes","deres"]  },
-            ],
-          },
-          {
-            label: "Neuter (et-words)",
-            headers: ["Person", "Singular", "Plural"],
-            rows: [
-              { label: "my",       prompt: ["my (et)",   "our (et)"],  answers: ["mit",   "vores"]  },
-              { label: "your",     prompt: ["your (et)", "your (et)"], answers: ["dit",   "jeres"]  },
-              { label: "his",      prompt: ["his (et)",  "their (et)"],answers: ["hans",  "deres"]  },
-              { label: "her",      prompt: ["her (et)",  "their (et)"],answers: ["hendes","deres"]  },
-            ],
-          },
-          {
-            label: "Plural (all genders)",
-            headers: ["Person", "Singular poss.", "Plural poss."],
-            rows: [
-              { label: "my",       prompt: ["my (pl.)",   "our (pl.)"],  answers: ["mine",   "vores"]  },
-              { label: "your",     prompt: ["your (pl.)", "your (pl.)"], answers: ["dine",   "jeres"]  },
-              { label: "his",      prompt: ["his (pl.)",  "their (pl.)"],answers: ["hans",   "deres"]  },
-              { label: "her",      prompt: ["her (pl.)",  "their (pl.)"],answers: ["hendes", "deres"]  },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "pronouns_demonstrative",
-    label: "Pronouns: Demonstrative",
-    sublabel: "denne/dette/disse & den/det/de",
-    type: "pronoun",
-    words: [
-      {
-        en: "Demonstrative Pronouns",
-        tables: [
-          {
-            label: "denne / dette / disse (this/these — nearby)",
-            headers: ["", "Common (en)", "Neuter (et)", "Plural"],
-            rows: [
-              { label: "this/these", prompt: ["this (en)", "this (et)", "these"], answers: ["denne", "dette", "disse"] },
-            ],
-          },
-          {
-            label: "den / det / de (that/those — or def. article with adj.)",
-            headers: ["", "Common (en)", "Neuter (et)", "Plural"],
-            rows: [
-              { label: "that/those", prompt: ["that (en)", "that (et)", "those"], answers: ["den", "det", "de"] },
-            ],
-          },
-          {
-            label: "samme (same) & anden/andet/andre (other)",
-            headers: ["", "Common (en)", "Neuter (et)", "Plural"],
-            rows: [
-              { label: "same",  prompt: ["same (en)", "same (et)", "same (pl.)"], answers: ["samme", "samme", "samme"] },
-              { label: "other", prompt: ["other (en)","other (et)","others"],     answers: ["anden",  "andet",  "andre"] },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-
-function normalize(str) {
-  // Allow ø=oe, å=aa, æ=ae as alternates
-  return str.trim().toLowerCase()
-    .replace(/ø/g, "oe").replace(/å/g, "aa").replace(/æ/g, "ae")
-    .replace(/\s*\/\s*.*/g, "") // take first of "x / y" alternates
-    .trim();
+function normalise(s) {
+  return (s||"").trim().toLowerCase()
+    .replace(/æ/g,"ae").replace(/ø/g,"oe").replace(/å/g,"aa")
+    .replace(/é|è|ê/g,"e").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ");
 }
 
-function checkAnswer(input, answer) {
-  if (!input.trim()) return "empty";
-  const normInput = normalize(input);
-  // Check against all "/" separated alternatives
-  const alts = answer.split("/").map(a => normalize(a.trim()));
-  return (alts.includes(normInput) || alts.includes(normalize(input))) ? "correct" : "wrong";
+function checkAnswer(input, correct, alternatives=[]) {
+  const n = normalise(input);
+  const all = [correct, ...alternatives].map(normalise);
+  return all.some(a => n === a || (n.length > 2 && a === n));
 }
-
-// ─── STYLE ────────────────────────────────────────────────────────────────────
-
-const COLORS = {
-  bg:          "#f0f4f0",
-  card:        "#ffffff",
-  border:      "#d8e4d8",
-  headerBg:    "#c8403a",
-  headerText:  "#ffffff",
-  accent:      "#c8403a",
-  accentDark:  "#a03030",
-  text:        "#1a2a1a",
-  textMuted:   "#5a6e5a",
-  inputBg:     "#f8faf8",
-  correct:     "#2d7a4f",
-  wrong:       "#c8403a",
-  tagNoun:     { bg: "#1a4a2a", text: "#7ed8a4" },
-  tagVerb:     { bg: "#2a1a4a", text: "#c4a0f0" },
-  tagAdj:      { bg: "#4a3010", text: "#e8c97a" },
-  tagPronoun:  { bg: "#1a3a4a", text: "#7ec8f0" },
-};
-
-const TAG = {
-  noun:     COLORS.tagNoun,
-  verb:     COLORS.tagVerb,
-  adjective:COLORS.tagAdj,
-  pronoun:  COLORS.tagPronoun,
-};
-
-// ─── NOUN TABLE ───────────────────────────────────────────────────────────────
-
-function NounTable({ word, inputs, submitted, showAnswers, onInput }) {
-  const fields = [
-    { key: "indef_sg", label: "Indefinite Singular", prompt: "a/an ___" },
-    { key: "def_sg",   label: "Definite Singular",   prompt: "the ___ (sg.)" },
-    { key: "indef_pl", label: "Indefinite Plural",   prompt: "___ (pl.)" },
-    { key: "def_pl",   label: "Definite Plural",     prompt: "the ___ (pl.)" },
-  ];
-
-  return (
-    <table style={{ width:"100%", borderCollapse:"collapse" }}>
-      <thead>
-        <tr>
-          <th style={thStyle("left")}>Form</th>
-          <th style={thStyle("left")}>Prompt</th>
-          <th style={thStyle("center")}>Danish</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fields.map((f, i) => {
-          const answer = word[f.key];
-          const val = inputs[f.key] || "";
-          const status = submitted ? checkAnswer(val, answer) : null;
-          const isUncountable = answer === "—";
-          return (
-            <tr key={f.key} style={{ background: i%2===0?"transparent":"rgba(200,240,200,0.08)" }}>
-              <td style={tdLabelStyle}>{f.label}</td>
-              <td style={{ ...tdLabelStyle, fontStyle:"italic", color: COLORS.textMuted }}>{f.prompt.replace("___", word.en)}</td>
-              <td style={{ padding:"5px 10px", textAlign:"center",
-                background: !status?"transparent": status==="correct"?"rgba(45,122,79,0.08)": status==="wrong"?"rgba(200,64,58,0.08)":"transparent" }}>
-                {isUncountable
-                  ? <span style={{ color: COLORS.textMuted, fontSize:"13px", fontStyle:"italic" }}>uncountable</span>
-                  : <div style={{ position:"relative" }}>
-                      <input type="text" value={val} onChange={e => onInput(f.key, e.target.value)}
-                        style={{ ...inputStyle, borderColor: !status?"#d8e4d8": status==="correct"?COLORS.correct:COLORS.wrong,
-                          background: !status?COLORS.inputBg: status==="correct"?"rgba(45,122,79,0.05)":"rgba(200,64,58,0.05)" }} />
-                      {submitted && status==="wrong" && showAnswers && (
-                        <div style={hintStyle}>{answer}</div>
-                      )}
-                    </div>
-                }
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
-// ─── VERB TABLE ───────────────────────────────────────────────────────────────
-
-function VerbTable({ word, inputs, submitted, showAnswers, onInput }) {
-  const fields = [
-    { key: "infinitive", label: "Infinitive",      prompt: "to ___" },
-    { key: "present",    label: "Present",         prompt: "I ___ (now)" },
-    { key: "past",       label: "Past (simple)",   prompt: "I ___ (yesterday)" },
-    { key: "future",     label: "Future",          prompt: "I will ___" },
-    { key: "perfect",    label: "Perfect",         prompt: "I have ___" },
-  ];
-
-  return (
-    <table style={{ width:"100%", borderCollapse:"collapse" }}>
-      <thead>
-        <tr>
-          <th style={thStyle("left")}>Tense</th>
-          <th style={thStyle("left")}>Prompt</th>
-          <th style={thStyle("center")}>Danish</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fields.map((f, i) => {
-          const answer = word[f.key];
-          const val = inputs[f.key] || "";
-          const status = submitted ? checkAnswer(val, answer) : null;
-          return (
-            <tr key={f.key} style={{ background: i%2===0?"transparent":"rgba(200,240,200,0.08)" }}>
-              <td style={tdLabelStyle}>{f.label}</td>
-              <td style={{ ...tdLabelStyle, fontStyle:"italic", color: COLORS.textMuted }}>
-                {f.prompt.replace("___", word.en.replace(/^to /, ""))}
-              </td>
-              <td style={{ padding:"5px 10px", textAlign:"center",
-                background: !status?"transparent": status==="correct"?"rgba(45,122,79,0.08)":"rgba(200,64,58,0.08)" }}>
-                <div style={{ position:"relative" }}>
-                  <input type="text" value={val} onChange={e => onInput(f.key, e.target.value)}
-                    style={{ ...inputStyle, borderColor: !status?"#d8e4d8": status==="correct"?COLORS.correct:COLORS.wrong,
-                      background: !status?COLORS.inputBg: status==="correct"?"rgba(45,122,79,0.05)":"rgba(200,64,58,0.05)" }} />
-                  {submitted && status==="wrong" && showAnswers && (
-                    <div style={hintStyle}>{answer}</div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
-// ─── ADJECTIVE TABLE ─────────────────────────────────────────────────────────
-
-function AdjectiveTable({ word, inputs, submitted, showAnswers, onInput }) {
-  const fields = [
-    { key: "common",    label: "Common (en-word)",   prompt: "en ___ hund" },
-    { key: "neuter",    label: "Neuter (et-word)",   prompt: "et ___ hus"  },
-    { key: "plural",    label: "Plural",             prompt: "___ hunde"   },
-    { key: "definite",  label: "Definite",           prompt: "den ___ hund"},
-  ];
-
-  return (
-    <table style={{ width:"100%", borderCollapse:"collapse" }}>
-      <thead>
-        <tr>
-          <th style={thStyle("left")}>Form</th>
-          <th style={thStyle("left")}>Example</th>
-          <th style={thStyle("center")}>Danish adjective</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fields.map((f, i) => {
-          const answer = word[f.key];
-          const val = inputs[f.key] || "";
-          const status = submitted ? checkAnswer(val, answer) : null;
-          return (
-            <tr key={f.key} style={{ background: i%2===0?"transparent":"rgba(200,240,200,0.08)" }}>
-              <td style={tdLabelStyle}>{f.label}</td>
-              <td style={{ ...tdLabelStyle, fontStyle:"italic", color: COLORS.textMuted }}>
-                {f.prompt.replace("___", "___")}
-              </td>
-              <td style={{ padding:"5px 10px", textAlign:"center",
-                background: !status?"transparent": status==="correct"?"rgba(45,122,79,0.08)":"rgba(200,64,58,0.08)" }}>
-                <div style={{ position:"relative" }}>
-                  <input type="text" value={val} onChange={e => onInput(f.key, e.target.value)}
-                    style={{ ...inputStyle, borderColor: !status?"#d8e4d8": status==="correct"?COLORS.correct:COLORS.wrong,
-                      background: !status?COLORS.inputBg: status==="correct"?"rgba(45,122,79,0.05)":"rgba(200,64,58,0.05)" }} />
-                  {submitted && status==="wrong" && showAnswers && (
-                    <div style={hintStyle}>{answer}</div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
-
-// ─── PRONOUN TABLE ────────────────────────────────────────────────────────────
-
-function PronounTableGroup({ tables, inputs, submitted, showAnswers, onInput }) {
-  return (
-    <div style={{ display:"flex", flexDirection:"column", gap:"24px" }}>
-      {tables.map((t, ti) => (
-        <div key={ti}>
-          <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"11px", fontWeight:"600", letterSpacing:"1.5px", textTransform:"uppercase", color: COLORS.accent, marginBottom:"8px", paddingLeft:"10px", borderLeft:"3px solid "+COLORS.accent }}>{t.label}</div>
-          <table style={{ width:"100%", borderCollapse:"collapse" }}>
-            <thead>
-              <tr>{t.headers.map((h,i) => <th key={i} style={thStyle(i===0?"left":"center")}>{h}</th>)}</tr>
-            </thead>
-            <tbody>
-              {t.rows.map((row, ri) => (
-                <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(200,240,200,0.08)" }}>
-                  <td style={tdLabelStyle}>{row.label}</td>
-                  {row.answers.map((answer, ci) => {
-                    const key = `${ti}-${ri}-${ci}`;
-                    const val = inputs[key] || "";
-                    const status = submitted ? checkAnswer(val, answer) : null;
-                    return (
-                      <td key={ci} style={{ padding:"5px 10px", textAlign:"center", borderBottom:"1px solid #e8f0e8",
-                        background: !status?"transparent": status==="correct"?"rgba(45,122,79,0.08)":"rgba(200,64,58,0.08)" }}>
-                        <div style={{ marginBottom:"2px", fontSize:"11px", color: COLORS.textMuted, fontStyle:"italic" }}>
-                          {row.prompt ? row.prompt[ci] : ""}
-                        </div>
-                        <div style={{ position:"relative" }}>
-                          <input type="text" value={val} onChange={e => onInput(key, e.target.value)}
-                            style={{ ...inputStyle, borderColor: !status?"#d8e4d8": status==="correct"?COLORS.correct:COLORS.wrong,
-                              background: !status?COLORS.inputBg: status==="correct"?"rgba(45,122,79,0.05)":"rgba(200,64,58,0.05)" }} />
-                          {submitted && status==="wrong" && showAnswers && (
-                            <div style={hintStyle}>{answer}</div>
-                          )}
-                        </div>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── SHARED STYLES ────────────────────────────────────────────────────────────
-
-const thStyle = (align) => ({
-  fontFamily: "'DM Sans',sans-serif", fontSize:"10px", fontWeight:"600",
-  letterSpacing:"1.5px", textTransform:"uppercase", color: COLORS.textMuted,
-  padding:"7px 10px", textAlign:align, borderBottom:"2px solid #e0eae0",
-});
-
-const tdLabelStyle = {
-  padding:"8px 10px", fontFamily:"'DM Sans',sans-serif", fontSize:"12px",
-  color: COLORS.textMuted, borderBottom:"1px solid #e8f0e8", whiteSpace:"nowrap",
-  fontWeight:"500",
-};
-
-const inputStyle = {
-  width:"100%", minWidth:"100px", padding:"5px 8px",
-  fontFamily:"'Source Serif 4',serif", fontSize:"15px", textAlign:"center",
-  border:"1px solid #d8e4d8", borderRadius:"3px", outline:"none",
-  color: COLORS.text, transition:"border-color 0.2s, background 0.2s",
-};
-
-const hintStyle = {
-  position:"absolute", bottom:"-16px", left:"50%", transform:"translateX(-50%)",
-  fontSize:"11px", color: COLORS.correct, fontStyle:"italic",
-  whiteSpace:"nowrap", pointerEvents:"none", zIndex:1,
-};
-
-// ─── SCORE BAR ────────────────────────────────────────────────────────────────
-
-function ScoreBar({ score, total, submitted }) {
-  if (!submitted) return null;
-  const pct = Math.round((score / total) * 100);
-  const grade =
-    pct === 100 ? { label: "Fremragende!", color: "#2d7a4f" }
-    : pct >= 80  ? { label: "Godt klaret!", color: "#3a8a5a" }
-    : pct >= 60  ? { label: "Ikke dårligt", color: "#8a7014" }
-    :              { label: "Øv! Prøv igen", color: "#c8403a" };
-  return (
-    <div style={{ padding:"12px 24px", background:"#f8faf8", borderBottom:"1px solid #e0eae0", display:"flex", alignItems:"center", gap:"16px" }}>
-      <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"16px", fontWeight:"600", color:grade.color, minWidth:"150px" }}>{grade.label}</div>
-      <div style={{ flex:1 }}>
-        <div style={{ height:"5px", background:"#e0eae0", borderRadius:"3px", overflow:"hidden" }}>
-          <div style={{ height:"100%", width:`${pct}%`, background:grade.color, borderRadius:"3px", transition:"width 0.6s ease" }} />
-        </div>
-      </div>
-      <div style={{ fontSize:"13px", color: COLORS.textMuted, fontWeight:"500", minWidth:"80px", textAlign:"right" }}>{score}/{total} · {pct}%</div>
-    </div>
-  );
-}
-
-// ─── MATCHING MODE ────────────────────────────────────────────────────────────
 
 function shuffle(arr) {
   const a = [...arr];
@@ -736,125 +275,127 @@ function shuffle(arr) {
   return a;
 }
 
-const PAIRS_PER_ROUND = 8;
+function pct(c, t) { return t > 0 ? Math.round((c/t)*100) : 0; }
 
-const MATCH_COLORS = [
-  { light:"rgba(200,64,58,0.1)",    border:"#c8403a", text:"#c8403a" },
-  { light:"rgba(30,100,60,0.1)",    border:"#1a6a40", text:"#2a8a50" },
-  { light:"rgba(30,80,160,0.1)",    border:"#1a50aa", text:"#2a70cc" },
-  { light:"rgba(140,80,0,0.1)",     border:"#8a5000", text:"#aa6810" },
-  { light:"rgba(80,30,120,0.1)",    border:"#501e78", text:"#7030aa" },
-  { light:"rgba(0,120,120,0.1)",    border:"#007878", text:"#009a9a" },
-  { light:"rgba(160,100,0,0.1)",    border:"#a06400", text:"#c07800" },
-  { light:"rgba(20,80,20,0.1)",     border:"#145014", text:"#1a6e1a" },
-];
-
-function buildMatchPool() {
-  const pool = [];
-  CATEGORIES.forEach(cat => cat.words.forEach(w => {
-    const danish = cat.type === "noun" ? w.indef_sg
-      : cat.type === "verb" ? w.infinitive
-      : cat.type === "adjective" ? w.common
-      : w.en;
-    if (danish && danish !== "—") pool.push({ left: w.en, right: danish });
-  }));
-  return pool;
+// Score badge helper
+function ScoreBadge({score, total, submitted}) {
+  if (!submitted || total === 0) return null;
+  const p = pct(score, total);
+  const col = p >= 75 ? "var(--green)" : "var(--red)";
+  return (
+    <span className="section-score-badge" style={{background: p>=75?"var(--green-light)":"var(--red-light)", color:col, border:`1px solid ${p>=75?"var(--green-border)":"var(--red-border)"}`}}>
+      {score}/{total} · {p}%
+    </span>
+  );
 }
 
-function MatchingMode() {
-  const allPairs = React.useMemo(() => buildMatchPool(), []);
-  const [round, setRound]     = React.useState(0);
-  const [left, setLeft]       = React.useState([]);
-  const [right, setRight]     = React.useState([]);
+// ─── VOCAB INTRO ──────────────────────────────────────────────────────────────
+
+function VocabIntro({section}) {
+  const [flipped, setFlipped] = React.useState({});
+  return (
+    <div>
+      <p className="section-instruction">Study these words before the exercises. Click a card to see an example sentence.</p>
+      <div className="vocab-grid">
+        {section.words.map((w,i) => (
+          <div key={i} className="vocab-card" onClick={()=>setFlipped(f=>({...f,[i]:!f[i]}))} style={{cursor:"pointer"}}>
+            <div className="vocab-da">{w.da}</div>
+            <div className="vocab-en">{w.en}</div>
+            {flipped[i] && <div className="vocab-example">{w.example}</div>}
+            {!flipped[i] && <div style={{fontSize:"10px",color:"var(--text3)",marginTop:"4px"}}>tap for example ↓</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── MATCHING ─────────────────────────────────────────────────────────────────
+
+function Matching({section, onScore}) {
+  const pairs = React.useMemo(() => section.pairs, [section.id]);
+  const [left]  = React.useState(() => shuffle(pairs.map((p,i)=>({id:i,text:p.da}))));
+  const [right] = React.useState(() => shuffle(pairs.map((p,i)=>({id:i,text:p.en}))));
   const [matched, setMatched] = React.useState({});
-  const [selL, setSelL]       = React.useState(null);
-  const [selR, setSelR]       = React.useState(null);
-  const [wrong, setWrong]     = React.useState({l:null, r:null});
-  const [done, setDone]       = React.useState(false);
-  const [corr, setCorr]       = React.useState(0);
-  const [att, setAtt]         = React.useState(0);
+  const [selL, setSelL] = React.useState(null);
+  const [selR, setSelR] = React.useState(null);
+  const [wrong, setWrong] = React.useState({l:null,r:null});
+  const [attempts, setAttempts] = React.useState(0);
+  const [submitted, setSubmitted] = React.useState(false);
 
-  const startRound = React.useCallback((r) => {
-    const start = (r * PAIRS_PER_ROUND) % allPairs.length;
-    const slice = Array.from({length:PAIRS_PER_ROUND}, (_,i) => ({
-      ...allPairs[(start+i) % allPairs.length], id: i
-    }));
-    setLeft(shuffle(slice.map(p => ({id:p.id, text:p.left}))));
-    setRight(shuffle(slice.map(p => ({id:p.id, text:p.right}))));
-    setMatched({}); setSelL(null); setSelR(null);
-    setWrong({l:null,r:null}); setDone(false);
-  }, [allPairs]);
+  const COLORS = [
+    {bg:"rgba(200,64,58,0.08)",border:"#c8403a"},
+    {bg:"rgba(45,122,80,0.08)",border:"#2d7a50"},
+    {bg:"rgba(60,100,200,0.08)",border:"#3c64c8"},
+    {bg:"rgba(160,80,180,0.08)",border:"#a050b4"},
+    {bg:"rgba(200,130,20,0.08)",border:"#c88214"},
+    {bg:"rgba(20,140,160,0.08)",border:"#148ca0"},
+    {bg:"rgba(80,160,80,0.08)",border:"#50a050"},
+    {bg:"rgba(160,80,80,0.08)",border:"#a05050"},
+  ];
 
-  React.useEffect(() => { startRound(0); }, []);
-
-  React.useEffect(() => {
+  React.useEffect(()=>{
     if (selL===null || selR===null) return;
-    setAtt(a => a+1);
-    if (selL === selR) {
-      const ci = Object.keys(matched).length % MATCH_COLORS.length;
-      const nm = {...matched, [selL]: ci};
-      setMatched(nm); setCorr(c => c+1);
+    setAttempts(a=>a+1);
+    if (selL===selR) {
+      const ci = Object.keys(matched).length % COLORS.length;
+      const nm = {...matched, [selL]:ci};
+      setMatched(nm);
       setSelL(null); setSelR(null);
-      if (Object.keys(nm).length === PAIRS_PER_ROUND) setTimeout(() => setDone(true), 300);
+      if (Object.keys(nm).length === pairs.length) {
+        setSubmitted(true);
+        const score = Math.round((pairs.length / Math.max(attempts+1, pairs.length)) * pairs.length);
+        onScore(Math.min(pairs.length, score), pairs.length);
+      }
     } else {
-      setWrong({l:selL, r:selR});
-      setTimeout(() => { setWrong({l:null,r:null}); setSelL(null); setSelR(null); }, 650);
+      setWrong({l:selL,r:selR});
+      setTimeout(()=>{setWrong({l:null,r:null});setSelL(null);setSelR(null);},600);
     }
-  }, [selL, selR]);
+  },[selL,selR]);
 
   const mc = Object.keys(matched).length;
-  const acc = att > 0 ? Math.round((corr/att)*100) : null;
-
-  const tile = (id, side) => {
-    const isM = matched[id] !== undefined;
-    const c = isM ? MATCH_COLORS[matched[id]] : null;
+  const tileStyle = (id, side) => {
+    const isM = matched[id]!==undefined;
+    const col = isM ? COLORS[matched[id]] : null;
     const isSel = side==="l" ? selL===id : selR===id;
-    const isW   = side==="l" ? wrong.l===id : wrong.r===id;
+    const isW = side==="l" ? wrong.l===id : wrong.r===id;
     return {
-      padding:"10px 10px", border:"1.5px solid",
-      borderColor: isM?c.border : isW?COLORS.wrong : isSel?COLORS.accent : COLORS.border,
-      borderRadius:"5px",
-      background: isM?c.light : isW?"rgba(200,64,58,0.08)" : isSel?"rgba(200,64,58,0.05)" : COLORS.card,
-      color: isM?c.text : isW?COLORS.wrong : isSel?COLORS.accent : COLORS.text,
-      cursor: isM?"default":"pointer", transition:"all 0.15s", textAlign:"center",
-      userSelect:"none", opacity:isM?0.55:1, textDecoration:isM?"line-through":"none",
-      minHeight:"50px", display:"flex", alignItems:"center", justifyContent:"center",
+      borderColor: isM?col.border : isW?"var(--red)" : isSel?"var(--red)" : "var(--border2)",
+      background: isM?col.bg : isW?"var(--red-light)" : isSel?"var(--red-light)" : "var(--surface)",
+      color: isM?col.border : isW?"var(--red)" : isSel?"var(--red)" : "var(--text)",
+      opacity: isM?0.5:1, textDecoration:isM?"line-through":"none",
+      fontWeight: isSel||isM?"600":"400"
     };
   };
 
   return (
-    <div style={{ marginTop:"16px" }}>
-      <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"12px" }}>
-        <div style={{ flex:1, height:"4px", background:COLORS.border, borderRadius:"2px", overflow:"hidden" }}>
-          <div style={{ height:"100%", width:`${(mc/PAIRS_PER_ROUND)*100}%`, background:COLORS.accent, transition:"width 0.4s" }} />
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+        <div style={{flex:1,height:"3px",background:"var(--surface2)",borderRadius:"2px",overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${(mc/pairs.length)*100}%`,background:"var(--red)",transition:"width 0.4s"}}/>
         </div>
-        <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", color:COLORS.textMuted, whiteSpace:"nowrap" }}>
-          {mc}/{PAIRS_PER_ROUND}{acc!==null ? ` · ${acc}% acc` : ""}
-        </div>
+        <span style={{fontFamily:"'DM Mono',monospace",fontSize:"10px",color:"var(--text3)",whiteSpace:"nowrap"}}>{mc}/{pairs.length}</span>
       </div>
-      {!done && <div style={{ textAlign:"center", marginBottom:"10px", color:COLORS.textMuted, fontSize:"12px", fontFamily:"'DM Sans',sans-serif" }}>Click an English word, then its Danish translation</div>}
-      {done && (
-        <div style={{ textAlign:"center", padding:"16px", background:"#fafcfa", border:"1px solid "+COLORS.border, borderRadius:"6px", marginBottom:"14px" }}>
-          <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"20px", color:COLORS.accent, fontWeight:"700", marginBottom:"4px" }}>
-            {acc===100 ? "Fremragende! 🇩🇰" : acc>=80 ? "Godt klaret! ✓" : acc>=60 ? "Ikke dårligt" : "Øv! Prøv igen"}
-          </div>
-          <div style={{ color:COLORS.textMuted, fontSize:"12px", fontFamily:"'DM Sans',sans-serif", marginBottom:"12px" }}>{acc}% accuracy</div>
-          <button onClick={() => { setRound(r => { const n=r+1; startRound(n); return n; }); }}
-            style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"1.5px", fontWeight:"600", padding:"8px 22px", background:COLORS.accent, color:"#fff", border:"none", borderRadius:"3px", cursor:"pointer" }}>
-            NEXT ROUND →
-          </button>
+      {submitted && (
+        <div className="pop" style={{padding:"12px 16px",background:"var(--green-light)",border:"1px solid var(--green-border)",borderRadius:"var(--radius)",marginBottom:"14px",textAlign:"center"}}>
+          <span style={{fontFamily:"'Fraunces',serif",fontSize:"16px",color:"var(--green)",fontWeight:"600"}}>Alle par matchet! ✓</span>
         </div>
       )}
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px 16px" }}>
-        <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"9px", letterSpacing:"2px", color:COLORS.textMuted, textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid "+COLORS.border, fontWeight:"600" }}>ENGLISH</div>
-        <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"9px", letterSpacing:"2px", color:COLORS.textMuted, textAlign:"center", paddingBottom:"4px", borderBottom:"1px solid "+COLORS.border, fontWeight:"600" }}>DANISH</div>
-        {left.map((item, i) => (
+      <div className="matching-grid">
+        <div className="match-col-header">Dansk</div>
+        <div className="match-col-header">English</div>
+        {left.map((item,i) => (
           <React.Fragment key={item.id}>
-            <div onClick={() => !matched[item.id] && wrong.l===null && setSelL(item.id)} style={tile(item.id,"l")}>
-              <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"14px", fontWeight:"500" }}>{item.text}</span>
+            <div className={`match-tile da-tile${matched[item.id]!==undefined?"":" selectable"}`}
+              style={tileStyle(item.id,"l")}
+              onClick={()=>matched[item.id]===undefined&&wrong.l===null&&setSelL(item.id)}>
+              {item.text}
             </div>
-            <div onClick={() => !matched[right[i].id] && wrong.l===null && setSelR(right[i].id)} style={tile(right[i].id,"r")}>
-              <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"15px" }}>{right[i].text}</span>
+            <div className={`match-tile${matched[right[i].id]!==undefined?"":" selectable"}`}
+              style={tileStyle(right[i].id,"r")}
+              onClick={()=>matched[right[i].id]===undefined&&wrong.l===null&&setSelR(right[i].id)}>
+              {right[i].text}
             </div>
           </React.Fragment>
         ))}
@@ -863,273 +404,604 @@ function MatchingMode() {
   );
 }
 
-// ─── READER DATA & COMPONENTS ────────────────────────────────────────────────
+// ─── MULTIPLE CHOICE ──────────────────────────────────────────────────────────
 
-const PASSAGES = [
-  {
-    id:"andersen_tændstikpigen", title:"Den lille Pige med Svovlstikkerne",
-    author:"H.C. Andersen", work:"Eventyr", date:"1845",
-    intro:"The opening of Andersen's The Little Match Girl — one of the most famous Danish sentences ever written. Rich in adjectives, noun phrases, and the characteristic fairy-tale past tense.",
-    lines:[
-      [
-        {w:"Det",       lemma:"det (neuter demonstrative/personal pronoun)", pos:"pron", parse:"Nominative neuter singular (expletive subject)", eng:"It", note:"Det var is an existential/impersonal construction: 'It was' = 'There was'. Common in fairy-tale openings."},
-        " ",
-        {w:"var",       lemma:"være",                   pos:"verb", parse:"Past tense (imperfect), 3rd singular", eng:"was"},
-        " ",
-        {w:"så",        lemma:"så",                     pos:"adv",  parse:"Adverb of degree", eng:"so / terribly"},
-        " ",
-        {w:"frygteligt",lemma:"frygtelig",              pos:"adj",  parse:"Neuter singular (adverbial predicative, agrees with koldt)", eng:"terribly / dreadfully", note:"Neuter form used adverbially here — it modifies koldt. Adjectives in neuter form are regularly used as adverbs in Danish."},
-        " ",
-        {w:"koldt",     lemma:"kold",                   pos:"adj",  parse:"Neuter predicative singular (predicate of det var)", eng:"cold", note:"Neuter form because the subject det is neuter. This is a weather/impersonal construction."},
-        ";"
-      ],
-      [
-        {w:"det",       lemma:"det",                    pos:"pron", parse:"Nominative neuter (expletive subject)", eng:"it"},
-        " ",
-        {w:"sneede",    lemma:"sne",                    pos:"verb", parse:"Past tense, 3rd singular", eng:"was snowing / it snowed", note:"sneede is the past tense of sne (to snow) — a weak verb with -ede ending. Modern spelling: snede."},
-        " ",
-        {w:"og",        lemma:"og",                     pos:"conj", parse:"Coordinating conjunction", eng:"and"},
-        " ",
-        {w:"det",       lemma:"det",                    pos:"pron", parse:"Nominative neuter (expletive subject)", eng:"it"},
-        " ",
-        {w:"begyndte",  lemma:"begynde",                pos:"verb", parse:"Past tense, 3rd singular", eng:"was beginning / began", note:"begyndte — past tense of begynde (to begin), a weak verb. Note the characteristic Danish -te ending."},
-        " ",
-        {w:"at",        lemma:"at",                     pos:"part", parse:"Infinitive marker", eng:"to", note:"Danish uses at before infinitives — equivalent to English 'to' in 'began to get dark'."},
-        " ",
-        {w:"blive",     lemma:"blive",                  pos:"verb", parse:"Infinitive (after begyndte at)", eng:"to become / to get", note:"blive is one of the most important Danish verbs: 'to become', 'to stay', also used in passive constructions (blive + past participle)."},
-        " ",
-        {w:"mørkt",     lemma:"mørk",                   pos:"adj",  parse:"Neuter indefinite (predicate complement after blive)", eng:"dark", note:"Neuter form because the subject det is neuter. Predicative adjectives agree with their subject in Danish."},
-        "."
-      ],
-      [
-        {w:"Den",       lemma:"den (common gender definite article / demonstrative)", pos:"art", parse:"Common gender singular (definite article/demonstrative, modifies sidste Dag)", eng:"The / that", note:"den is the definite article/demonstrative for common gender nouns. It agrees with Dag (en dag = common gender)."},
-        " ",
-        {w:"sidste",    lemma:"sidste",                 pos:"adj",  parse:"Definite form singular (used after den)", eng:"last", note:"Definite adjective form — adjectives take the -e ending after a definite article: den sidste."},
-        " ",
-        {w:"Dag",       lemma:"dag, -en (common)",      pos:"noun", parse:"Common gender singular indefinite (object of i)", eng:"day"},
-        " ",
-        {w:"i",         lemma:"i",                      pos:"prep", parse:"Preposition (temporal)", eng:"of / in"},
-        " ",
-        {w:"Aaret",     lemma:"år, -et (neuter)",       pos:"noun", parse:"Neuter singular definite (object of i)", eng:"the year", note:"Definite neuter nouns take -et: år → året (the year). Note the capital A — 19th century Danish capitalised all nouns as German does."},
-        " ",
-        {w:"var",       lemma:"være",                   pos:"verb", parse:"Past tense, 3rd singular", eng:"was"},
-        " ",
-        {w:"det",       lemma:"det",                    pos:"pron", parse:"Expletive subject", eng:"it"},
-        "."
-      ],
-    ],
-  },
-  {
-    id:"grundlov_1849", title:"Grundloven §1", author:"Danmarks Grundlov",
-    work:"Grundloven af 1849", date:"1849 (amended 1953)",
-    intro:"The opening article of the Danish Constitution — one of the most important sentences in Danish political history. The 1849 constitution established Denmark as a constitutional monarchy.",
-    lines:[
-      [
-        {w:"Danmarks",  lemma:"Danmark (proper noun)",  pos:"noun", parse:"Genitive singular (possessive -s)", eng:"Denmark's / of Denmark", note:"Danish forms the genitive by adding -s directly to the noun, with no apostrophe: Danmarks = 'of Denmark'."},
-        " ",
-        {w:"Statsform",lemma:"statsform, -en (common)", pos:"noun", parse:"Common gender singular indefinite (subject)", eng:"form of government / constitution", note:"A compound: stat (state) + form (form). Danish freely forms compound nouns by joining words — the last element determines the gender."},
-        " ",
-        {w:"er",        lemma:"være",                   pos:"verb", parse:"Present tense, 3rd singular", eng:"is"},
-        " ",
-        {w:"et",        lemma:"en / et (indefinite article)", pos:"art", parse:"Neuter indefinite article (agrees with konstitutionelt monarki)", eng:"a"},
-        " ",
-        {w:"konstitutionelt",lemma:"konstitutionel",    pos:"adj",  parse:"Neuter indefinite form (agrees with monarki)", eng:"constitutional", note:"Neuter indefinite adjectives take -t: konstitutionel → konstitutionelt. This is the regular neuter adjective ending in Danish."},
-        " ",
-        {w:"monarki",   lemma:"monarki, -et (neuter)",  pos:"noun", parse:"Neuter singular indefinite (predicate nominative)", eng:"monarchy"},
-        "."
-      ],
-      [
-        {w:"Den",       lemma:"den",                    pos:"art",  parse:"Common gender definite article (modifies lovgivende magt)", eng:"The"},
-        " ",
-        {w:"lovgivende",lemma:"lovgivende",             pos:"adj",  parse:"Definite / invariable present participial adjective", eng:"legislative", note:"Participial adjectives (ending in -ende) are invariable — they do not change for gender or number."},
-        " ",
-        {w:"magt",      lemma:"magt, -en (common)",     pos:"noun", parse:"Common gender singular (subject)", eng:"power / authority"},
-        " ",
-        {w:"er",        lemma:"være",                   pos:"verb", parse:"Present tense, 3rd singular", eng:"is"},
-        " ",
-        {w:"hos",       lemma:"hos",                    pos:"prep", parse:"Preposition (location with abstract nouns — 'with/vested in')", eng:"with / vested in", note:"hos literally means 'at the home of' / 'with', but legally here means 'vested in' — power resides with the King and Parliament jointly."},
-        " ",
-        {w:"Kongen",    lemma:"konge, -n (common)",     pos:"noun", parse:"Common gender singular definite", eng:"the King", note:"Definite common nouns typically add -n or -en: kong → kongen. Capital K in the constitution for the monarch."},
-        " ",
-        {w:"og",        lemma:"og",                     pos:"conj", parse:"Coordinating conjunction", eng:"and"},
-        " ",
-        {w:"Folketinget",lemma:"folketing, -et (neuter)",pos:"noun", parse:"Neuter singular definite", eng:"the Folketing (Parliament)", note:"Folketing: folk (people) + ting (thing/assembly). Definite neuter: -et ending. The Folketing is the unicameral Danish parliament established in 1953."},
-        "."
-      ],
-    ],
-  },
-  {
-    id:"kierkegaard_enten", title:"Enten-Eller (fragment)", author:"Søren Kierkegaard",
-    work:"Enten-Eller", date:"1843",
-    intro:"A famous aphorism from Kierkegaard's Either/Or — an example of 19th century Danish philosophical prose, with its characteristic long sentences and noun-heavy style.",
-    lines:[
-      [
-        {w:"Gift",      lemma:"gifte sig",              pos:"verb", parse:"Imperative singular (informal command)", eng:"Marry!", note:"Gift is the imperative of gifte sig (to marry, reflexive). Danish reflexive verbs use sig — gifte sig = 'to get married'."},
-        " ",
-        {w:"dig",       lemma:"sig / dig",              pos:"pron", parse:"Reflexive/accusative 2nd singular (reflexive object of gift)", eng:"yourself", note:"dig is the accusative/reflexive form of du (you) — here used reflexively: 'marry yourself' = 'get married'."},
-        ","
-        ,
-        " ",
-        {w:"du",        lemma:"du",                     pos:"pron", parse:"Nominative singular 2nd person (subject of vil fortryde)", eng:"you"},
-        " ",
-        {w:"vil",       lemma:"ville",                  pos:"verb", parse:"Present tense modal, 2nd singular", eng:"will"},
-        " ",
-        {w:"fortryde",  lemma:"fortryde",               pos:"verb", parse:"Infinitive (after vil)", eng:"regret", note:"fortryde (to regret) — a strong/irregular verb. Its past tense is fortrød, perfect har fortrudt."},
-        " ",
-        {w:"det",       lemma:"det",                    pos:"pron", parse:"Accusative neuter (object of fortryde)", eng:"it"},
-        ";"
-      ],
-      [
-        {w:"gift",      lemma:"gifte sig",              pos:"verb", parse:"Imperative singular", eng:"marry"},
-        " ",
-        {w:"dig",       lemma:"dig",                    pos:"pron", parse:"Reflexive accusative 2nd singular", eng:"yourself"},
-        " ",
-        {w:"ikke",      lemma:"ikke",                   pos:"adv",  parse:"Negation particle", eng:"not", note:"ikke is the standard Danish negation — placed after the finite verb and before the infinitive."},
-        ","
-        ,
-        " ",
-        {w:"du",        lemma:"du",                     pos:"pron", parse:"Nominative singular 2nd person", eng:"you"},
-        " ",
-        {w:"vil",       lemma:"ville",                  pos:"verb", parse:"Present tense modal, 2nd singular", eng:"will"},
-        " ",
-        {w:"også",      lemma:"også",                   pos:"adv",  parse:"Adverb (also / likewise)", eng:"also / likewise"},
-        " ",
-        {w:"fortryde",  lemma:"fortryde",               pos:"verb", parse:"Infinitive (after vil)", eng:"regret"},
-        " ",
-        {w:"det",       lemma:"det",                    pos:"pron", parse:"Accusative neuter (object of fortryde)", eng:"it"},
-        "."
-      ],
-      [
-        {w:"Giff",      lemma:"gifte sig",              pos:"verb", parse:"Imperative singular (archaic spelling)", eng:"Marry", note:"19th century orthography: giff = gift. Kierkegaard's original spelling preserved here."},
-        " ",
-        {w:"dig",       lemma:"dig",                    pos:"pron", parse:"Reflexive accusative 2nd singular", eng:"yourself"},
-        " ",
-        {w:"eller",     lemma:"eller",                  pos:"conj", parse:"Coordinating conjunction (disjunctive)", eng:"or"},
-        " ",
-        {w:"gift",      lemma:"gifte sig",              pos:"verb", parse:"Imperative singular", eng:"marry"},
-        " ",
-        {w:"dig",       lemma:"dig",                    pos:"pron", parse:"Reflexive accusative 2nd singular", eng:"yourself"},
-        " ",
-        {w:"ikke",      lemma:"ikke",                   pos:"adv",  parse:"Negation", eng:"not"},
-        ","
-        ,
-        " ",
-        {w:"du",        lemma:"du",                     pos:"pron", parse:"Nominative 2nd singular", eng:"you"},
-        " ",
-        {w:"vil",       lemma:"ville",                  pos:"verb", parse:"Present modal, 2nd singular", eng:"will"},
-        " ",
-        {w:"fortryde",  lemma:"fortryde",               pos:"verb", parse:"Infinitive", eng:"regret"},
-        " ",
-        {w:"begge",     lemma:"begge",                  pos:"pron", parse:"Pronoun/numeral — invariable", eng:"both", note:"begge (both) is invariable — it does not change for gender or case. Here used as a direct object: 'you will regret both'."},
-        " ",
-        {w:"Dele",      lemma:"del, -en (common)",      pos:"noun", parse:"Common gender plural (archaic capitalisation)", eng:"parts", note:"del (part) in the plural: dele. 19th century Danish capitalised all nouns. The phrase begge Dele = 'both things / both parts'."},
-        "."
-      ],
-    ],
-  },
-];
+function MultipleChoice({section, onScore}) {
+  const [answers, setAnswers] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
 
-const POS_COLORS_D = {
-  noun: {bg:"rgba(30,100,50,0.1)",   border:"#1a6a30"},
-  verb: {bg:"rgba(200,64,58,0.1)",   border:"#c8403a"},
-  adj:  {bg:"rgba(30,60,140,0.1)",   border:"#1a3c8c"},
-  adv:  {bg:"rgba(140,90,0,0.1)",    border:"#8a5a00"},
-  prep: {bg:"rgba(100,30,100,0.1)",  border:"#641e64"},
-  conj: {bg:"rgba(0,100,100,0.1)",   border:"#006464"},
-  pron: {bg:"rgba(160,60,0,0.1)",    border:"#a03c00"},
-  part: {bg:"rgba(60,60,60,0.1)",    border:"#3c3c3c"},
-  art:  {bg:"rgba(80,80,0,0.1)",     border:"#505000"},
-};
+  const submit = () => {
+    if (Object.keys(answers).length < section.questions.length) return;
+    const correct = section.questions.filter((q,i) => answers[i]===q.answer).length;
+    setSubmitted(true);
+    onScore(correct, section.questions.length);
+  };
 
-function WordTokenD({ token, activeId, setActiveId, idx }) {
-  const isActive = activeId === idx;
-  const pc = POS_COLORS_D[token.pos] || POS_COLORS_D.noun;
+  const reset = () => { setAnswers({}); setSubmitted(false); };
+
   return (
-    <span style={{ position:"relative", display:"inline" }}>
-      <span onClick={()=>setActiveId(isActive?null:idx)} onMouseEnter={()=>setActiveId(idx)} onMouseLeave={()=>setActiveId(null)}
-        style={{ cursor:"pointer", borderBottom:isActive?"2px solid "+COLORS.accent:"2px solid transparent", color:isActive?COLORS.accent:COLORS.text, background:isActive?"rgba(200,64,58,0.06)":"transparent", borderRadius:"2px", padding:"0 1px", transition:"all 0.1s" }}>
-        {token.w}
-      </span>
-      {isActive && (
-        <span style={{ position:"absolute", bottom:"calc(100% + 10px)", left:"50%", transform:"translateX(-50%)", zIndex:200, width:"268px", background:"#fafcfa", border:"1px solid "+COLORS.border, borderRadius:"6px", boxShadow:"0 8px 32px rgba(0,0,0,0.15)", padding:"12px 14px", pointerEvents:"none" }}>
-          <span style={{ position:"absolute", bottom:"-6px", left:"50%", width:"10px", height:"10px", background:"#fafcfa", border:"1px solid "+COLORS.border, borderTop:"none", borderLeft:"none", transform:"translateX(-50%) rotate(45deg)", display:"block" }} />
-          <div style={{ display:"flex", alignItems:"baseline", gap:"8px", marginBottom:"7px", flexWrap:"wrap" }}>
-            <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"18px", color:COLORS.text, fontWeight:"600" }}>{token.w}</span>
-            <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"12px", color:COLORS.textMuted, fontStyle:"italic" }}>{token.lemma}</span>
-          </div>
-          <div style={{ marginBottom:"6px" }}>
-            <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", letterSpacing:"1.5px", textTransform:"uppercase", padding:"2px 7px", borderRadius:"10px", background:pc.bg, border:"1px solid "+pc.border, color:pc.border, fontWeight:"600" }}>{token.pos}</span>
-          </div>
-          <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"11px", color:COLORS.textMuted, marginBottom:"5px", lineHeight:"1.4" }}>
-            <span style={{ fontSize:"8px", letterSpacing:"1px", color:"#aabcaa", textTransform:"uppercase", marginRight:"5px" }}>Form</span>{token.parse}
-          </div>
-          <div style={{ fontFamily:"'Source Serif 4',serif", fontSize:"14px", color:COLORS.text, fontWeight:"600", marginBottom:token.note?"7px":"0", lineHeight:"1.4" }}>
-            <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", letterSpacing:"1px", color:"#aabcaa", textTransform:"uppercase", marginRight:"5px", fontWeight:"400" }}>Meaning</span>"{token.eng}"
-          </div>
-          {token.note && (
-            <div style={{ fontFamily:"'Source Serif 4',serif", fontSize:"12px", fontStyle:"italic", color:COLORS.textMuted, borderTop:"1px solid "+COLORS.border, paddingTop:"6px", lineHeight:"1.5" }}>
-              <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", letterSpacing:"1px", color:"#aabcaa", textTransform:"uppercase", marginRight:"5px", fontStyle:"normal", fontWeight:"600" }}>Note</span>{token.note}
-            </div>
-          )}
-        </span>
-      )}
-    </span>
-  );
-}
-
-function ReaderMode() {
-  const [pidx, setPidx] = React.useState(0);
-  const [activeId, setActiveId] = React.useState(null);
-  const passage = PASSAGES[pidx];
-  let wc = 0;
-  return (
-    <div style={{ marginTop:"16px" }}>
-      <div style={{ display:"flex", flexWrap:"wrap", gap:"6px", marginBottom:"14px" }}>
-        {PASSAGES.map((p,i) => (
-          <button key={p.id} onClick={()=>{ setPidx(i); setActiveId(null); }} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"0.5px", fontWeight:"500", padding:"5px 14px", border:"1px solid", borderColor:i===pidx?COLORS.accent:COLORS.border, borderRadius:"20px", background:i===pidx?COLORS.headerBg:"transparent", color:i===pidx?"#fff":COLORS.textMuted, cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap" }}>
-            {p.author} · {p.title}
-          </button>
-        ))}
-      </div>
-      <div style={{ background:COLORS.card, border:"1px solid "+COLORS.border, borderRadius:"6px", boxShadow:"0 2px 12px rgba(0,0,0,0.07)", padding:"24px 28px" }}>
-        <div style={{ marginBottom:"14px", paddingBottom:"12px", borderBottom:"1px solid "+COLORS.border }}>
-          <h2 style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"17px", fontWeight:"600", color:COLORS.text, marginBottom:"3px" }}>{passage.title}</h2>
-          <div style={{ fontFamily:"'Source Serif 4',serif", fontStyle:"italic", fontSize:"13px", color:COLORS.textMuted }}>{passage.author} · <em>{passage.work}</em> · {passage.date}</div>
-          {passage.intro && <div style={{ marginTop:"8px", fontFamily:"'Source Serif 4',serif", fontSize:"13px", color:COLORS.textMuted, lineHeight:"1.6", fontStyle:"italic" }}>{passage.intro}</div>}
-        </div>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:"4px", marginBottom:"14px" }}>
-          {Object.entries(POS_COLORS_D).map(([pos,c])=>(
-            <span key={pos} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", letterSpacing:"1px", textTransform:"uppercase", padding:"2px 6px", borderRadius:"10px", background:c.bg, border:"1px solid "+c.border, color:c.border, fontWeight:"600" }}>{pos}</span>
-          ))}
-          <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"12px", color:COLORS.textMuted, fontStyle:"italic", marginLeft:"6px", alignSelf:"center" }}>hover or tap any word</span>
-        </div>
-        <div style={{ fontFamily:"'Source Serif 4',serif", fontSize:"22px", lineHeight:"2.4", color:COLORS.text, marginBottom:"18px" }}>
-          {passage.lines.map((line,li)=>(
-            <span key={li}>
-              {line.map((token,ti)=>{
-                if (typeof token==="string") return <span key={ti} style={{color:COLORS.textMuted}}>{token}</span>;
-                const id=wc++;
-                return <WordTokenD key={ti} token={token} activeId={activeId} setActiveId={setActiveId} idx={id} />;
-              })}
-              {li<passage.lines.length-1 && " "}
-            </span>
-          ))}
-        </div>
-        <details>
-          <summary style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"2px", color:COLORS.textMuted, cursor:"pointer", userSelect:"none", textTransform:"uppercase", fontWeight:"600" }}>▸ Full Word List</summary>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(250px,1fr))", gap:"4px", marginTop:"10px" }}>
-            {passage.lines.flat().filter(t=>typeof t==="object").map((token,i)=>{
-              const pc=POS_COLORS_D[token.pos]||POS_COLORS_D.noun;
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.questions.map((q,qi) => (
+        <div key={qi} className="mc-question">
+          <div className="mc-prompt">{qi+1}. {q.prompt}</div>
+          <div className="mc-options">
+            {q.options.map((opt,oi) => {
+              let cls = "mc-option";
+              if (submitted) {
+                if (opt===q.answer) cls += " correct";
+                else if (answers[qi]===opt) cls += " wrong";
+              } else if (answers[qi]===opt) cls += " selected";
               return (
-                <div key={i} style={{ display:"flex", alignItems:"baseline", gap:"6px", padding:"5px 9px", background:"rgba(26,100,48,0.04)", border:"1px solid "+COLORS.border, borderRadius:"3px" }}>
-                  <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"15px", color:COLORS.accent, minWidth:"80px" }}>{token.w}</span>
-                  <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", padding:"1px 5px", borderRadius:"8px", background:pc.bg, border:"1px solid "+pc.border, color:pc.border, whiteSpace:"nowrap", fontWeight:"600" }}>{token.pos}</span>
-                  <span style={{ fontFamily:"'Source Serif 4',serif", fontSize:"12px", color:COLORS.textMuted, fontStyle:"italic" }}>{token.eng}</span>
-                </div>
+                <button key={oi} className={cls} disabled={submitted}
+                  onClick={()=>!submitted&&setAnswers(a=>({...a,[qi]:opt}))}>
+                  {opt}
+                </button>
               );
             })}
           </div>
-        </details>
+        </div>
+      ))}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(answers).length<section.questions.length} onClick={submit}>Check Answers</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── FILL IN THE BLANK ────────────────────────────────────────────────────────
+
+function FillBlank({section, onScore}) {
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.items.filter((it,i) => checkAnswer(vals[i]||"", it.answer)).length;
+    setSubmitted(true);
+    onScore(correct, section.items.length);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.items.map((item,i) => {
+        const ok = submitted ? checkAnswer(vals[i]||"", item.answer) : null;
+        return (
+          <div key={i} className="fill-item">
+            {item.before && <span className="fill-text">{item.before}</span>}
+            <input className={`fill-input${submitted?(ok?" correct":" wrong"):""}`}
+              value={vals[i]||""} disabled={submitted}
+              onChange={e=>setVals(v=>({...v,[i]:e.target.value}))}
+              onKeyDown={e=>{if(e.key==="Enter"&&!submitted) submit();}}
+              placeholder="___"
+              style={{width: Math.max(80, (item.answer.length*14))+"px"}}
+            />
+            {item.after && <span className="fill-text">{item.after}</span>}
+            {submitted && !ok && <span className="fill-correction">→ {item.answer}</span>}
+            {!submitted && item.hint && <span className="fill-hint">({item.hint})</span>}
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── SENTENCE CONSTRUCTION ────────────────────────────────────────────────────
+
+function SentenceConstruction({section, onScore}) {
+  const initItems = React.useMemo(()=>section.items.map(it=>({
+    ...it, shuffled: shuffle(it.words), placed: []
+  })),[section.id]);
+
+  const [items, setItems] = React.useState(initItems);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const place = (itemIdx, word, wordIdx) => {
+    if (submitted) return;
+    setItems(prev => prev.map((it,i) => {
+      if (i!==itemIdx) return it;
+      const newShuffled = it.shuffled.filter((_,j)=>j!==wordIdx);
+      return {...it, shuffled:newShuffled, placed:[...it.placed, word]};
+    }));
+  };
+
+  const unplace = (itemIdx, word, placedIdx) => {
+    if (submitted) return;
+    setItems(prev => prev.map((it,i) => {
+      if (i!==itemIdx) return it;
+      const newPlaced = it.placed.filter((_,j)=>j!==placedIdx);
+      return {...it, shuffled:[...it.shuffled, word], placed:newPlaced};
+    }));
+  };
+
+  const submit = () => {
+    const correct = items.filter(it => it.placed.join(" ")===it.answer.join(" ")).length;
+    setSubmitted(true);
+    onScore(correct, items.length);
+  };
+
+  const reset = () => { setItems(initItems.map(it=>({...it,shuffled:shuffle(it.words),placed:[]}))); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {items.map((item,idx) => {
+        const isCorrect = submitted && item.placed.join(" ")===item.answer.join(" ");
+        const isWrong = submitted && !isCorrect;
+        return (
+          <div key={idx} className="sc-item">
+            <div className="sc-translation">{item.translation}</div>
+            <div className={`sc-drop-zone${isCorrect?" correct":isWrong?" wrong":""}`}>
+              {item.placed.length===0 && <span style={{fontSize:"12px",color:"var(--text3)",fontStyle:"italic"}}>Drop words here…</span>}
+              {item.placed.map((w,wi)=>(
+                <span key={wi} className="sc-tile placed" onClick={()=>unplace(idx,w,wi)}>{w}</span>
+              ))}
+            </div>
+            {submitted && isWrong && (
+              <div style={{fontSize:"11px",color:"var(--green)",marginBottom:"8px"}}>
+                ✓ {item.answer.join(" ")}
+              </div>
+            )}
+            <div className="sc-tiles">
+              {item.shuffled.map((w,wi)=>(
+                <span key={wi} className={`sc-tile${/^[.,?!;:]$/.test(w)?" punct":""}`}
+                  onClick={()=>place(idx,w,wi)}>{w}</span>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={items.some(it=>it.placed.length===0)} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── GRAMMAR TABLE ────────────────────────────────────────────────────────────
+
+function GrammarTable({section, onScore}) {
+  const totalCells = section.rows.reduce((s,r)=>s+r.answers.length,0);
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    let correct = 0;
+    section.rows.forEach((row,ri) => row.answers.forEach((ans,ci) => {
+      if (checkAnswer(vals[`${ri}-${ci}`]||"", ans)) correct++;
+    }));
+    setSubmitted(true);
+    onScore(correct, totalCells);
+  };
+
+  const reveal = () => {
+    const nv = {};
+    section.rows.forEach((row,ri) => row.answers.forEach((ans,ci) => { nv[`${ri}-${ci}`]=ans; }));
+    setVals(nv); setSubmitted(true); onScore(0, totalCells);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      {section.explanation && <div className="grammar-explanation">{section.explanation}</div>}
+      <div style={{overflowX:"auto"}}>
+        <table className="grammar-table">
+          <thead>
+            <tr>{section.headers.map((h,i)=><th key={i}>{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {section.rows.map((row,ri)=>(
+              <tr key={ri}>
+                <td>{row.label}</td>
+                {row.answers.map((ans,ci)=>{
+                  const key=`${ri}-${ci}`;
+                  const val=vals[key]||"";
+                  const ok=submitted?checkAnswer(val,ans):null;
+                  return (
+                    <td key={ci}>
+                      <input className={`grammar-input${submitted?(ok?" correct":" wrong"):""}`}
+                        value={val} disabled={submitted}
+                        onChange={e=>setVals(v=>({...v,[key]:e.target.value}))}
+                        onKeyDown={e=>{if(e.key==="Enter"&&!submitted)submit();}}
+                      />
+                      {submitted&&!ok&&<span className="grammar-correction">{ans}</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <>
+              <button className="btn btn-secondary" onClick={reveal}>Reveal</button>
+              <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+            </>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── TRANSLATION ──────────────────────────────────────────────────────────────
+
+function Translation({section, onScore}) {
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.items.filter((it,i)=>checkAnswer(vals[i]||"",it.answer,it.alternatives||[])).length;
+    setSubmitted(true);
+    onScore(correct, section.items.length);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.items.map((item,i)=>{
+        const ok=submitted?checkAnswer(vals[i]||"",item.answer,item.alternatives||[]):null;
+        return (
+          <div key={i} className="translation-item">
+            <div className="translation-prompt">{item.prompt}</div>
+            <div>
+              <input className={`translation-input${submitted?(ok?" correct":" wrong"):""}`}
+                value={vals[i]||""} disabled={submitted}
+                onChange={e=>setVals(v=>({...v,[i]:e.target.value}))}
+                onKeyDown={e=>{if(e.key==="Enter"&&!submitted)submit();}}
+                placeholder={section.direction==="en_to_da"?"Type in Danish…":"Type in English…"}
+              />
+              {submitted&&!ok&&<span className="translation-correction">→ {item.answer}{item.alternatives?.length>0?` / ${item.alternatives[0]}`:""}</span>}
+            </div>
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── READING ──────────────────────────────────────────────────────────────────
+
+function Reading({section, onScore}) {
+  const [answers, setAnswers] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.questions.filter((q,i)=>answers[i]===q.answer).length;
+    setSubmitted(true);
+    onScore(correct, section.questions.length);
+  };
+
+  const reset = () => { setAnswers({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <div className="reading-text">{section.text}</div>
+      {section.glossary && section.glossary.length>0 && (
+        <div style={{marginBottom:"20px"}}>
+          <div style={{fontSize:"10px",fontWeight:"600",letterSpacing:"1.5px",textTransform:"uppercase",color:"var(--text3)",marginBottom:"8px"}}>Gloser — Glossary</div>
+          <div className="glossary">
+            {section.glossary.map((g,i)=>(
+              <span key={i} className="gloss-item"><span className="gloss-da">{g.da}</span> = {g.en}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      <div style={{fontSize:"12px",fontWeight:"600",letterSpacing:"1px",textTransform:"uppercase",color:"var(--text3)",marginBottom:"14px"}}>Forståelsesspørgsmål — Comprehension Questions</div>
+      {section.questions.map((q,qi)=>(
+        <div key={qi} className="mc-question">
+          <div className="mc-prompt">{qi+1}. {q.prompt}</div>
+          <div className="mc-options">
+            {q.options.map((opt,oi)=>{
+              let cls="mc-option";
+              if(submitted){if(opt===q.answer)cls+=" correct";else if(answers[qi]===opt)cls+=" wrong";}
+              else if(answers[qi]===opt)cls+=" selected";
+              return <button key={oi} className={cls} disabled={submitted} onClick={()=>!submitted&&setAnswers(a=>({...a,[qi]:opt}))}>{opt}</button>;
+            })}
+          </div>
+        </div>
+      ))}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(answers).length<section.questions.length} onClick={submit}>Check Answers</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── CULTURAL NOTE ────────────────────────────────────────────────────────────
+
+function CulturalNote({section}) {
+  return (
+    <div className="cultural-card">
+      <div className="cultural-flag">🇩🇰</div>
+      <div className="cultural-heading">{section.heading}</div>
+      <div className="cultural-text">{section.content}</div>
+    </div>
+  );
+}
+
+// ─── LISTENING PLACEHOLDER ────────────────────────────────────────────────────
+
+function ListeningPlaceholder({section}) {
+  return (
+    <div className="listening-placeholder">
+      <div className="listening-icon">🎧</div>
+      <div className="listening-label">Lytteøvelse — Listening Exercise</div>
+      <div className="listening-sub">{section.description}</div>
+      <div style={{marginTop:"12px",fontFamily:"'DM Mono',monospace",fontSize:"10px",color:"var(--text3)",padding:"6px 14px",border:"1px dashed var(--border2)",borderRadius:"12px"}}>TTS INTEGRATION PENDING</div>
+    </div>
+  );
+}
+
+// ─── SECTION RENDERER ─────────────────────────────────────────────────────────
+
+const TYPE_LABELS = {
+  vocab_intro: "Vocabulary",
+  matching: "Matching",
+  multiple_choice: "Multiple Choice",
+  fill_blank: "Fill in the Blank",
+  sentence_construction: "Sentence Builder",
+  grammar_table: "Grammar Table",
+  translation: "Translation",
+  reading: "Reading",
+  listening_placeholder: "Listening",
+  cultural_note: "Culture"
+};
+
+function SectionRenderer({section, onScore, scores}) {
+  const score = scores[section.id];
+  const label = TYPE_LABELS[section.type] || section.type;
+  const isScored = ["matching","multiple_choice","fill_blank","sentence_construction","grammar_table","translation","reading"].includes(section.type);
+
+  return (
+    <div className="section-card fade-up">
+      <div className="section-header">
+        <span className="section-type-badge">{label}</span>
+        <span className="section-title">{section.title}</span>
+        {isScored && score && <ScoreBadge score={score.correct} total={score.total} submitted={true}/>}
+      </div>
+      <div className="section-body">
+        {section.type==="vocab_intro"           && <VocabIntro section={section}/>}
+        {section.type==="matching"              && <Matching section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="multiple_choice"       && <MultipleChoice section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="fill_blank"            && <FillBlank section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="sentence_construction" && <SentenceConstruction section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="grammar_table"         && <GrammarTable section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="translation"           && <Translation section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="reading"               && <Reading section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="cultural_note"         && <CulturalNote section={section}/>}
+        {section.type==="listening_placeholder" && <ListeningPlaceholder section={section}/>}
+      </div>
+    </div>
+  );
+}
+
+// ─── UNIT VIEW ────────────────────────────────────────────────────────────────
+
+function UnitView({unit, courseUnit, onBack, onComplete}) {
+  const [activeSection, setActiveSection] = React.useState(unit.sections[0].id);
+  const [scores, setScores] = React.useState({});
+  const [showComplete, setShowComplete] = React.useState(false);
+
+  const scoredSections = unit.sections.filter(s=>unit.completion.counted_sections.includes(s.id));
+  const totalPossible = scoredSections.reduce((sum,s) => {
+    const sc = scores[s.id];
+    return sum + (sc ? sc.total : 0);
+  }, 0);
+  const totalCorrect = scoredSections.reduce((sum,s) => {
+    const sc = scores[s.id];
+    return sum + (sc ? sc.correct : 0);
+  }, 0);
+  const attempted = scoredSections.filter(s=>scores[s.id]).length;
+  const overallPct = totalPossible > 0 ? pct(totalCorrect, totalPossible) : 0;
+  const canComplete = attempted >= scoredSections.length;
+  const passed = overallPct >= unit.completion.threshold;
+
+  const handleScore = (sectionId, correct, total) => {
+    setScores(s=>({...s,[sectionId]:{correct,total}}));
+  };
+
+  const activeSec = unit.sections.find(s=>s.id===activeSection);
+
+  if (showComplete) {
+    return (
+      <div className="unit-container">
+        <div className="complete-screen fade-up">
+          <div className="complete-icon">{passed?"🎉":"📚"}</div>
+          <div className="complete-title">{passed?"Godt klaret!":"Prøv igen!"}</div>
+          <div className="complete-sub">
+            {passed
+              ? `You scored ${overallPct}% — above the ${unit.completion.threshold}% threshold. Unit complete.`
+              : `You scored ${overallPct}% — the threshold is ${unit.completion.threshold}%. Review the exercises and try again.`
+            }
+          </div>
+          <div className="score-breakdown">
+            {scoredSections.map(s=>{
+              const sc=scores[s.id];
+              const p=sc?pct(sc.correct,sc.total):0;
+              return (
+                <div key={s.id} className="score-row">
+                  <span className="score-label">{TYPE_LABELS[s.type]||s.type}</span>
+                  <span className={`score-val ${p>=75?"pass":"fail"}`}>{sc?`${sc.correct}/${sc.total} · ${p}%`:"—"}</span>
+                </div>
+              );
+            })}
+            <div className="score-row score-overall">
+              <span>Overall</span>
+              <span className={`score-val ${passed?"pass":"fail"}`}>{overallPct}%</span>
+            </div>
+          </div>
+          <div className="complete-actions">
+            <button className="btn btn-secondary" onClick={()=>setShowComplete(false)}>Review Unit</button>
+            {passed && <button className="btn btn-success" onClick={()=>onComplete(unit.id)}>Next Unit →</button>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="unit-container">
+      <div className="unit-header">
+        <div className="unit-header-meta">
+          <span className="unit-header-module">Modul {courseUnit?.module || 1}</span>
+          <span className="unit-header-sep">·</span>
+          <span className="unit-header-module">Uge {courseUnit?.week || 1}</span>
+          <span className="unit-header-cefr">A1</span>
+        </div>
+        <h1 className="unit-title-big">{unit.title}</h1>
+        <p className="unit-theme-big">{unit.theme}</p>
+        <div className="unit-progress-bar">
+          <div className="unit-progress-fill" style={{width:`${(attempted/scoredSections.length)*100}%`}}/>
+        </div>
+        <div className="unit-progress-label">{attempted}/{scoredSections.length} sections attempted{totalPossible>0?` · ${overallPct}% overall`:""}</div>
+      </div>
+
+      <div className="section-tabs">
+        {unit.sections.map(s=>{
+          const sc=scores[s.id];
+          const isScored=unit.completion.counted_sections.includes(s.id);
+          const isDone=isScored&&sc;
+          let cls="section-tab";
+          if(s.id===activeSection)cls+=" active";
+          if(isDone)cls+=" complete";
+          return (
+            <button key={s.id} className={cls} onClick={()=>setActiveSection(s.id)}>
+              {isDone?"✓ ":""}{TYPE_LABELS[s.type]||s.type}
+            </button>
+          );
+        })}
+      </div>
+
+      {activeSec && <SectionRenderer key={activeSec.id} section={activeSec} onScore={handleScore} scores={scores}/>}
+
+      <div style={{display:"flex",justifyContent:"space-between",marginTop:"24px",flexWrap:"wrap",gap:"10px"}}>
+        <button className="btn btn-secondary" onClick={onBack}>← Back to Course</button>
+        {canComplete && (
+          <button className={`btn ${passed?"btn-success":"btn-secondary"}`} onClick={()=>setShowComplete(true)}>
+            {passed?"Complete Unit ✓":"See Results"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── MODULE MAP ───────────────────────────────────────────────────────────────
+
+function ModuleMap({course, progress, onSelectUnit}) {
+  const [openModules, setOpenModules] = React.useState({1:true});
+
+  const toggleModule = (id) => setOpenModules(o=>({...o,[id]:!o[id]}));
+
+  const getUnitStatus = (unitId) => {
+    if (progress.completed?.includes(unitId)) return "complete";
+    if (progress.current===unitId) return "in_progress";
+    return "locked";
+  };
+
+  const isUnitUnlocked = (moduleIdx, unitIdx) => {
+    const mod = course.modules[moduleIdx];
+    if (unitIdx===0 && moduleIdx===0) return true;
+    if (unitIdx===0) {
+      const prevMod = course.modules[moduleIdx-1];
+      return prevMod.weeks.every(w=>progress.completed?.includes(w.id));
+    }
+    return progress.completed?.includes(mod.weeks[unitIdx-1].id);
+  };
+
+  return (
+    <div className="map-container">
+      <div className="map-hero fade-up">
+        <h1>Dansk</h1>
+        <p>A CEFR-aligned course from complete beginner to B1+. Work through each module at your own pace — units unlock as you progress.</p>
+      </div>
+
+      {course.modules.map((mod, mi) => {
+        const isOpen = openModules[mod.id];
+        const completedInMod = mod.weeks.filter(w=>progress.completed?.includes(w.id)).length;
+        const modPct = Math.round((completedInMod/mod.weeks.length)*100);
+        return (
+          <div key={mod.id} className="module-block fade-up" style={{animationDelay:`${mi*0.05}s`}}>
+            <div className="module-header" onClick={()=>toggleModule(mod.id)}>
+              <div className="module-badge" style={{background:mod.color}}>
+                <span className="module-badge-inner">{mod.cefr}</span>
+              </div>
+              <div className="module-info">
+                <div className="module-title">{mod.title} — {mod.subtitle}</div>
+                <div className="module-sub">{completedInMod}/{mod.weeks.length} units complete{completedInMod>0?` · ${modPct}%`:""}</div>
+              </div>
+              <span className="module-cefr" style={{borderColor:mod.color,color:mod.color}}>{mod.cefr}</span>
+              <span className={`module-chevron${isOpen?" open":""}`}>▾</span>
+            </div>
+
+            {isOpen && (
+              <div className="unit-grid">
+                {mod.weeks.map((unit, ui) => {
+                  const unlocked = isUnitUnlocked(mi, ui);
+                  const status = getUnitStatus(unit.id);
+                  const statusColor = status==="complete"?"var(--green)":status==="in_progress"?"var(--gold)":"var(--border2)";
+                  const statusLabel = status==="complete"?"Complete":status==="in_progress"?"In Progress":"Locked";
+                  return (
+                    <div key={unit.id}
+                      className={`unit-card ${status} ${!unlocked?"locked":""}`}
+                      onClick={()=>unlocked&&onSelectUnit(unit.id)}>
+                      {!unlocked && <span className="lock-icon">🔒</span>}
+                      <div className="unit-week">Week {unit.week}</div>
+                      <div className="unit-title">{unit.title}</div>
+                      <div className="unit-theme">{unit.theme}</div>
+                      <div className="unit-status">
+                        <div className="unit-status-dot" style={{background:statusColor}}/>
+                        <span className="unit-status-label" style={{color:statusColor}}>{statusLabel}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="module-block fade-up" style={{animationDelay:"0.3s",opacity:0.6}}>
+        <div className="module-header" style={{cursor:"default"}}>
+          <div className="module-badge" style={{background:"#78716c"}}>
+            <span className="module-badge-inner" style={{fontSize:"11px"}}>N</span>
+          </div>
+          <div className="module-info">
+            <div className="module-title">Modul N — Nordic Track</div>
+            <div className="module-sub">For Norwegian & Swedish L1 speakers · Contrastive linguistics overlay</div>
+          </div>
+          <span className="module-cefr" style={{borderColor:"#78716c",color:"#78716c"}}>N</span>
+        </div>
       </div>
     </div>
   );
@@ -1138,180 +1010,88 @@ function ReaderMode() {
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
 function App() {
-  const [mode, setMode] = React.useState("tables");
-  const [catIdx, setCatIdx] = React.useState(0);
-  const [wordIdx, setWordIdx] = React.useState(0);
-  const [inputs, setInputs] = React.useState({});
-  const [submitted, setSubmitted] = React.useState(false);
-  const [showAnswers, setShowAnswers] = React.useState(false);
+  const [course, setCourse]       = React.useState(null);
+  const [activeUnit, setActiveUnit] = React.useState(null);
+  const [unitData, setUnitData]   = React.useState(null);
+  const [progress, setProgress]   = React.useState({completed:[], current:null});
+  const [loading, setLoading]     = React.useState(true);
+  const [error, setError]         = React.useState(null);
 
-  const category = CATEGORIES[catIdx];
-  const word = category.words[wordIdx];
-  const tag = TAG[category.type] || TAG.noun;
+  React.useEffect(()=>{
+    fetch("course.json")
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(c=>{ setCourse(c); setLoading(false); })
+      .catch(e=>{ setError(e.message); setLoading(false); });
+  },[]);
 
-  // Count all fillable cells
-  const allKeys = React.useMemo(() => {
-    if (category.type === "noun") return ["indef_sg","def_sg","indef_pl","def_pl"].filter(k => word[k] !== "—");
-    if (category.type === "verb") return ["infinitive","present","past","future","perfect"];
-    if (category.type === "adjective") return ["common","neuter","plural","definite"];
-    if (category.type === "pronoun") {
-      const keys = [];
-      word.tables.forEach((t,ti) => t.rows.forEach((row,ri) => row.answers.forEach((_,ci) => keys.push(`${ti}-${ri}-${ci}`))));
-      return keys;
-    }
-    return [];
-  }, [catIdx, wordIdx]);
-
-  const total = allKeys.length;
-  const filledCount = allKeys.filter(k => inputs[k]?.trim()).length;
-
-  const score = React.useMemo(() => {
-    if (!submitted) return 0;
-    return allKeys.filter(k => {
-      const val = inputs[k] || "";
-      let answer = "";
-      if (category.type === "noun") answer = word[k];
-      else if (category.type === "verb") answer = word[k];
-      else if (category.type === "adjective") answer = word[k];
-      else if (category.type === "pronoun") {
-        const [ti,ri,ci] = k.split("-").map(Number);
-        answer = word.tables[ti].rows[ri].answers[ci];
-      }
-      return checkAnswer(val, answer) === "correct";
-    }).length;
-  }, [submitted, inputs, catIdx, wordIdx]);
-
-  const handleInput = (key, val) => {
-    setInputs(p => ({ ...p, [key]: val }));
-    if (submitted) setSubmitted(false);
+  const selectUnit = (unitId) => {
+    setLoading(true);
+    fetch(`${unitId}.json`)
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(u=>{ setUnitData(u); setActiveUnit(unitId); setLoading(false); })
+      .catch(e=>{ setError(`Could not load unit: ${e.message}`); setLoading(false); });
   };
-  const reset = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
-  const goWord = (dir) => { setWordIdx((wordIdx + dir + category.words.length) % category.words.length); reset(); };
-  const goCategory = (idx) => { setCatIdx(idx); setWordIdx(0); reset(); };
 
-  const wordDisplay = category.type === "pronoun" ? word.en
-    : category.type === "noun" ? word.en
-    : word.en;
+  const completeUnit = (unitId) => {
+    setProgress(p=>({
+      ...p,
+      completed: p.completed.includes(unitId)?p.completed:[...p.completed,unitId],
+      current: null
+    }));
+    setActiveUnit(null);
+    setUnitData(null);
+  };
+
+  const getCourseUnit = (unitId) => {
+    if (!course) return null;
+    for (const mod of course.modules) {
+      const week = mod.weeks.find(w=>w.id===unitId);
+      if (week) return {...week, module:mod.id};
+    }
+    return null;
+  };
 
   return (
-    <div style={{ minHeight:"100vh", background: COLORS.bg, fontFamily:"'Source Serif 4','Georgia',serif", color: COLORS.text, paddingBottom:"60px" }}>
-
-      {/* Header — Danish flag red */}
-      <header style={{ background: COLORS.headerBg, padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px", borderBottom:"4px solid "+COLORS.accentDark }}>
-        <div>
-          <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"4px", color:"rgba(255,255,255,0.6)", marginBottom:"4px", fontWeight:"500" }}>DANSK GRAMMATIK</div>
-          <h1 style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"22px", fontWeight:"600", color:"#ffffff", margin:0, letterSpacing:"0.5px" }}>Danish Practice Tables</h1>
-        </div>
-        <div style={{ marginLeft:"auto", fontStyle:"italic", color:"rgba(255,255,255,0.5)", fontSize:"13px", paddingBottom:"2px" }}>
-          Øvelse gør mester
-        </div>
-      </header>
-
-      <div style={{ maxWidth:"860px", margin:"0 auto", padding:"0 20px" }}>
-
-        {/* Mode tabs */}
-        <div style={{ display:"flex", marginTop:"20px", borderBottom:"2px solid "+COLORS.border }}>
-          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"]].map(([m,label]) => (
-            <button key={m} onClick={()=>setMode(m)} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"11px", letterSpacing:"0.5px", fontWeight:mode===m?"600":"400", padding:"9px 20px", border:"none", borderBottom:mode===m?"2px solid "+COLORS.accent:"2px solid transparent", marginBottom:"-2px", background:mode===m?COLORS.card:"transparent", color:mode===m?COLORS.accent:COLORS.textMuted, cursor:"pointer", transition:"all 0.15s" }}>
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* MATCHING MODE */}
-        {mode === "matching" && <MatchingMode />}
-
-        {/* READER MODE */}
-        {mode === "reader" && <ReaderMode />}
-
-        {/* TABLES MODE */}
-        {mode === "tables" && <div>
-
-        {/* Category pills */}
-        <div style={{ marginTop:"20px", display:"flex", flexWrap:"wrap", gap:"5px" }}>
-          {CATEGORIES.map((cat, i) => {
-            const tc = TAG[cat.type] || TAG.noun;
-            const active = i === catIdx;
-            return (
-              <button key={cat.id} onClick={() => goCategory(i)} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"0.8px", fontWeight:"500", padding:"4px 12px", border:"1px solid", borderColor: active?tc.text+"88":"#c8d8c8", borderRadius:"20px", background: active?tc.bg:"transparent", color: active?tc.text: COLORS.textMuted, cursor:"pointer", whiteSpace:"nowrap" }}>
-                {cat.label}
-                <span style={{ opacity:0.65, marginLeft:"4px", fontSize:"9px" }}>{cat.sublabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Card */}
-        <div style={{ marginTop:"16px", background: COLORS.card, border:"1px solid "+COLORS.border, borderRadius:"6px", boxShadow:"0 2px 12px rgba(0,0,0,0.07)", overflow:"hidden" }}>
-
-          {/* Card header */}
-          <div style={{ background:"#fafcfa", borderBottom:"2px solid "+COLORS.border, padding:"14px 22px", display:"flex", alignItems:"center", gap:"14px" }}>
-            <button onClick={() => goWord(-1)} style={{ background:COLORS.bg, border:"1px solid "+COLORS.border, borderRadius:"3px", color: COLORS.accent, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"bold" }}>‹</button>
-
-            <div style={{ flex:1 }}>
-              <div style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"18px", fontWeight:"600", color: COLORS.text }}>{wordDisplay}</div>
-              <div style={{ display:"flex", alignItems:"center", gap:"8px", marginTop:"3px" }}>
-                <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"8px", letterSpacing:"1.5px", padding:"2px 7px", borderRadius:"10px", background:tag.bg, color:tag.text, border:`1px solid ${tag.text}44`, fontWeight:"600" }}>{category.type.toUpperCase()}</span>
-                <span style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"9px", color: COLORS.textMuted, letterSpacing:"0.5px" }}>{category.sublabel}</span>
-              </div>
-            </div>
-
-            <div style={{ textAlign:"center", color: COLORS.textMuted, fontSize:"11px", flexShrink:0, fontFamily:"'DM Sans',sans-serif" }}>
-              <div style={{ fontSize:"15px", color: COLORS.accent, fontWeight:"700" }}>{wordIdx+1}</div>
-              <div>of {category.words.length}</div>
-            </div>
-
-            <button onClick={() => goWord(1)} style={{ background:COLORS.bg, border:"1px solid "+COLORS.border, borderRadius:"3px", color: COLORS.accent, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"bold" }}>›</button>
+    <div className="app">
+      <nav className="topbar">
+        <a href="index.html" className="topbar-logo">Language Nexus</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-course">Dansk</span>
+        {activeUnit && (
+          <div className="topbar-right">
+            <button className="back-btn" onClick={()=>{setActiveUnit(null);setUnitData(null);}}>← Course Map</button>
           </div>
+        )}
+      </nav>
 
-          <ScoreBar score={score} total={total} submitted={submitted} />
-
-          {/* Content */}
-          <div style={{ padding:"18px 22px" }}>
-            {category.type === "noun" && (
-              <NounTable word={word} inputs={inputs} submitted={submitted} showAnswers={showAnswers} onInput={handleInput} />
-            )}
-            {category.type === "verb" && (
-              <VerbTable word={word} inputs={inputs} submitted={submitted} showAnswers={showAnswers} onInput={handleInput} />
-            )}
-            {category.type === "adjective" && (
-              <AdjectiveTable word={word} inputs={inputs} submitted={submitted} showAnswers={showAnswers} onInput={handleInput} />
-            )}
-            {category.type === "pronoun" && (
-              <PronounTableGroup tables={word.tables} inputs={inputs} submitted={submitted} showAnswers={showAnswers} onInput={handleInput} />
-            )}
-          </div>
-
-          {/* Controls */}
-          <div style={{ padding:"13px 22px 17px", borderTop:"1px solid "+COLORS.border, display:"flex", alignItems:"center", gap:"9px", flexWrap:"wrap" }}>
-            <button onClick={() => setSubmitted(true)} disabled={filledCount===0}
-              style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"1.5px", fontWeight:"600", padding:"8px 20px", background: filledCount===0?"#c8d8c8":COLORS.accent, color:"#fff", border:"none", borderRadius:"3px", cursor:filledCount===0?"default":"pointer" }}>
-              GRADE ({filledCount}/{total})
-            </button>
-            <button onClick={reset} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"1.5px", fontWeight:"600", padding:"8px 16px", background:"transparent", color: COLORS.textMuted, border:"1px solid "+COLORS.border, borderRadius:"3px", cursor:"pointer" }}>RESET</button>
-            {submitted && score < total && (
-              <button onClick={() => setShowAnswers(v => !v)} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"10px", letterSpacing:"1.5px", fontWeight:"600", padding:"8px 16px", background:"transparent", color: showAnswers?COLORS.correct:COLORS.wrong, border:"1px solid", borderColor: showAnswers?COLORS.correct:COLORS.border, borderRadius:"3px", cursor:"pointer" }}>
-                {showAnswers ? "HIDE ANSWERS" : "SHOW ANSWERS"}
-              </button>
-            )}
-            <div style={{ marginLeft:"auto", display:"flex", gap:"7px" }}>
-              <button onClick={() => goWord(-1)} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"9px", letterSpacing:"1px", fontWeight:"600", padding:"8px 13px", background:"transparent", color: COLORS.textMuted, border:"1px solid "+COLORS.border, borderRadius:"3px", cursor:"pointer" }}>← PREV</button>
-              <button onClick={() => goWord(1)} style={{ fontFamily:"'DM Sans',sans-serif", fontSize:"9px", letterSpacing:"1px", fontWeight:"600", padding:"8px 13px", background: COLORS.accent, color:"#fff", border:"none", borderRadius:"3px", cursor:"pointer" }}>NEXT →</button>
-            </div>
-          </div>
+      {loading && (
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",flex:1,padding:"60px",flexDirection:"column",gap:"16px"}}>
+          <div style={{width:"32px",height:"32px",border:"3px solid var(--border)",borderTop:"3px solid var(--red)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+          <span style={{fontFamily:"'Fraunces',serif",fontSize:"15px",color:"var(--text3)",fontStyle:"italic"}}>Indlæser…</span>
         </div>
+      )}
 
-        <div style={{ marginTop:"14px", fontSize:"11px", color: COLORS.textMuted, fontStyle:"italic", textAlign:"center", fontFamily:"'DM Sans',sans-serif" }}>
-          Danish special characters optional: ø = oe · å = aa · æ = ae
+      {error && (
+        <div style={{maxWidth:"500px",margin:"60px auto",padding:"24px",background:"var(--surface)",border:"1px solid var(--border)",borderRadius:"var(--radius-lg)",textAlign:"center"}}>
+          <div style={{fontFamily:"'Fraunces',serif",fontSize:"18px",color:"var(--red)",marginBottom:"8px"}}>Fejl</div>
+          <div style={{fontSize:"13px",color:"var(--text2)",marginBottom:"16px",fontFamily:"'DM Mono',monospace"}}>{error}</div>
+          <div style={{fontSize:"12px",color:"var(--text3)"}}>Make sure you are serving from a local server (<code>npx serve .</code>) or Netlify, and that <code>course.json</code> and unit JSON files are in the same folder.</div>
         </div>
-        </div>}
+      )}
 
-      </div>
+      {!loading && !error && !activeUnit && course && (
+        <ModuleMap course={course} progress={progress} onSelectUnit={selectUnit}/>
+      )}
+
+      {!loading && !error && activeUnit && unitData && (
+        <UnitView unit={unitData} courseUnit={getCourseUnit(activeUnit)} onBack={()=>{setActiveUnit(null);setUnitData(null);}} onComplete={completeUnit}/>
+      )}
     </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
