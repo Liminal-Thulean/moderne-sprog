@@ -1,0 +1,215 @@
+{
+  "id": "m1_w1",
+  "module": 1,
+  "week": 1,
+  "title": "Hej Danmark",
+  "theme": "Greetings, introductions, and the Danish classroom",
+  "description": "Your first steps in Danish. Learn to greet people, introduce yourself, and navigate the classroom.",
+  "module_n": false,
+  "sections": [
+    {
+      "id": "vocab_intro",
+      "type": "vocab_intro",
+      "title": "Nye ord — New Words",
+      "words": [
+        { "da": "hej",        "en": "hello / hi",         "example": "Hej! Jeg hedder Anna." },
+        { "da": "goddag",     "en": "good day (formal)",  "example": "Goddag, jeg hedder hr. Hansen." },
+        { "da": "farvel",     "en": "goodbye",            "example": "Farvel! Vi ses i morgen." },
+        { "da": "tak",        "en": "thank you",          "example": "Tak for hjælpen!" },
+        { "da": "ja",         "en": "yes",                "example": "Ja, det er rigtigt." },
+        { "da": "nej",        "en": "no",                 "example": "Nej, det er forkert." },
+        { "da": "undskyld",   "en": "excuse me / sorry",  "example": "Undskyld, hvad hedder du?" },
+        { "da": "hvad",       "en": "what",               "example": "Hvad hedder du?" },
+        { "da": "hedde",      "en": "to be called / named","example": "Jeg hedder Maria." },
+        { "da": "jeg",        "en": "I",                  "example": "Jeg er fra Polen." },
+        { "da": "du",         "en": "you (informal)",     "example": "Hvad hedder du?" },
+        { "da": "navn",       "en": "name",               "example": "Mit navn er Lars." },
+        { "da": "fra",        "en": "from",               "example": "Jeg er fra Danmark." },
+        { "da": "Danmark",    "en": "Denmark",            "example": "Vi bor i Danmark." },
+        { "da": "klassen",    "en": "the class",          "example": "Velkommen til klassen!" }
+      ]
+    },
+    {
+      "id": "matching_1",
+      "type": "matching",
+      "title": "Match ordene — Match the Words",
+      "instruction": "Click a Danish word, then click its English meaning.",
+      "pairs": [
+        { "da": "hej",      "en": "hello" },
+        { "da": "farvel",   "en": "goodbye" },
+        { "da": "tak",      "en": "thank you" },
+        { "da": "ja",       "en": "yes" },
+        { "da": "nej",      "en": "no" },
+        { "da": "undskyld", "en": "excuse me" },
+        { "da": "navn",     "en": "name" },
+        { "da": "fra",      "en": "from" }
+      ]
+    },
+    {
+      "id": "mc_1",
+      "type": "multiple_choice",
+      "title": "Hvad betyder det? — What does it mean?",
+      "instruction": "Choose the correct Danish translation.",
+      "questions": [
+        {
+          "prompt": "What is the Danish word for 'yes'?",
+          "options": ["nej", "ja", "tak", "hej"],
+          "answer": "ja"
+        },
+        {
+          "prompt": "How do you say 'goodbye' in Danish?",
+          "options": ["hej", "goddag", "farvel", "undskyld"],
+          "answer": "farvel"
+        },
+        {
+          "prompt": "Which sentence means 'My name is Sara'?",
+          "options": ["Jeg er fra Sara.", "Mit navn er Sara.", "Du hedder Sara.", "Sara er klassen."],
+          "answer": "Mit navn er Sara."
+        },
+        {
+          "prompt": "What does 'Hvad hedder du?' mean?",
+          "options": ["Where are you from?", "How are you?", "What is your name?", "Where do you live?"],
+          "answer": "What is your name?"
+        },
+        {
+          "prompt": "Which word means 'I' in Danish?",
+          "options": ["du", "vi", "jeg", "de"],
+          "answer": "jeg"
+        },
+        {
+          "prompt": "What does 'undskyld' mean?",
+          "options": ["thank you", "hello", "yes", "excuse me / sorry"],
+          "answer": "excuse me / sorry"
+        }
+      ]
+    },
+    {
+      "id": "fill_1",
+      "type": "fill_blank",
+      "title": "Udfyld hullerne — Fill in the Blanks",
+      "instruction": "Type the missing Danish word. Accepted answers are shown after checking.",
+      "items": [
+        { "before": "", "after": "! Jeg hedder Peter.", "answer": "Hej", "hint": "A casual greeting" },
+        { "before": "Hvad ", "after": " du?", "answer": "hedder", "hint": "to be called" },
+        { "before": "Jeg er ", "after": " Danmark.", "answer": "fra", "hint": "from" },
+        { "before": "Mit ", "after": " er Fatima.", "answer": "navn", "hint": "name" },
+        { "before": "", "after": " for hjælpen!", "answer": "Tak", "hint": "thank you" },
+        { "before": "Vi ses! ", "after": "!", "answer": "Farvel", "hint": "goodbye" }
+      ]
+    },
+    {
+      "id": "sentence_1",
+      "type": "sentence_construction",
+      "title": "Byg sætningen — Build the Sentence",
+      "instruction": "Drag the word tiles into the correct order to build a Danish sentence.",
+      "mode": "drag",
+      "items": [
+        {
+          "words": ["hedder", "Jeg", "Anna", "."],
+          "answer": ["Jeg", "hedder", "Anna", "."],
+          "translation": "My name is Anna. (lit. I am called Anna.)"
+        },
+        {
+          "words": ["du", "?", "Hvad", "hedder"],
+          "answer": ["Hvad", "hedder", "du", "?"],
+          "translation": "What is your name?"
+        },
+        {
+          "words": ["fra", "er", "Polen", "Jeg", "."],
+          "answer": ["Jeg", "er", "fra", "Polen", "."],
+          "translation": "I am from Poland."
+        },
+        {
+          "words": ["navn", "Lars", "er", "Mit", "."],
+          "answer": ["Mit", "navn", "er", "Lars", "."],
+          "translation": "My name is Lars."
+        }
+      ]
+    },
+    {
+      "id": "grammar_1",
+      "type": "grammar_table",
+      "title": "Grammatik: Personlige pronominer — Personal Pronouns",
+      "explanation": "Danish personal pronouns are essential building blocks. In Module 1 we focus on the three most common: jeg (I), du (you), and the formal De. Notice that Danish does not capitalise 'jeg' — unlike English 'I'.",
+      "headers": ["", "Danish", "English"],
+      "rows": [
+        { "label": "1st person singular", "answers": ["jeg", "I"] },
+        { "label": "2nd person singular (informal)", "answers": ["du", "you"] },
+        { "label": "3rd person singular masculine", "answers": ["han", "he"] },
+        { "label": "3rd person singular feminine", "answers": ["hun", "she"] },
+        { "label": "1st person plural", "answers": ["vi", "we"] }
+      ]
+    },
+    {
+      "id": "translation_1",
+      "type": "translation",
+      "title": "Oversæt — Translate",
+      "instruction": "Translate each phrase into Danish. Small spelling variations are accepted.",
+      "direction": "en_to_da",
+      "items": [
+        { "prompt": "Hello!", "answer": "Hej!", "alternatives": ["Goddag!"] },
+        { "prompt": "Thank you.", "answer": "Tak.", "alternatives": [] },
+        { "prompt": "My name is ___. (use your own name or write 'Anna')", "answer": "Mit navn er Anna.", "alternatives": ["Jeg hedder Anna."] },
+        { "prompt": "I am from Denmark.", "answer": "Jeg er fra Danmark.", "alternatives": [] },
+        { "prompt": "Excuse me.", "answer": "Undskyld.", "alternatives": [] }
+      ]
+    },
+    {
+      "id": "reading_1",
+      "type": "reading",
+      "title": "Læs og forstå — Read and Understand",
+      "text": "Hej! Jeg hedder Marco. Jeg er fra Italien, men jeg bor i Danmark nu. Jeg går i klasse 8B. Min lærer hedder fru Christensen. Hun er meget venlig. I klassen er der mange elever fra forskellige lande. Vi taler dansk sammen.",
+      "glossary": [
+        { "da": "men", "en": "but" },
+        { "da": "bor", "en": "live/lives" },
+        { "da": "nu", "en": "now" },
+        { "da": "går i klasse", "en": "is in class/year" },
+        { "da": "lærer", "en": "teacher" },
+        { "da": "venlig", "en": "friendly/kind" },
+        { "da": "elever", "en": "students/pupils" },
+        { "da": "forskellige", "en": "different/various" },
+        { "da": "lande", "en": "countries" },
+        { "da": "sammen", "en": "together" }
+      ],
+      "questions": [
+        {
+          "prompt": "Where is Marco from?",
+          "options": ["Denmark", "Italy", "Poland", "Germany"],
+          "answer": "Italy"
+        },
+        {
+          "prompt": "What is Marco's teacher called?",
+          "options": ["fru Hansen", "hr. Christensen", "fru Christensen", "fru Marco"],
+          "answer": "fru Christensen"
+        },
+        {
+          "prompt": "Which class is Marco in?",
+          "options": ["6A", "7B", "8B", "9C"],
+          "answer": "8B"
+        },
+        {
+          "prompt": "What language do the students speak together?",
+          "options": ["Italian", "English", "Various languages", "Danish"],
+          "answer": "Danish"
+        }
+      ]
+    },
+    {
+      "id": "listening_1",
+      "type": "listening_placeholder",
+      "title": "Lyt og forstå — Listen and Understand",
+      "description": "Audio exercises will be available here once TTS integration is complete. This section will feature native-speed Danish dialogues with comprehension questions."
+    },
+    {
+      "id": "cultural_1",
+      "type": "cultural_note",
+      "title": "Kulturelt hjørne — Cultural Corner",
+      "heading": "Greetings in Denmark",
+      "content": "Danes typically greet each other with 'hej' in almost all situations — with friends, teachers, shopkeepers, and even doctors. Unlike many other cultures, the formal 'De' (capital D) is rarely used in modern Denmark and may even sound strange to younger Danes. Your teacher will almost certainly ask you to call them by their first name. This reflects a core Danish value: lighed (equality). Everyone, regardless of age or position, is approachable. Don't be surprised if your Danish classmates seem very informal — it is not rudeness, it is culture."
+    }
+  ],
+  "completion": {
+    "threshold": 75,
+    "counted_sections": ["matching_1", "mc_1", "fill_1", "sentence_1", "grammar_1", "translation_1", "reading_1"]
+  }
+}

@@ -1,60 +1,1097 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Moderne Sprog</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<title>Dansk — Language Nexus</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f4f2ee;--surface:#fff;--border:rgba(0,0,0,0.08);--text:#1a1a1a;--muted:rgba(26,26,26,0.45)}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,0,0,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.015) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-.page{position:relative;z-index:1}
-header{text-align:center;padding:80px 20px 60px;border-bottom:1px solid var(--border)}
-.site-label{font-size:10px;font-weight:600;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
-h1{font-family:'Playfair Display',serif;font-size:clamp(38px,6vw,66px);font-weight:400;font-style:italic;color:var(--text);letter-spacing:-1px;margin-bottom:18px;line-height:1.05}
-.subtitle{font-size:clamp(14px,2vw,16px);font-weight:300;color:var(--muted);max-width:460px;margin:0 auto 14px;line-height:1.65}
-.rule{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:22px}
-.rule-line{width:60px;height:1px;background:var(--muted);opacity:0.3}
-.rule-text{font-size:9px;font-weight:500;letter-spacing:3px;color:var(--muted);text-transform:uppercase;opacity:0.6}
-.grid-section{max-width:800px;margin:0 auto;padding:60px 20px 80px}
-.lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-.lang-card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0;overflow:hidden;aspect-ratio:4/3;position:relative;transition:transform 0.2s,box-shadow 0.25s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.lang-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.12)}
-.lang-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity 0.2s}
-.lang-card:hover::after{opacity:1}
-footer{text-align:center;padding:24px 20px 44px;border-top:1px solid var(--border)}
-footer p{font-size:9px;font-weight:500;letter-spacing:3px;color:var(--muted);text-transform:uppercase;opacity:0.5}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-header{animation:fadeUp 0.6s ease both}
-.lang-card:nth-child(1){animation:fadeUp 0.6s 0.15s ease both}
-.lang-card:nth-child(2){animation:fadeUp 0.6s 0.25s ease both}
+:root{
+  --bg:#f7f5f0;
+  --surface:#ffffff;
+  --surface2:#f0ede6;
+  --border:rgba(0,0,0,0.08);
+  --border2:rgba(0,0,0,0.14);
+  --text:#1c1917;
+  --text2:#57534e;
+  --text3:#a8a29e;
+  --red:#c8403a;
+  --red-light:rgba(200,64,58,0.08);
+  --red-border:rgba(200,64,58,0.25);
+  --green:#2d7a50;
+  --green-light:rgba(45,122,80,0.08);
+  --green-border:rgba(45,122,80,0.25);
+  --gold:#b8860b;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.12),0 4px 8px rgba(0,0,0,0.06);
+  --radius:6px;
+  --radius-lg:10px;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
+button{cursor:pointer;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+button:disabled{opacity:0.45;cursor:not-allowed}
+input{font-family:'DM Sans',sans-serif}
+input:focus{outline:none}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--red);padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
+.topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+.topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
+.topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.back-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;letter-spacing:1px;padding:5px 14px;border-radius:20px;text-transform:uppercase}
+.back-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* ── MODULE MAP ── */
+.map-container{max-width:860px;margin:0 auto;padding:40px 20px 80px;width:100%}
+.map-hero{margin-bottom:48px}
+.map-hero h1{font-family:'Fraunces',serif;font-size:clamp(36px,5vw,56px);font-weight:300;font-style:italic;color:var(--text);line-height:1.1;margin-bottom:10px}
+.map-hero p{font-size:15px;color:var(--text2);max-width:520px;line-height:1.65}
+.module-block{margin-bottom:32px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.module-header{padding:18px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.module-header:hover{background:var(--surface2)}
+.module-badge{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.module-badge-inner{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:#fff}
+.module-info{flex:1}
+.module-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px}
+.module-sub{font-size:12px;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase;font-weight:500}
+.module-cefr{font-family:'DM Mono',monospace;font-size:11px;padding:3px 9px;border-radius:12px;border:1px solid;font-weight:500;flex-shrink:0}
+.module-chevron{color:var(--text3);font-size:14px;transition:transform 0.2s;flex-shrink:0}
+.module-chevron.open{transform:rotate(180deg)}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--border)}
+.unit-card{background:var(--surface);padding:16px 18px;cursor:pointer;transition:background 0.15s;position:relative;overflow:hidden}
+.unit-card:hover:not(.locked){background:#faf8f5}
+.unit-card.locked{cursor:default;opacity:0.55}
+.unit-card.complete::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
+.unit-card.in-progress::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.unit-week{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.unit-title{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3}
+.unit-theme{font-size:11px;color:var(--text3);line-height:1.4}
+.unit-status{display:flex;align-items:center;gap:4px;margin-top:8px}
+.unit-status-dot{width:6px;height:6px;border-radius:50%}
+.unit-status-label{font-size:10px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.lock-icon{position:absolute;top:14px;right:14px;font-size:13px;opacity:0.4}
+.progress-ring{position:absolute;top:12px;right:12px}
+
+/* ── UNIT VIEW ── */
+.unit-container{max-width:760px;margin:0 auto;padding:32px 20px 80px;width:100%}
+.unit-header{margin-bottom:32px}
+.unit-header-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.unit-header-module{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)}
+.unit-header-sep{color:var(--text3);font-size:11px}
+.unit-header-cefr{font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:8px;border:1px solid var(--border2);color:var(--text2)}
+.unit-title-big{font-family:'Fraunces',serif;font-size:clamp(28px,4vw,40px);font-weight:400;font-style:italic;color:var(--text);margin-bottom:6px;line-height:1.1}
+.unit-theme-big{font-size:14px;color:var(--text2);margin-bottom:20px}
+.unit-progress-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.unit-progress-fill{height:100%;background:var(--red);border-radius:2px;transition:width 0.5s ease}
+.unit-progress-label{font-size:11px;color:var(--text3);text-align:right}
+
+/* ── SECTION TABS ── */
+.section-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.section-tab{font-size:11px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);letter-spacing:0.3px;white-space:nowrap}
+.section-tab:hover{background:var(--surface2)}
+.section-tab.active{background:var(--red);border-color:var(--red);color:#fff}
+.section-tab.complete{border-color:var(--green-border);color:var(--green)}
+.section-tab.complete.active{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:16px}
+.section-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.section-type-badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:1.5px;padding:3px 9px;border-radius:10px;background:var(--surface2);color:var(--text3);text-transform:uppercase;flex-shrink:0}
+.section-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);flex:1}
+.section-score-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;flex-shrink:0}
+.section-body{padding:22px}
+.section-instruction{font-size:13px;color:var(--text2);margin-bottom:18px;font-style:italic;line-height:1.5}
+
+/* ── VOCAB INTRO ── */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.vocab-card{padding:12px 14px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.vocab-da{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:2px}
+.vocab-en{font-size:12px;color:var(--text2);margin-bottom:6px}
+.vocab-example{font-size:11px;color:var(--text3);font-style:italic;line-height:1.4;border-top:1px solid var(--border);padding-top:6px;margin-top:4px}
+
+/* ── MATCHING ── */
+.matching-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.match-col-header{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding-bottom:6px;border-bottom:1px solid var(--border);text-align:center}
+.match-tile{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);text-align:center;user-select:none;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all 0.15s}
+.match-tile.selectable:hover{border-color:var(--red);background:var(--red-light);cursor:pointer}
+.match-tile.selected{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
+.match-tile.wrong{border-color:var(--red);background:var(--red-light);animation:shake 0.4s ease}
+.match-tile.matched{opacity:0.45;text-decoration:line-through;cursor:default}
+.match-tile.da-tile{font-family:'Fraunces',serif;font-size:15px;font-weight:600}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ── MULTIPLE CHOICE ── */
+.mc-question{margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.mc-question:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.mc-prompt{font-size:14px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.5}
+.mc-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mc-option{padding:9px 14px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);font-size:13px;color:var(--text);text-align:left;transition:all 0.15s}
+.mc-option:hover:not(:disabled){border-color:var(--red);background:var(--red-light)}
+.mc-option.selected{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:500}
+.mc-option.correct{border-color:var(--green);background:var(--green-light);color:var(--green);font-weight:500}
+.mc-option.wrong{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:500}
+
+/* ── FILL BLANK ── */
+.fill-item{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;margin-bottom:16px;padding:14px 16px;background:var(--surface2);border-radius:var(--radius);font-size:15px;border:1px solid var(--border)}
+.fill-item:last-child{margin-bottom:0}
+.fill-text{font-family:'Fraunces',serif;font-size:16px;color:var(--text)}
+.fill-input{font-family:'Fraunces',serif;font-size:16px;width:120px;padding:2px 8px;border-bottom:2px solid var(--border2);background:transparent;color:var(--text);border-top:none;border-left:none;border-right:none;border-radius:0;text-align:center}
+.fill-input:focus{border-bottom-color:var(--red)}
+.fill-input.correct{border-bottom-color:var(--green);color:var(--green)}
+.fill-input.wrong{border-bottom-color:var(--red);color:var(--red)}
+.fill-hint{font-size:10px;color:var(--text3);font-style:italic;margin-left:4px}
+.fill-correction{font-size:11px;color:var(--green);margin-left:6px;font-weight:500}
+
+/* ── SENTENCE CONSTRUCTION (DRAG) ── */
+.sc-item{margin-bottom:20px;padding:16px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.sc-item:last-child{margin-bottom:0}
+.sc-translation{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:12px}
+.sc-drop-zone{min-height:48px;border:2px dashed var(--border2);border-radius:var(--radius);padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;background:var(--surface);transition:border-color 0.15s}
+.sc-drop-zone.correct{border-color:var(--green);border-style:solid;background:var(--green-light)}
+.sc-drop-zone.wrong{border-color:var(--red);border-style:solid}
+.sc-tiles{display:flex;flex-wrap:wrap;gap:6px}
+.sc-tile{font-family:'Fraunces',serif;font-size:15px;font-weight:500;padding:5px 12px;background:var(--surface);border:1.5px solid var(--border2);border-radius:20px;cursor:grab;user-select:none;transition:all 0.15s;color:var(--text)}
+.sc-tile:hover{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.sc-tile.placed{background:var(--red);border-color:var(--red);color:#fff;cursor:pointer}
+.sc-tile.placed:hover{background:#a83330}
+.sc-tile.punct{opacity:0.7;font-style:italic}
+
+/* ── GRAMMAR TABLE ── */
+.grammar-explanation{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;padding:12px 16px;background:var(--surface2);border-radius:var(--radius);border-left:3px solid var(--red)}
+.grammar-table{width:100%;border-collapse:collapse;font-size:14px}
+.grammar-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:8px 12px;border-bottom:1px solid var(--border);text-align:center;background:var(--surface2)}
+.grammar-table th:first-child{text-align:left}
+.grammar-table td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
+.grammar-table td:first-child{font-size:12px;color:var(--text2);font-style:italic;text-align:left;padding-left:12px;white-space:nowrap}
+.grammar-table tr:last-child td{border-bottom:none}
+.grammar-input{width:100%;max-width:100px;text-align:center;padding:5px 8px;font-family:'Fraunces',serif;font-size:15px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text)}
+.grammar-input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-light)}
+.grammar-input.correct{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.grammar-input.wrong{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.grammar-correction{font-size:11px;color:var(--green);display:block;margin-top:2px}
+
+/* ── TRANSLATION ── */
+.translation-item{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-bottom:12px;padding:14px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+.translation-item:last-child{margin-bottom:0}
+.translation-prompt{font-family:'Fraunces',serif;font-size:15px;color:var(--text);font-style:italic;padding-right:8px;line-height:1.4}
+.translation-input{width:100%;padding:8px 12px;font-family:'Fraunces',serif;font-size:15px;border:1.5px solid var(--border2);border-radius:var(--radius);background:var(--surface);color:var(--text)}
+.translation-input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-light)}
+.translation-input.correct{border-color:var(--green);background:var(--green-light)}
+.translation-input.wrong{border-color:var(--red);background:var(--red-light)}
+.translation-correction{font-size:11px;color:var(--green);margin-top:4px;display:block}
+
+/* ── READING ── */
+.reading-text{font-family:'Fraunces',serif;font-size:17px;line-height:1.9;color:var(--text);margin-bottom:20px;padding:20px;background:var(--surface2);border-radius:var(--radius);border-left:3px solid var(--red)}
+.glossary{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.gloss-item{font-size:11px;padding:3px 10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text2)}
+.gloss-da{font-weight:600;color:var(--text)}
+
+/* ── CULTURAL NOTE ── */
+.cultural-card{background:linear-gradient(135deg,#fdf6ec,#fef9f0);border:1px solid #e8d5a0;border-radius:var(--radius-lg);padding:24px}
+.cultural-flag{font-size:32px;margin-bottom:12px}
+.cultural-heading{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:12px}
+.cultural-text{font-size:14px;color:var(--text2);line-height:1.75}
+
+/* ── LISTENING PLACEHOLDER ── */
+.listening-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;gap:12px;background:var(--surface2);border-radius:var(--radius);border:2px dashed var(--border2)}
+.listening-icon{font-size:40px;opacity:0.4}
+.listening-label{font-family:'Fraunces',serif;font-size:16px;color:var(--text3)}
+.listening-sub{font-size:12px;color:var(--text3);max-width:300px;line-height:1.5}
+
+/* ── UNIT COMPLETE ── */
+.complete-screen{max-width:520px;margin:0 auto;padding:60px 20px;text-align:center}
+.complete-icon{font-size:56px;margin-bottom:20px}
+.complete-title{font-family:'Fraunces',serif;font-size:36px;font-weight:400;font-style:italic;color:var(--text);margin-bottom:8px}
+.complete-sub{font-size:14px;color:var(--text2);margin-bottom:32px;line-height:1.6}
+.score-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:28px;text-align:left;box-shadow:var(--shadow-sm)}
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.score-row:last-child{border-bottom:none}
+.score-label{color:var(--text2)}
+.score-val{font-weight:600;font-family:'DM Mono',monospace;font-size:12px}
+.score-val.pass{color:var(--green)}
+.score-val.fail{color:var(--red)}
+.score-overall{padding-top:12px;margin-top:4px;border-top:2px solid var(--border);font-size:15px;font-weight:600}
+.complete-actions{display:flex;gap:10px;justify-content:center}
+
+/* ── BUTTONS ── */
+.btn{font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.8px;padding:9px 22px;border-radius:4px;border:none;text-transform:uppercase}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover:not(:disabled){background:#a83330}
+.btn-secondary{background:transparent;color:var(--text2);border:1.5px solid var(--border2)}
+.btn-secondary:hover:not(:disabled){background:var(--surface2)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover:not(:disabled){background:#235f3e}
+.check-bar{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.35s ease both}
+@keyframes pop{0%{transform:scale(0.95)}60%{transform:scale(1.03)}100%{transform:scale(1)}}
+.pop{animation:pop 0.25s ease both}
+
+/* ── RESPONSIVE ── */
+@media(max-width:560px){
+  .mc-options{grid-template-columns:1fr}
+  .translation-item{grid-template-columns:1fr}
+  .matching-grid{gap:6px 10px}
+  .vocab-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
-<div class="page">
-  <header>
-    <div class="site-label">Modern Language Studies</div>
-    <h1>Language Nexus</h1>
-    <p class="subtitle">Grammar tables, vocabulary practice, and reading passages for modern European languages.</p>
-    <div class="rule">
-      <div class="rule-line"></div>
-      <div class="rule-text">Choose a language</div>
-      <div class="rule-line"></div>
+<div id="root"></div>
+<script type="text/babel">
+
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
+
+function normalise(s) {
+  return (s||"").trim().toLowerCase()
+    .replace(/æ/g,"ae").replace(/ø/g,"oe").replace(/å/g,"aa")
+    .replace(/é|è|ê/g,"e").replace(/[^a-z0-9\s]/g,"").replace(/\s+/g," ");
+}
+
+function checkAnswer(input, correct, alternatives=[]) {
+  const n = normalise(input);
+  const all = [correct, ...alternatives].map(normalise);
+  return all.some(a => n === a || (n.length > 2 && a === n));
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function pct(c, t) { return t > 0 ? Math.round((c/t)*100) : 0; }
+
+// Score badge helper
+function ScoreBadge({score, total, submitted}) {
+  if (!submitted || total === 0) return null;
+  const p = pct(score, total);
+  const col = p >= 75 ? "var(--green)" : "var(--red)";
+  return (
+    <span className="section-score-badge" style={{background: p>=75?"var(--green-light)":"var(--red-light)", color:col, border:`1px solid ${p>=75?"var(--green-border)":"var(--red-border)"}`}}>
+      {score}/{total} · {p}%
+    </span>
+  );
+}
+
+// ─── VOCAB INTRO ──────────────────────────────────────────────────────────────
+
+function VocabIntro({section}) {
+  const [flipped, setFlipped] = React.useState({});
+  return (
+    <div>
+      <p className="section-instruction">Study these words before the exercises. Click a card to see an example sentence.</p>
+      <div className="vocab-grid">
+        {section.words.map((w,i) => (
+          <div key={i} className="vocab-card" onClick={()=>setFlipped(f=>({...f,[i]:!f[i]}))} style={{cursor:"pointer"}}>
+            <div className="vocab-da">{w.da}</div>
+            <div className="vocab-en">{w.en}</div>
+            {flipped[i] && <div className="vocab-example">{w.example}</div>}
+            {!flipped[i] && <div style={{fontSize:"10px",color:"var(--text3)",marginTop:"4px"}}>tap for example ↓</div>}
+          </div>
+        ))}
+      </div>
     </div>
-  </header>
-  <main class="grid-section">
-    <div class="lang-grid">
-      <a class="lang-card" href="danish.html" style="--accent:#c8403a;">
-        <img src="danish.png" alt="Danish" style="width:100%;height:100%;object-fit:cover;display:block;"/>
-      </a>
-      <a class="lang-card" href="german.html" style="--accent:#1a1a1a;">
-        <img src="german.png" alt="German" style="width:100%;height:100%;object-fit:cover;display:block;"/>
-      </a>
+  );
+}
+
+// ─── MATCHING ─────────────────────────────────────────────────────────────────
+
+function Matching({section, onScore}) {
+  const pairs = React.useMemo(() => section.pairs, [section.id]);
+  const [left]  = React.useState(() => shuffle(pairs.map((p,i)=>({id:i,text:p.da}))));
+  const [right] = React.useState(() => shuffle(pairs.map((p,i)=>({id:i,text:p.en}))));
+  const [matched, setMatched] = React.useState({});
+  const [selL, setSelL] = React.useState(null);
+  const [selR, setSelR] = React.useState(null);
+  const [wrong, setWrong] = React.useState({l:null,r:null});
+  const [attempts, setAttempts] = React.useState(0);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const COLORS = [
+    {bg:"rgba(200,64,58,0.08)",border:"#c8403a"},
+    {bg:"rgba(45,122,80,0.08)",border:"#2d7a50"},
+    {bg:"rgba(60,100,200,0.08)",border:"#3c64c8"},
+    {bg:"rgba(160,80,180,0.08)",border:"#a050b4"},
+    {bg:"rgba(200,130,20,0.08)",border:"#c88214"},
+    {bg:"rgba(20,140,160,0.08)",border:"#148ca0"},
+    {bg:"rgba(80,160,80,0.08)",border:"#50a050"},
+    {bg:"rgba(160,80,80,0.08)",border:"#a05050"},
+  ];
+
+  React.useEffect(()=>{
+    if (selL===null || selR===null) return;
+    setAttempts(a=>a+1);
+    if (selL===selR) {
+      const ci = Object.keys(matched).length % COLORS.length;
+      const nm = {...matched, [selL]:ci};
+      setMatched(nm);
+      setSelL(null); setSelR(null);
+      if (Object.keys(nm).length === pairs.length) {
+        setSubmitted(true);
+        const score = Math.round((pairs.length / Math.max(attempts+1, pairs.length)) * pairs.length);
+        onScore(Math.min(pairs.length, score), pairs.length);
+      }
+    } else {
+      setWrong({l:selL,r:selR});
+      setTimeout(()=>{setWrong({l:null,r:null});setSelL(null);setSelR(null);},600);
+    }
+  },[selL,selR]);
+
+  const mc = Object.keys(matched).length;
+  const tileStyle = (id, side) => {
+    const isM = matched[id]!==undefined;
+    const col = isM ? COLORS[matched[id]] : null;
+    const isSel = side==="l" ? selL===id : selR===id;
+    const isW = side==="l" ? wrong.l===id : wrong.r===id;
+    return {
+      borderColor: isM?col.border : isW?"var(--red)" : isSel?"var(--red)" : "var(--border2)",
+      background: isM?col.bg : isW?"var(--red-light)" : isSel?"var(--red-light)" : "var(--surface)",
+      color: isM?col.border : isW?"var(--red)" : isSel?"var(--red)" : "var(--text)",
+      opacity: isM?0.5:1, textDecoration:isM?"line-through":"none",
+      fontWeight: isSel||isM?"600":"400"
+    };
+  };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"12px"}}>
+        <div style={{flex:1,height:"3px",background:"var(--surface2)",borderRadius:"2px",overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${(mc/pairs.length)*100}%`,background:"var(--red)",transition:"width 0.4s"}}/>
+        </div>
+        <span style={{fontFamily:"'DM Mono',monospace",fontSize:"10px",color:"var(--text3)",whiteSpace:"nowrap"}}>{mc}/{pairs.length}</span>
+      </div>
+      {submitted && (
+        <div className="pop" style={{padding:"12px 16px",background:"var(--green-light)",border:"1px solid var(--green-border)",borderRadius:"var(--radius)",marginBottom:"14px",textAlign:"center"}}>
+          <span style={{fontFamily:"'Fraunces',serif",fontSize:"16px",color:"var(--green)",fontWeight:"600"}}>Alle par matchet! ✓</span>
+        </div>
+      )}
+      <div className="matching-grid">
+        <div className="match-col-header">Dansk</div>
+        <div className="match-col-header">English</div>
+        {left.map((item,i) => (
+          <React.Fragment key={item.id}>
+            <div className={`match-tile da-tile${matched[item.id]!==undefined?"":" selectable"}`}
+              style={tileStyle(item.id,"l")}
+              onClick={()=>matched[item.id]===undefined&&wrong.l===null&&setSelL(item.id)}>
+              {item.text}
+            </div>
+            <div className={`match-tile${matched[right[i].id]!==undefined?"":" selectable"}`}
+              style={tileStyle(right[i].id,"r")}
+              onClick={()=>matched[right[i].id]===undefined&&wrong.l===null&&setSelR(right[i].id)}>
+              {right[i].text}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
-  </main>
-  <footer><p>Übung macht den Meister · Øvelse gør mester</p></footer>
-</div>
+  );
+}
+
+// ─── MULTIPLE CHOICE ──────────────────────────────────────────────────────────
+
+function MultipleChoice({section, onScore}) {
+  const [answers, setAnswers] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    if (Object.keys(answers).length < section.questions.length) return;
+    const correct = section.questions.filter((q,i) => answers[i]===q.answer).length;
+    setSubmitted(true);
+    onScore(correct, section.questions.length);
+  };
+
+  const reset = () => { setAnswers({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.questions.map((q,qi) => (
+        <div key={qi} className="mc-question">
+          <div className="mc-prompt">{qi+1}. {q.prompt}</div>
+          <div className="mc-options">
+            {q.options.map((opt,oi) => {
+              let cls = "mc-option";
+              if (submitted) {
+                if (opt===q.answer) cls += " correct";
+                else if (answers[qi]===opt) cls += " wrong";
+              } else if (answers[qi]===opt) cls += " selected";
+              return (
+                <button key={oi} className={cls} disabled={submitted}
+                  onClick={()=>!submitted&&setAnswers(a=>({...a,[qi]:opt}))}>
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(answers).length<section.questions.length} onClick={submit}>Check Answers</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── FILL IN THE BLANK ────────────────────────────────────────────────────────
+
+function FillBlank({section, onScore}) {
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.items.filter((it,i) => checkAnswer(vals[i]||"", it.answer)).length;
+    setSubmitted(true);
+    onScore(correct, section.items.length);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.items.map((item,i) => {
+        const ok = submitted ? checkAnswer(vals[i]||"", item.answer) : null;
+        return (
+          <div key={i} className="fill-item">
+            {item.before && <span className="fill-text">{item.before}</span>}
+            <input className={`fill-input${submitted?(ok?" correct":" wrong"):""}`}
+              value={vals[i]||""} disabled={submitted}
+              onChange={e=>setVals(v=>({...v,[i]:e.target.value}))}
+              onKeyDown={e=>{if(e.key==="Enter"&&!submitted) submit();}}
+              placeholder="___"
+              style={{width: Math.max(80, (item.answer.length*14))+"px"}}
+            />
+            {item.after && <span className="fill-text">{item.after}</span>}
+            {submitted && !ok && <span className="fill-correction">→ {item.answer}</span>}
+            {!submitted && item.hint && <span className="fill-hint">({item.hint})</span>}
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── SENTENCE CONSTRUCTION ────────────────────────────────────────────────────
+
+function SentenceConstruction({section, onScore}) {
+  const initItems = React.useMemo(()=>section.items.map(it=>({
+    ...it, shuffled: shuffle(it.words), placed: []
+  })),[section.id]);
+
+  const [items, setItems] = React.useState(initItems);
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const place = (itemIdx, word, wordIdx) => {
+    if (submitted) return;
+    setItems(prev => prev.map((it,i) => {
+      if (i!==itemIdx) return it;
+      const newShuffled = it.shuffled.filter((_,j)=>j!==wordIdx);
+      return {...it, shuffled:newShuffled, placed:[...it.placed, word]};
+    }));
+  };
+
+  const unplace = (itemIdx, word, placedIdx) => {
+    if (submitted) return;
+    setItems(prev => prev.map((it,i) => {
+      if (i!==itemIdx) return it;
+      const newPlaced = it.placed.filter((_,j)=>j!==placedIdx);
+      return {...it, shuffled:[...it.shuffled, word], placed:newPlaced};
+    }));
+  };
+
+  const submit = () => {
+    const correct = items.filter(it => it.placed.join(" ")===it.answer.join(" ")).length;
+    setSubmitted(true);
+    onScore(correct, items.length);
+  };
+
+  const reset = () => { setItems(initItems.map(it=>({...it,shuffled:shuffle(it.words),placed:[]}))); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {items.map((item,idx) => {
+        const isCorrect = submitted && item.placed.join(" ")===item.answer.join(" ");
+        const isWrong = submitted && !isCorrect;
+        return (
+          <div key={idx} className="sc-item">
+            <div className="sc-translation">{item.translation}</div>
+            <div className={`sc-drop-zone${isCorrect?" correct":isWrong?" wrong":""}`}>
+              {item.placed.length===0 && <span style={{fontSize:"12px",color:"var(--text3)",fontStyle:"italic"}}>Drop words here…</span>}
+              {item.placed.map((w,wi)=>(
+                <span key={wi} className="sc-tile placed" onClick={()=>unplace(idx,w,wi)}>{w}</span>
+              ))}
+            </div>
+            {submitted && isWrong && (
+              <div style={{fontSize:"11px",color:"var(--green)",marginBottom:"8px"}}>
+                ✓ {item.answer.join(" ")}
+              </div>
+            )}
+            <div className="sc-tiles">
+              {item.shuffled.map((w,wi)=>(
+                <span key={wi} className={`sc-tile${/^[.,?!;:]$/.test(w)?" punct":""}`}
+                  onClick={()=>place(idx,w,wi)}>{w}</span>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={items.some(it=>it.placed.length===0)} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── GRAMMAR TABLE ────────────────────────────────────────────────────────────
+
+function GrammarTable({section, onScore}) {
+  const totalCells = section.rows.reduce((s,r)=>s+r.answers.length,0);
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    let correct = 0;
+    section.rows.forEach((row,ri) => row.answers.forEach((ans,ci) => {
+      if (checkAnswer(vals[`${ri}-${ci}`]||"", ans)) correct++;
+    }));
+    setSubmitted(true);
+    onScore(correct, totalCells);
+  };
+
+  const reveal = () => {
+    const nv = {};
+    section.rows.forEach((row,ri) => row.answers.forEach((ans,ci) => { nv[`${ri}-${ci}`]=ans; }));
+    setVals(nv); setSubmitted(true); onScore(0, totalCells);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      {section.explanation && <div className="grammar-explanation">{section.explanation}</div>}
+      <div style={{overflowX:"auto"}}>
+        <table className="grammar-table">
+          <thead>
+            <tr>{section.headers.map((h,i)=><th key={i}>{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {section.rows.map((row,ri)=>(
+              <tr key={ri}>
+                <td>{row.label}</td>
+                {row.answers.map((ans,ci)=>{
+                  const key=`${ri}-${ci}`;
+                  const val=vals[key]||"";
+                  const ok=submitted?checkAnswer(val,ans):null;
+                  return (
+                    <td key={ci}>
+                      <input className={`grammar-input${submitted?(ok?" correct":" wrong"):""}`}
+                        value={val} disabled={submitted}
+                        onChange={e=>setVals(v=>({...v,[key]:e.target.value}))}
+                        onKeyDown={e=>{if(e.key==="Enter"&&!submitted)submit();}}
+                      />
+                      {submitted&&!ok&&<span className="grammar-correction">{ans}</span>}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <>
+              <button className="btn btn-secondary" onClick={reveal}>Reveal</button>
+              <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+            </>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── TRANSLATION ──────────────────────────────────────────────────────────────
+
+function Translation({section, onScore}) {
+  const [vals, setVals] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.items.filter((it,i)=>checkAnswer(vals[i]||"",it.answer,it.alternatives||[])).length;
+    setSubmitted(true);
+    onScore(correct, section.items.length);
+  };
+
+  const reset = () => { setVals({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <p className="section-instruction">{section.instruction}</p>
+      {section.items.map((item,i)=>{
+        const ok=submitted?checkAnswer(vals[i]||"",item.answer,item.alternatives||[]):null;
+        return (
+          <div key={i} className="translation-item">
+            <div className="translation-prompt">{item.prompt}</div>
+            <div>
+              <input className={`translation-input${submitted?(ok?" correct":" wrong"):""}`}
+                value={vals[i]||""} disabled={submitted}
+                onChange={e=>setVals(v=>({...v,[i]:e.target.value}))}
+                onKeyDown={e=>{if(e.key==="Enter"&&!submitted)submit();}}
+                placeholder={section.direction==="en_to_da"?"Type in Danish…":"Type in English…"}
+              />
+              {submitted&&!ok&&<span className="translation-correction">→ {item.answer}{item.alternatives?.length>0?` / ${item.alternatives[0]}`:""}</span>}
+            </div>
+          </div>
+        );
+      })}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(vals).length===0} onClick={submit}>Check</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── READING ──────────────────────────────────────────────────────────────────
+
+function Reading({section, onScore}) {
+  const [answers, setAnswers] = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+
+  const submit = () => {
+    const correct = section.questions.filter((q,i)=>answers[i]===q.answer).length;
+    setSubmitted(true);
+    onScore(correct, section.questions.length);
+  };
+
+  const reset = () => { setAnswers({}); setSubmitted(false); };
+
+  return (
+    <div>
+      <div className="reading-text">{section.text}</div>
+      {section.glossary && section.glossary.length>0 && (
+        <div style={{marginBottom:"20px"}}>
+          <div style={{fontSize:"10px",fontWeight:"600",letterSpacing:"1.5px",textTransform:"uppercase",color:"var(--text3)",marginBottom:"8px"}}>Gloser — Glossary</div>
+          <div className="glossary">
+            {section.glossary.map((g,i)=>(
+              <span key={i} className="gloss-item"><span className="gloss-da">{g.da}</span> = {g.en}</span>
+            ))}
+          </div>
+        </div>
+      )}
+      <div style={{fontSize:"12px",fontWeight:"600",letterSpacing:"1px",textTransform:"uppercase",color:"var(--text3)",marginBottom:"14px"}}>Forståelsesspørgsmål — Comprehension Questions</div>
+      {section.questions.map((q,qi)=>(
+        <div key={qi} className="mc-question">
+          <div className="mc-prompt">{qi+1}. {q.prompt}</div>
+          <div className="mc-options">
+            {q.options.map((opt,oi)=>{
+              let cls="mc-option";
+              if(submitted){if(opt===q.answer)cls+=" correct";else if(answers[qi]===opt)cls+=" wrong";}
+              else if(answers[qi]===opt)cls+=" selected";
+              return <button key={oi} className={cls} disabled={submitted} onClick={()=>!submitted&&setAnswers(a=>({...a,[qi]:opt}))}>{opt}</button>;
+            })}
+          </div>
+        </div>
+      ))}
+      <div className="check-bar">
+        {submitted
+          ? <button className="btn btn-secondary" onClick={reset}>Try Again</button>
+          : <button className="btn btn-primary" disabled={Object.keys(answers).length<section.questions.length} onClick={submit}>Check Answers</button>
+        }
+      </div>
+    </div>
+  );
+}
+
+// ─── CULTURAL NOTE ────────────────────────────────────────────────────────────
+
+function CulturalNote({section}) {
+  return (
+    <div className="cultural-card">
+      <div className="cultural-flag">🇩🇰</div>
+      <div className="cultural-heading">{section.heading}</div>
+      <div className="cultural-text">{section.content}</div>
+    </div>
+  );
+}
+
+// ─── LISTENING PLACEHOLDER ────────────────────────────────────────────────────
+
+function ListeningPlaceholder({section}) {
+  return (
+    <div className="listening-placeholder">
+      <div className="listening-icon">🎧</div>
+      <div className="listening-label">Lytteøvelse — Listening Exercise</div>
+      <div className="listening-sub">{section.description}</div>
+      <div style={{marginTop:"12px",fontFamily:"'DM Mono',monospace",fontSize:"10px",color:"var(--text3)",padding:"6px 14px",border:"1px dashed var(--border2)",borderRadius:"12px"}}>TTS INTEGRATION PENDING</div>
+    </div>
+  );
+}
+
+// ─── SECTION RENDERER ─────────────────────────────────────────────────────────
+
+const TYPE_LABELS = {
+  vocab_intro: "Vocabulary",
+  matching: "Matching",
+  multiple_choice: "Multiple Choice",
+  fill_blank: "Fill in the Blank",
+  sentence_construction: "Sentence Builder",
+  grammar_table: "Grammar Table",
+  translation: "Translation",
+  reading: "Reading",
+  listening_placeholder: "Listening",
+  cultural_note: "Culture"
+};
+
+function SectionRenderer({section, onScore, scores}) {
+  const score = scores[section.id];
+  const label = TYPE_LABELS[section.type] || section.type;
+  const isScored = ["matching","multiple_choice","fill_blank","sentence_construction","grammar_table","translation","reading"].includes(section.type);
+
+  return (
+    <div className="section-card fade-up">
+      <div className="section-header">
+        <span className="section-type-badge">{label}</span>
+        <span className="section-title">{section.title}</span>
+        {isScored && score && <ScoreBadge score={score.correct} total={score.total} submitted={true}/>}
+      </div>
+      <div className="section-body">
+        {section.type==="vocab_intro"           && <VocabIntro section={section}/>}
+        {section.type==="matching"              && <Matching section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="multiple_choice"       && <MultipleChoice section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="fill_blank"            && <FillBlank section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="sentence_construction" && <SentenceConstruction section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="grammar_table"         && <GrammarTable section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="translation"           && <Translation section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="reading"               && <Reading section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="cultural_note"         && <CulturalNote section={section}/>}
+        {section.type==="listening_placeholder" && <ListeningPlaceholder section={section}/>}
+      </div>
+    </div>
+  );
+}
+
+// ─── UNIT VIEW ────────────────────────────────────────────────────────────────
+
+function UnitView({unit, courseUnit, onBack, onComplete}) {
+  const [activeSection, setActiveSection] = React.useState(unit.sections[0].id);
+  const [scores, setScores] = React.useState({});
+  const [showComplete, setShowComplete] = React.useState(false);
+
+  const scoredSections = unit.sections.filter(s=>unit.completion.counted_sections.includes(s.id));
+  const totalPossible = scoredSections.reduce((sum,s) => {
+    const sc = scores[s.id];
+    return sum + (sc ? sc.total : 0);
+  }, 0);
+  const totalCorrect = scoredSections.reduce((sum,s) => {
+    const sc = scores[s.id];
+    return sum + (sc ? sc.correct : 0);
+  }, 0);
+  const attempted = scoredSections.filter(s=>scores[s.id]).length;
+  const overallPct = totalPossible > 0 ? pct(totalCorrect, totalPossible) : 0;
+  const canComplete = attempted >= scoredSections.length;
+  const passed = overallPct >= unit.completion.threshold;
+
+  const handleScore = (sectionId, correct, total) => {
+    setScores(s=>({...s,[sectionId]:{correct,total}}));
+  };
+
+  const activeSec = unit.sections.find(s=>s.id===activeSection);
+
+  if (showComplete) {
+    return (
+      <div className="unit-container">
+        <div className="complete-screen fade-up">
+          <div className="complete-icon">{passed?"🎉":"📚"}</div>
+          <div className="complete-title">{passed?"Godt klaret!":"Prøv igen!"}</div>
+          <div className="complete-sub">
+            {passed
+              ? `You scored ${overallPct}% — above the ${unit.completion.threshold}% threshold. Unit complete.`
+              : `You scored ${overallPct}% — the threshold is ${unit.completion.threshold}%. Review the exercises and try again.`
+            }
+          </div>
+          <div className="score-breakdown">
+            {scoredSections.map(s=>{
+              const sc=scores[s.id];
+              const p=sc?pct(sc.correct,sc.total):0;
+              return (
+                <div key={s.id} className="score-row">
+                  <span className="score-label">{TYPE_LABELS[s.type]||s.type}</span>
+                  <span className={`score-val ${p>=75?"pass":"fail"}`}>{sc?`${sc.correct}/${sc.total} · ${p}%`:"—"}</span>
+                </div>
+              );
+            })}
+            <div className="score-row score-overall">
+              <span>Overall</span>
+              <span className={`score-val ${passed?"pass":"fail"}`}>{overallPct}%</span>
+            </div>
+          </div>
+          <div className="complete-actions">
+            <button className="btn btn-secondary" onClick={()=>setShowComplete(false)}>Review Unit</button>
+            {passed && <button className="btn btn-success" onClick={()=>onComplete(unit.id)}>Next Unit →</button>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="unit-container">
+      <div className="unit-header">
+        <div className="unit-header-meta">
+          <span className="unit-header-module">Modul {courseUnit?.module || 1}</span>
+          <span className="unit-header-sep">·</span>
+          <span className="unit-header-module">Uge {courseUnit?.week || 1}</span>
+          <span className="unit-header-cefr">A1</span>
+        </div>
+        <h1 className="unit-title-big">{unit.title}</h1>
+        <p className="unit-theme-big">{unit.theme}</p>
+        <div className="unit-progress-bar">
+          <div className="unit-progress-fill" style={{width:`${(attempted/scoredSections.length)*100}%`}}/>
+        </div>
+        <div className="unit-progress-label">{attempted}/{scoredSections.length} sections attempted{totalPossible>0?` · ${overallPct}% overall`:""}</div>
+      </div>
+
+      <div className="section-tabs">
+        {unit.sections.map(s=>{
+          const sc=scores[s.id];
+          const isScored=unit.completion.counted_sections.includes(s.id);
+          const isDone=isScored&&sc;
+          let cls="section-tab";
+          if(s.id===activeSection)cls+=" active";
+          if(isDone)cls+=" complete";
+          return (
+            <button key={s.id} className={cls} onClick={()=>setActiveSection(s.id)}>
+              {isDone?"✓ ":""}{TYPE_LABELS[s.type]||s.type}
+            </button>
+          );
+        })}
+      </div>
+
+      {activeSec && <SectionRenderer key={activeSec.id} section={activeSec} onScore={handleScore} scores={scores}/>}
+
+      <div style={{display:"flex",justifyContent:"space-between",marginTop:"24px",flexWrap:"wrap",gap:"10px"}}>
+        <button className="btn btn-secondary" onClick={onBack}>← Back to Course</button>
+        {canComplete && (
+          <button className={`btn ${passed?"btn-success":"btn-secondary"}`} onClick={()=>setShowComplete(true)}>
+            {passed?"Complete Unit ✓":"See Results"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── MODULE MAP ───────────────────────────────────────────────────────────────
+
+function ModuleMap({course, progress, onSelectUnit}) {
+  const [openModules, setOpenModules] = React.useState({1:true});
+
+  const toggleModule = (id) => setOpenModules(o=>({...o,[id]:!o[id]}));
+
+  const getUnitStatus = (unitId) => {
+    if (progress.completed?.includes(unitId)) return "complete";
+    if (progress.current===unitId) return "in_progress";
+    return "locked";
+  };
+
+  const isUnitUnlocked = (moduleIdx, unitIdx) => {
+    const mod = course.modules[moduleIdx];
+    if (unitIdx===0 && moduleIdx===0) return true;
+    if (unitIdx===0) {
+      const prevMod = course.modules[moduleIdx-1];
+      return prevMod.weeks.every(w=>progress.completed?.includes(w.id));
+    }
+    return progress.completed?.includes(mod.weeks[unitIdx-1].id);
+  };
+
+  return (
+    <div className="map-container">
+      <div className="map-hero fade-up">
+        <h1>Dansk</h1>
+        <p>A CEFR-aligned course from complete beginner to B1+. Work through each module at your own pace — units unlock as you progress.</p>
+      </div>
+
+      {course.modules.map((mod, mi) => {
+        const isOpen = openModules[mod.id];
+        const completedInMod = mod.weeks.filter(w=>progress.completed?.includes(w.id)).length;
+        const modPct = Math.round((completedInMod/mod.weeks.length)*100);
+        return (
+          <div key={mod.id} className="module-block fade-up" style={{animationDelay:`${mi*0.05}s`}}>
+            <div className="module-header" onClick={()=>toggleModule(mod.id)}>
+              <div className="module-badge" style={{background:mod.color}}>
+                <span className="module-badge-inner">{mod.cefr}</span>
+              </div>
+              <div className="module-info">
+                <div className="module-title">{mod.title} — {mod.subtitle}</div>
+                <div className="module-sub">{completedInMod}/{mod.weeks.length} units complete{completedInMod>0?` · ${modPct}%`:""}</div>
+              </div>
+              <span className="module-cefr" style={{borderColor:mod.color,color:mod.color}}>{mod.cefr}</span>
+              <span className={`module-chevron${isOpen?" open":""}`}>▾</span>
+            </div>
+
+            {isOpen && (
+              <div className="unit-grid">
+                {mod.weeks.map((unit, ui) => {
+                  const unlocked = isUnitUnlocked(mi, ui);
+                  const status = getUnitStatus(unit.id);
+                  const statusColor = status==="complete"?"var(--green)":status==="in_progress"?"var(--gold)":"var(--border2)";
+                  const statusLabel = status==="complete"?"Complete":status==="in_progress"?"In Progress":"Locked";
+                  return (
+                    <div key={unit.id}
+                      className={`unit-card ${status} ${!unlocked?"locked":""}`}
+                      onClick={()=>unlocked&&onSelectUnit(unit.id)}>
+                      {!unlocked && <span className="lock-icon">🔒</span>}
+                      <div className="unit-week">Week {unit.week}</div>
+                      <div className="unit-title">{unit.title}</div>
+                      <div className="unit-theme">{unit.theme}</div>
+                      <div className="unit-status">
+                        <div className="unit-status-dot" style={{background:statusColor}}/>
+                        <span className="unit-status-label" style={{color:statusColor}}>{statusLabel}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="module-block fade-up" style={{animationDelay:"0.3s",opacity:0.6}}>
+        <div className="module-header" style={{cursor:"default"}}>
+          <div className="module-badge" style={{background:"#78716c"}}>
+            <span className="module-badge-inner" style={{fontSize:"11px"}}>N</span>
+          </div>
+          <div className="module-info">
+            <div className="module-title">Modul N — Nordic Track</div>
+            <div className="module-sub">For Norwegian & Swedish L1 speakers · Contrastive linguistics overlay</div>
+          </div>
+          <span className="module-cefr" style={{borderColor:"#78716c",color:"#78716c"}}>N</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+
+function App() {
+  const [course, setCourse]       = React.useState(null);
+  const [activeUnit, setActiveUnit] = React.useState(null);
+  const [unitData, setUnitData]   = React.useState(null);
+  const [progress, setProgress]   = React.useState({completed:[], current:null});
+  const [loading, setLoading]     = React.useState(true);
+  const [error, setError]         = React.useState(null);
+
+  React.useEffect(()=>{
+    fetch("course.json")
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(c=>{ setCourse(c); setLoading(false); })
+      .catch(e=>{ setError(e.message); setLoading(false); });
+  },[]);
+
+  const selectUnit = (unitId) => {
+    setLoading(true);
+    fetch(`${unitId}.json`)
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(u=>{ setUnitData(u); setActiveUnit(unitId); setLoading(false); })
+      .catch(e=>{ setError(`Could not load unit: ${e.message}`); setLoading(false); });
+  };
+
+  const completeUnit = (unitId) => {
+    setProgress(p=>({
+      ...p,
+      completed: p.completed.includes(unitId)?p.completed:[...p.completed,unitId],
+      current: null
+    }));
+    setActiveUnit(null);
+    setUnitData(null);
+  };
+
+  const getCourseUnit = (unitId) => {
+    if (!course) return null;
+    for (const mod of course.modules) {
+      const week = mod.weeks.find(w=>w.id===unitId);
+      if (week) return {...week, module:mod.id};
+    }
+    return null;
+  };
+
+  return (
+    <div className="app">
+      <nav className="topbar">
+        <a href="index.html" className="topbar-logo">Language Nexus</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-course">Dansk</span>
+        {activeUnit && (
+          <div className="topbar-right">
+            <button className="back-btn" onClick={()=>{setActiveUnit(null);setUnitData(null);}}>← Course Map</button>
+          </div>
+        )}
+      </nav>
+
+      {loading && (
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",flex:1,padding:"60px",flexDirection:"column",gap:"16px"}}>
+          <div style={{width:"32px",height:"32px",border:"3px solid var(--border)",borderTop:"3px solid var(--red)",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+          <span style={{fontFamily:"'Fraunces',serif",fontSize:"15px",color:"var(--text3)",fontStyle:"italic"}}>Indlæser…</span>
+        </div>
+      )}
+
+      {error && (
+        <div style={{maxWidth:"500px",margin:"60px auto",padding:"24px",background:"var(--surface)",border:"1px solid var(--border)",borderRadius:"var(--radius-lg)",textAlign:"center"}}>
+          <div style={{fontFamily:"'Fraunces',serif",fontSize:"18px",color:"var(--red)",marginBottom:"8px"}}>Fejl</div>
+          <div style={{fontSize:"13px",color:"var(--text2)",marginBottom:"16px",fontFamily:"'DM Mono',monospace"}}>{error}</div>
+          <div style={{fontSize:"12px",color:"var(--text3)"}}>Make sure you are serving from a local server (<code>npx serve .</code>) or Netlify, and that <code>course.json</code> and unit JSON files are in the same folder.</div>
+        </div>
+      )}
+
+      {!loading && !error && !activeUnit && course && (
+        <ModuleMap course={course} progress={progress} onSelectUnit={selectUnit}/>
+      )}
+
+      {!loading && !error && activeUnit && unitData && (
+        <UnitView unit={unitData} courseUnit={getCourseUnit(activeUnit)} onBack={()=>{setActiveUnit(null);setUnitData(null);}} onComplete={completeUnit}/>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
 </body>
 </html>
