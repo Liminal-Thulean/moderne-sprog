@@ -1,0 +1,204 @@
+{
+  "id": "m1_w2",
+  "module": 1,
+  "week": 2,
+  "title": "Hvem er du?",
+  "theme": "Personal information, numbers 0–20, and the verbs være, hedde, have",
+  "description": "Learn to give and ask for personal information. Numbers, age, where you live, and the three most important Danish verbs.",
+  "module_n": false,
+  "sections": [
+    {
+      "id": "vocab_numbers",
+      "type": "vocab_intro",
+      "title": "Tal 0–20 — Numbers 0–20",
+      "words": [
+        { "da": "nul",       "en": "0 — zero",      "example": "Mit nummer er nul-to-tre." },
+        { "da": "en / et",   "en": "1 — one",        "example": "Jeg har en bror og et søskende." },
+        { "da": "to",        "en": "2 — two",        "example": "Jeg har to søstre." },
+        { "da": "tre",       "en": "3 — three",      "example": "Vi er tre i familien." },
+        { "da": "fire",      "en": "4 — four",       "example": "Jeg er fire år gammel... nej, fjorten!" },
+        { "da": "fem",       "en": "5 — five",       "example": "Klassen har fem drenge." },
+        { "da": "seks",      "en": "6 — six",        "example": "Vi starter klokken seks." },
+        { "da": "syv",       "en": "7 — seven",      "example": "Ugen har syv dage." },
+        { "da": "otte",      "en": "8 — eight",      "example": "Jeg sover otte timer." },
+        { "da": "ni",        "en": "9 — nine",       "example": "Klassen har ni piger." },
+        { "da": "ti",        "en": "10 — ten",       "example": "Jeg er ti år gammel." },
+        { "da": "elleve",    "en": "11 — eleven",    "example": "Han er elleve år." },
+        { "da": "tolv",      "en": "12 — twelve",    "example": "Der er tolv måneder i et år." },
+        { "da": "tretten",   "en": "13 — thirteen",  "example": "Hun er tretten år gammel." },
+        { "da": "fjorten",   "en": "14 — fourteen",  "example": "Jeg er fjorten år gammel." },
+        { "da": "femten",    "en": "15 — fifteen",   "example": "Vi er femten elever i klassen." },
+        { "da": "seksten",   "en": "16 — sixteen",   "example": "Han er seksten år." },
+        { "da": "sytten",    "en": "17 — seventeen", "example": "Hun fylder sytten i morgen." },
+        { "da": "atten",     "en": "18 — eighteen",  "example": "Han er atten år." },
+        { "da": "nitten",    "en": "19 — nineteen",  "example": "Hun er nitten år gammel." },
+        { "da": "tyve",      "en": "20 — twenty",    "example": "Der er tyve elever i klassen." }
+      ]
+    },
+    {
+      "id": "vocab_personal",
+      "type": "vocab_intro",
+      "title": "Personlige oplysninger — Personal Information",
+      "words": [
+        { "da": "alder",       "en": "age",               "example": "Hvad er din alder? Jeg er fjorten." },
+        { "da": "gammel",      "en": "old / years old",   "example": "Jeg er fjorten år gammel." },
+        { "da": "år",          "en": "year(s)",           "example": "Jeg er tolv år." },
+        { "da": "adresse",     "en": "address",           "example": "Min adresse er Skolevej 3." },
+        { "da": "telefon",     "en": "telephone / phone", "example": "Mit telefonnummer er 12 34 56 78." },
+        { "da": "bor",         "en": "live / lives",      "example": "Jeg bor i Aarhus." },
+        { "da": "kommer fra",  "en": "come(s) from",      "example": "Jeg kommer fra Somalia." },
+        { "da": "land",        "en": "country",           "example": "Hvilket land kommer du fra?" },
+        { "da": "by",          "en": "city / town",       "example": "Jeg bor i en lille by." },
+        { "da": "Danmark",     "en": "Denmark",           "example": "Jeg bor i Danmark nu." },
+        { "da": "skole",       "en": "school",            "example": "Jeg går på Skipper Clement Skolen." },
+        { "da": "klasse",      "en": "class / year group","example": "Jeg er i 8. klasse." },
+        { "da": "nummer",      "en": "number",            "example": "Hvad er dit telefonnummer?" },
+        { "da": "mit / min",   "en": "my",                "example": "Mit navn er Ali. Min skole er stor." },
+        { "da": "dit / din",   "en": "your",              "example": "Hvad er dit navn? Hvad er din adresse?" }
+      ]
+    },
+    {
+      "id": "mc_numbers",
+      "type": "multiple_choice",
+      "title": "Tal — Numbers",
+      "instruction": "Choose the correct answer.",
+      "questions": [
+        { "prompt": "How do you say 7 in Danish?", "options": ["seks","syv","otte","ni"], "answer": "syv" },
+        { "prompt": "How do you say 15 in Danish?", "options": ["femten","fjorten","seksten","tyve"], "answer": "femten" },
+        { "prompt": "How do you say 20 in Danish?", "options": ["tolv","nitten","tyve","tretten"], "answer": "tyve" },
+        { "prompt": "Which number is 'elleve'?", "options": ["9","10","11","12"], "answer": "11" },
+        { "prompt": "How do you say 'I am 14 years old'?", "options": ["Jeg er fjorten år gammel.","Jeg er femten år gammel.","Jeg har fjorten år.","Jeg er fjorten gammel år."], "answer": "Jeg er fjorten år gammel." },
+        { "prompt": "What does 'der er tyve elever' mean?", "options": ["there are twelve students","there are twenty students","there are two students","there are ten students"], "answer": "there are twenty students" }
+      ]
+    },
+    {
+      "id": "grammar_verbs",
+      "type": "grammar_table",
+      "title": "Grammatik: Være, hedde, have",
+      "explanation": "These three verbs are the most important in Danish. Unlike English, Danish verbs do not change form based on the person — 'jeg er', 'du er', 'han er' all use the same form 'er'. This makes Danish verb conjugation much simpler than German or French.",
+      "headers": ["", "være (to be)", "hedde (to be called)", "have (to have)"],
+      "rows": [
+        { "label": "jeg (I)",         "answers": ["er", "hedder", "har"] },
+        { "label": "du (you)",         "answers": ["er", "hedder", "har"] },
+        { "label": "han/hun (he/she)", "answers": ["er", "hedder", "har"] },
+        { "label": "vi (we)",          "answers": ["er", "hedder", "har"] },
+        { "label": "I (you pl.)",      "answers": ["er", "hedder", "har"] },
+        { "label": "de (they)",        "answers": ["er", "hedder", "har"] }
+      ]
+    },
+    {
+      "id": "fill_verbs",
+      "type": "fill_blank",
+      "title": "Udfyld med det rigtige verbum",
+      "instruction": "Use the correct form of være, hedde, or have.",
+      "items": [
+        { "before": "Jeg ", "after": " fjorten år gammel.", "answer": "er", "hint": "være" },
+        { "before": "Hun ", "after": " Maria.", "answer": "hedder", "hint": "hedde" },
+        { "before": "Vi ", "after": " to hunde.", "answer": "har", "hint": "have" },
+        { "before": "Han ", "after": " fra Polen.", "answer": "er", "hint": "være" },
+        { "before": "Hvad ", "after": " du?", "answer": "hedder", "hint": "hedde" },
+        { "before": "De ", "after": " tre søskende.", "answer": "har", "hint": "have" },
+        { "before": "Jeg ", "after": " ikke en telefon.", "answer": "har", "hint": "have" },
+        { "before": "Du ", "after": " en god elev.", "answer": "er", "hint": "være" }
+      ]
+    },
+    {
+      "id": "matching_numbers",
+      "type": "matching",
+      "title": "Match tallene — Match the Numbers",
+      "instruction": "Click a Danish word, then click its numeral.",
+      "pairs": [
+        { "da": "tre",     "en": "3" },
+        { "da": "syv",     "en": "7" },
+        { "da": "tolv",    "en": "12" },
+        { "da": "femten",  "en": "15" },
+        { "da": "atten",   "en": "18" },
+        { "da": "tyve",    "en": "20" },
+        { "da": "ni",      "en": "9" },
+        { "da": "seksten", "en": "16" }
+      ]
+    },
+    {
+      "id": "sentence_personal",
+      "type": "sentence_construction",
+      "title": "Byg sætningen — Build the Sentence",
+      "instruction": "Drag the word tiles into the correct order.",
+      "mode": "drag",
+      "items": [
+        { "words": ["gammel","er","Jeg","fjorten","år","."], "answer": ["Jeg","er","fjorten","år","gammel","."], "translation": "I am fourteen years old." },
+        { "words": ["du","?","Hvor","gammel","er"], "answer": ["Hvor","gammel","er","du","?"], "translation": "How old are you?" },
+        { "words": ["bor","Aarhus","Jeg","i","."], "answer": ["Jeg","bor","i","Aarhus","."], "translation": "I live in Aarhus." },
+        { "words": ["nummer","?","dit","er","Hvad","telefon"], "answer": ["Hvad","er","dit","telefon","nummer","?"], "translation": "What is your phone number?" },
+        { "words": ["har","søskende","to","Jeg","."], "answer": ["Jeg","har","to","søskende","."], "translation": "I have two siblings." }
+      ]
+    },
+    {
+      "id": "fill_personal",
+      "type": "fill_blank",
+      "title": "Om dig selv — About Yourself",
+      "instruction": "Complete these sentences with the correct Danish word.",
+      "items": [
+        { "before": "Jeg ", "after": " i Danmark.", "answer": "bor", "hint": "live" },
+        { "before": "Jeg kommer ", "after": " Syrien.", "answer": "fra", "hint": "from" },
+        { "before": "Jeg er i 8. ", "after": ".", "answer": "klasse", "hint": "class/year" },
+        { "before": "Mit ", "after": " er Fatima.", "answer": "navn", "hint": "name" },
+        { "before": "Jeg er femten ", "after": " gammel.", "answer": "år", "hint": "years" },
+        { "before": "Hvad er din ", "after": "?", "answer": "adresse", "hint": "address" }
+      ]
+    },
+    {
+      "id": "reading_biocards",
+      "type": "reading",
+      "title": "Læs om dem — Read About Them",
+      "text": "Hej! Jeg hedder Yusuf. Jeg er tretten år gammel. Jeg kommer fra Somalia, men jeg bor i Danmark nu. Jeg bor i Aalborg. Jeg går i 7. klasse. Jeg har tre søskende — to brødre og en søster. Mit telefonnummer er 71 23 45 67.\n\nHej! Jeg hedder Lena. Jeg er femten år. Jeg kommer fra Ukraine. Jeg bor i Aarhus med min mor og min far. Jeg har ikke nogen søskende. Jeg er i 9. klasse. Min adresse er Bakkevej 12.",
+      "glossary": [
+        { "da": "søskende", "en": "siblings" },
+        { "da": "brødre",   "en": "brothers" },
+        { "da": "søster",   "en": "sister" },
+        { "da": "mor",      "en": "mother" },
+        { "da": "far",      "en": "father" },
+        { "da": "nogen",    "en": "any" },
+        { "da": "med",      "en": "with" }
+      ],
+      "questions": [
+        { "prompt": "How old is Yusuf?",                  "options": ["12","13","14","15"],                                        "answer": "13" },
+        { "prompt": "Where does Yusuf live in Denmark?",  "options": ["Aarhus","Copenhagen","Aalborg","Odense"],                   "answer": "Aalborg" },
+        { "prompt": "How many siblings does Yusuf have?", "options": ["one","two","three","none"],                                 "answer": "three" },
+        { "prompt": "Where does Lena come from?",         "options": ["Somalia","Syria","Poland","Ukraine"],                       "answer": "Ukraine" },
+        { "prompt": "Does Lena have any siblings?",       "options": ["Yes, one brother","Yes, two sisters","No siblings","Yes, one sister"], "answer": "No siblings" },
+        { "prompt": "Which class is Lena in?",            "options": ["7th","8th","9th","10th"],                                  "answer": "9th" }
+      ]
+    },
+    {
+      "id": "translation_personal",
+      "type": "translation",
+      "title": "Oversæt — Translate",
+      "instruction": "Translate into Danish.",
+      "direction": "en_to_da",
+      "items": [
+        { "prompt": "I am thirteen years old.", "answer": "Jeg er tretten år gammel.", "alternatives": [] },
+        { "prompt": "What is your name?",       "answer": "Hvad hedder du?", "alternatives": ["Hvad er dit navn?"] },
+        { "prompt": "I live in Denmark.",       "answer": "Jeg bor i Danmark.", "alternatives": [] },
+        { "prompt": "I have two brothers.",     "answer": "Jeg har to brødre.", "alternatives": [] },
+        { "prompt": "How old are you?",         "answer": "Hvor gammel er du?", "alternatives": [] }
+      ]
+    },
+    {
+      "id": "listening_w2",
+      "type": "listening_placeholder",
+      "title": "Lyt og forstå — Listen and Understand",
+      "description": "Audio exercises coming soon. This section will feature two students introducing themselves — name, age, country, city, and school year."
+    },
+    {
+      "id": "cultural_w2",
+      "type": "cultural_note",
+      "title": "Kulturelt hjørne — Cultural Corner",
+      "heading": "Numbers and the Danish phone system",
+      "content": "Danish phone numbers are always eight digits long and written in pairs: 71 23 45 67. Danes almost always give their number in pairs rather than individually. You will also notice that Danish numbers above 20 follow a very different pattern — 'halvtreds' (50) literally means 'half of three times twenty', a remnant of an old vigesimal (base-20) counting system. For now, numbers 0–20 are your priority, but do not be surprised when you hear 'halvtreds' and it means fifty!"
+    }
+  ],
+  "completion": {
+    "threshold": 75,
+    "counted_sections": ["mc_numbers","grammar_verbs","fill_verbs","matching_numbers","sentence_personal","fill_personal","reading_biocards","translation_personal"]
+  }
+}
