@@ -12,16 +12,16 @@
       "description": "Build functional communicative ability in everyday contexts. Greetings, school life, family, numbers, and basic sentence structure.",
       "color": "#c8403a",
       "weeks": [
-        { "id": "m1_w1", "week": 1, "title": "Hej Danmark", "theme": "Greetings & introductions", "unlocked": true },
-        { "id": "m1_w2", "week": 2, "title": "Hvem er du?", "theme": "Personal information & numbers", "unlocked": false },
-        { "id": "m1_w3", "week": 3, "title": "Min familie", "theme": "Family vocabulary & possessives", "unlocked": false },
-        { "id": "m1_w4", "week": 4, "title": "I klassen", "theme": "Classroom & school items", "unlocked": false },
-        { "id": "m1_w5", "week": 5, "title": "Mad og drikke", "theme": "Food, drink & modal verbs", "unlocked": false },
-        { "id": "m1_w6", "week": 6, "title": "Tid og dage", "theme": "Time, days & schedule", "unlocked": false },
-        { "id": "m1_w7", "week": 7, "title": "Steder og veje", "theme": "Places & prepositions", "unlocked": false },
-        { "id": "m1_w8", "week": 8, "title": "Følelser og kroppen", "theme": "Health, feelings & description", "unlocked": false },
-        { "id": "m1_w9", "week": 9, "title": "Praktisk dansk", "theme": "Forms, emails & practical literacy", "unlocked": false },
-        { "id": "m1_w10", "week": 10, "title": "Modul 1 afslutning", "theme": "Cumulative review & assessment", "unlocked": false }
+        { "id": "m1_w1", "week": 1, "title": "Hej Danmark", "theme": "Greetings & introductions" },
+        { "id": "m1_w2", "week": 2, "title": "Hvem er du?", "theme": "Personal information & numbers" },
+        { "id": "m1_w3", "week": 3, "title": "Min familie", "theme": "Family vocabulary & possessives" },
+        { "id": "m1_w4", "week": 4, "title": "I klassen", "theme": "Classroom & school items" },
+        { "id": "m1_w5", "week": 5, "title": "Mad og drikke", "theme": "Food, drink & modal verbs" },
+        { "id": "m1_w6", "week": 6, "title": "Tid og dage", "theme": "Time, days & schedule" },
+        { "id": "m1_w7", "week": 7, "title": "Steder og veje", "theme": "Places & prepositions" },
+        { "id": "m1_w8", "week": 8, "title": "Følelser og kroppen", "theme": "Health, feelings & description" },
+        { "id": "m1_w9", "week": 9, "title": "Praktisk dansk", "theme": "Forms, emails & practical literacy" },
+        { "id": "m1_w10", "week": 10, "title": "Modul 1 afslutning", "theme": "Cumulative review & assessment" }
       ]
     },
     {
@@ -32,14 +32,14 @@
       "description": "Expand into routines, hobbies, and past tense. Produce short paragraphs and participate in simple spontaneous dialogue.",
       "color": "#d4772a",
       "weeks": [
-        { "id": "m2_w1", "week": 1, "title": "Min hverdag", "theme": "Daily routines & frequency", "unlocked": false },
-        { "id": "m2_w2", "week": 2, "title": "Skole og fag", "theme": "School subjects & opinions", "unlocked": false },
-        { "id": "m2_w3", "week": 3, "title": "Fritid og hobbyer", "theme": "Hobbies & free time", "unlocked": false },
-        { "id": "m2_w4", "week": 4, "title": "Vejret og årstiderne", "theme": "Weather, seasons & clothing", "unlocked": false },
-        { "id": "m2_w5", "week": 5, "title": "Min weekend", "theme": "Past tense narrative", "unlocked": false },
-        { "id": "m2_w6", "week": 6, "title": "I byen", "theme": "Community & navigation", "unlocked": false },
-        { "id": "m2_w7", "week": 7, "title": "Sundhed og velvære", "theme": "Health & emotions", "unlocked": false },
-        { "id": "m2_w8", "week": 8, "title": "Modul 2 afslutning", "theme": "Project & assessment", "unlocked": false }
+        { "id": "m2_w1", "week": 1, "title": "Min hverdag", "theme": "Daily routines & frequency" },
+        { "id": "m2_w2", "week": 2, "title": "Skole og fag", "theme": "School subjects & opinions" },
+        { "id": "m2_w3", "week": 3, "title": "Fritid og hobbyer", "theme": "Hobbies & free time" },
+        { "id": "m2_w4", "week": 4, "title": "Vejret og årstiderne", "theme": "Weather, seasons & clothing" },
+        { "id": "m2_w5", "week": 5, "title": "Min weekend", "theme": "Past tense narrative" },
+        { "id": "m2_w6", "week": 6, "title": "I byen", "theme": "Community & navigation" },
+        { "id": "m2_w7", "week": 7, "title": "Sundhed og velvære", "theme": "Health & emotions" },
+        { "id": "m2_w8", "week": 8, "title": "Modul 2 afslutning", "theme": "Project & assessment" }
       ]
     },
     {
@@ -50,16 +50,16 @@
       "description": "Function independently in school and daily life. Read short academic texts, produce connected paragraphs, and begin argumentation.",
       "color": "#2d7a50",
       "weeks": [
-        { "id": "m3_w1", "week": 1, "title": "Skolelivet", "theme": "School expectations & routines", "unlocked": false },
-        { "id": "m3_w2", "week": 2, "title": "En oplevelse", "theme": "Narrative skills & past tense", "unlocked": false },
-        { "id": "m3_w3", "week": 3, "title": "Natur og videnskab", "theme": "Expository texts & cause-effect", "unlocked": false },
-        { "id": "m3_w4", "week": 4, "title": "Sådan gør man", "theme": "Instructions & procedures", "unlocked": false },
-        { "id": "m3_w5", "week": 5, "title": "Beskriv verden", "theme": "Description & comparison", "unlocked": false },
-        { "id": "m3_w6", "week": 6, "title": "Mit kvarter", "theme": "Maps, community & oral presentation", "unlocked": false },
-        { "id": "m3_w7", "week": 7, "title": "Din mening", "theme": "Opinion & early argumentation", "unlocked": false },
-        { "id": "m3_w8", "week": 8, "title": "Akademisk dansk", "theme": "Academic tasks & future tense", "unlocked": false },
-        { "id": "m3_w9", "week": 9, "title": "Kultur og traditioner", "theme": "Cultural comparison", "unlocked": false },
-        { "id": "m3_w10", "week": 10, "title": "Modul 3 afslutning", "theme": "Summative assessment", "unlocked": false }
+        { "id": "m3_w1", "week": 1, "title": "Skolelivet", "theme": "School expectations & routines" },
+        { "id": "m3_w2", "week": 2, "title": "En oplevelse", "theme": "Narrative skills & past tense" },
+        { "id": "m3_w3", "week": 3, "title": "Natur og videnskab", "theme": "Expository texts & cause-effect" },
+        { "id": "m3_w4", "week": 4, "title": "Sådan gør man", "theme": "Instructions & procedures" },
+        { "id": "m3_w5", "week": 5, "title": "Beskriv verden", "theme": "Description & comparison" },
+        { "id": "m3_w6", "week": 6, "title": "Mit kvarter", "theme": "Maps, community & oral presentation" },
+        { "id": "m3_w7", "week": 7, "title": "Din mening", "theme": "Opinion & early argumentation" },
+        { "id": "m3_w8", "week": 8, "title": "Akademisk dansk", "theme": "Academic tasks & future tense" },
+        { "id": "m3_w9", "week": 9, "title": "Kultur og traditioner", "theme": "Cultural comparison" },
+        { "id": "m3_w10", "week": 10, "title": "Modul 3 afslutning", "theme": "Summative assessment" }
       ]
     },
     {
@@ -70,12 +70,12 @@
       "description": "Develop functional autonomy. Handle connected texts, participate in academic routines, and build early argumentative writing.",
       "color": "#3c64c8",
       "weeks": [
-        { "id": "m4_u1", "week": 1, "title": "Akademiske tekster", "theme": "Reading strategies & text structure", "unlocked": false },
-        { "id": "m4_u2", "week": 2, "title": "Grammatik som redskab", "theme": "Mid-level grammar consolidation", "unlocked": false },
-        { "id": "m4_u3", "week": 3, "title": "Argumentér!", "theme": "Opinion to argument", "unlocked": false },
-        { "id": "m4_u4", "week": 4, "title": "Lyt og notér", "theme": "Listening & note-taking", "unlocked": false },
-        { "id": "m4_u5", "week": 5, "title": "Skriv godt", "theme": "B1 writing genres", "unlocked": false },
-        { "id": "m4_u6", "week": 6, "title": "Tal og præsentér", "theme": "Oral communication & presentation", "unlocked": false }
+        { "id": "m4_u1", "week": 1, "title": "Akademiske tekster", "theme": "Reading strategies & text structure" },
+        { "id": "m4_u2", "week": 2, "title": "Grammatik som redskab", "theme": "Mid-level grammar consolidation" },
+        { "id": "m4_u3", "week": 3, "title": "Argumentér!", "theme": "Opinion to argument" },
+        { "id": "m4_u4", "week": 4, "title": "Lyt og notér", "theme": "Listening & note-taking" },
+        { "id": "m4_u5", "week": 5, "title": "Skriv godt", "theme": "B1 writing genres" },
+        { "id": "m4_u6", "week": 6, "title": "Tal og præsentér", "theme": "Oral communication & presentation" }
       ]
     },
     {
@@ -86,21 +86,38 @@
       "description": "Consolidate academic Danish, refine argumentation, and prepare for full mainstream integration. The final module before exiting DSA.",
       "color": "#6a3aaa",
       "weeks": [
-        { "id": "m5_u1", "week": 1, "title": "Avanceret læsning", "theme": "Research skills & summarising", "unlocked": false },
-        { "id": "m5_u2", "week": 2, "title": "Udvidet skrivning", "theme": "Academic writing genres", "unlocked": false },
-        { "id": "m5_u3", "week": 3, "title": "Kritisk tænkning", "theme": "Argumentation & debate", "unlocked": false },
-        { "id": "m5_u4", "week": 4, "title": "Mundtlig akademisk", "theme": "Academic oral communication", "unlocked": false },
-        { "id": "m5_u5", "week": 5, "title": "Tværfagligt sprog", "theme": "Cross-curricular language", "unlocked": false },
-        { "id": "m5_u6", "week": 6, "title": "Integration og afslutning", "theme": "Sociocultural integration & DSA exit", "unlocked": false }
+        { "id": "m5_u1", "week": 1, "title": "Avanceret læsning", "theme": "Research skills & summarising" },
+        { "id": "m5_u2", "week": 2, "title": "Udvidet skrivning", "theme": "Academic writing genres" },
+        { "id": "m5_u3", "week": 3, "title": "Kritisk tænkning", "theme": "Argumentation & debate" },
+        { "id": "m5_u4", "week": 4, "title": "Mundtlig akademisk", "theme": "Academic oral communication" },
+        { "id": "m5_u5", "week": 5, "title": "Tværfagligt sprog", "theme": "Cross-curricular language" },
+        { "id": "m5_u6", "week": 6, "title": "Integration og afslutning", "theme": "Sociocultural integration & DSA exit" }
+      ]
+    },
+    {
+      "id": "n",
+      "title": "Modul N",
+      "subtitle": "Nordisk Spor",
+      "cefr": "N",
+      "description": "For elever med norsk eller svensk som modersmål. Kontrastiv lingvistik, udtale og pragmatisk tilpasning til dansk. Tildeles manuelt.",
+      "color": "#5c6bc0",
+      "nordic_only": true,
+      "weeks": [
+        { "id": "n0_u1", "week": 1, "title": "Sprogenes stamtræ", "theme": "Fra proto-indoeuropæisk til nordgermansk" },
+        { "id": "n0_u2", "week": 2, "title": "Urnordisk og vikingetid", "theme": "Runeskrift, lydskifte og sproglig divergens" },
+        { "id": "n0_u3", "week": 3, "title": "Middelalder og standardisering", "theme": "Gammeldansk, hanseatisk indflydelse og rigssprog" },
+        { "id": "n1_u1", "week": 4, "title": "Stødet", "theme": "Hvad er stød, og hvornår bruges det?" },
+        { "id": "n1_u2", "week": 5, "title": "Det bløde d", "theme": "mad → ma', hvad → va', noget → no'et" },
+        { "id": "n1_u3", "week": 6, "title": "Vokalkvalitet og reduktion", "theme": "Skvasystemet og vokalkontraster" },
+        { "id": "n1_u4", "week": 7, "title": "Prosodi og rytme", "theme": "Dansk lavtone vs. norsk/svensk toneaccent" },
+        { "id": "n2_u1", "week": 8, "title": "Falske venner", "theme": "Rolig, eventuelt, semester, gift og andre fælder" },
+        { "id": "n2_u2", "week": 9, "title": "Artikler og determinativer", "theme": "Dansk bestemthed vs. norsk/svensk fri morfologi" },
+        { "id": "n2_u3", "week": 10, "title": "Verbalpartikler", "theme": "Stå af, gå ud på — særdanske mønstre" },
+        { "id": "n2_u4", "week": 11, "title": "Modalverber", "theme": "vil, skal, må, kan — betydningsforskelle" },
+        { "id": "n3_u1", "week": 12, "title": "Dansk høflighed", "theme": "Underdrivelse, indirekthed og ligeværd" },
+        { "id": "n3_u2", "week": 13, "title": "Skriftligt register", "theme": "E-mails, opgaver og formelt dansk" },
+        { "id": "n3_u3", "week": 14, "title": "Klasserumskultur", "theme": "Dialog, selvstændighed og dansk skolekultur" }
       ]
     }
-  ],
-  "module_n": {
-    "id": "n",
-    "title": "Modul N",
-    "subtitle": "Nordic Track",
-    "description": "For learners with L1 Norwegian or Swedish. Contrastive linguistics, phonological precision, and pragmatic alignment.",
-    "eligible_l1": ["Norwegian", "Swedish"],
-    "overlay": true
-  }
+  ]
 }

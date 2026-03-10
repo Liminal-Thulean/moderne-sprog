@@ -1,0 +1,176 @@
+{
+  "id": "n0_u1",
+  "module": 0,
+  "week": 1,
+  "title": "Sprogenes stamtræ",
+  "theme": "Fra proto-indoeuropæisk til nordgermansk",
+  "description": "Et historisk overblik over de nordgermanske sprogs oprindelse og udvikling — fra det rekonstruerede ursprog til moderne dansk, norsk og svensk.",
+  "module_n": true,
+  "sections": [
+    {
+      "id": "intro",
+      "type": "cultural_note",
+      "title": "Velkommen til Modul N",
+      "heading": "Hvorfor dette modul?",
+      "content": "Du taler allerede norsk eller svensk — og du forstår formentlig meget af det danske, du møder. Men der er forskel på at forstå og på at tale dansk korrekt. Mange nordiske elever fossilerer tidligt: de lyder acceptabelt, men gør de samme fejl igen og igen uden at blive korrigeret, fordi omgivelserne forstår dem. Dette modul er designet til dig. Vi starter ikke fra nul. Vi starter med det, du allerede ved — og arbejder derfra. Det første skridt er at forstå, hvorfor sprogene ligner hinanden så meget, og præcis hvor de skiller sig ad."
+    },
+    {
+      "id": "reading_pie",
+      "type": "reading",
+      "title": "Læs: Sprogenes fælles oprindelse",
+      "text": "For cirka 6.000 år siden talte en gruppe mennesker på de eurasiske stepper et sprog, som sprogforskere i dag kalder proto-indoeuropæisk (PIE). Det talte sprog er ikke bevaret i skriftlige kilder — det er rekonstrueret gennem systematisk sammenligning af beslægtede sprog. Fra PIE udviklede sig de fleste af Europas og Sydasiens store sprogfamilier: romanske, germanske, slaviske, baltiske, keltiske, indo-iranske og flere andre. Den germanske gren opstod for omkring 2.500 år siden. Inden for germansk skelner man traditionelt mellem tre undergrupper: vestgermansk (engelsk, tysk, nederlandsk), østgermansk (gotisk — nu uddødt) og nordgermansk. De nordgermanske sprog, også kaldet de nordiske eller skandinaviske sprog, nedstammer alle fra urnordisk — et fælles ursprog, der taltes i Skandinavien fra cirka 200 til 800 e.Kr. Fra urnordisk udviklede sig gradvist de sprog, vi kender i dag: dansk, norsk (i flere varianter), svensk, islandsk og færøsk.",
+      "glossary": [
+        { "da": "stepper",         "en": "steppes" },
+        { "da": "rekonstrueret",   "en": "reconstructed" },
+        { "da": "systematisk",     "en": "systematic" },
+        { "da": "sammenligning",   "en": "comparison" },
+        { "da": "beslægtede",      "en": "related / cognate" },
+        { "da": "gren",            "en": "branch" },
+        { "da": "skelner",         "en": "distinguishes" },
+        { "da": "undergrupper",    "en": "subgroups" },
+        { "da": "nedstammer",      "en": "descend from" },
+        { "da": "uddødt",          "en": "extinct" },
+        { "da": "gradvist",        "en": "gradually" }
+      ],
+      "questions": [
+        {
+          "prompt": "Hvad er proto-indoeuropæisk?",
+          "options": ["Et moderne europæisk skriftsprog", "Et rekonstrueret ursprog fra de eurasiske stepper", "Et oldnordisk dialekt fra vikingetiden", "Et latinsk kancellisprog"],
+          "answer": "Et rekonstrueret ursprog fra de eurasiske stepper"
+        },
+        {
+          "prompt": "Hvad er urnordisk?",
+          "options": ["Et moderne norsk dialekt", "Det fælles ursprog for alle germanske sprog", "Det fælles ursprog for de nordgermanske sprog (ca. 200–800 e.Kr.)", "Et skriftsprog fra middelalderen"],
+          "answer": "Det fælles oprindelige sprog for de nordgermanske sprog (ca. 200–800 e.Kr.)"
+        },
+        {
+          "prompt": "Hvilken sproggruppe tilhører engelsk?",
+          "options": ["Nordgermansk", "Østgermansk", "Vestgermansk", "Romansk"],
+          "answer": "Vestgermansk"
+        },
+        {
+          "prompt": "Hvilke af disse sprog er nordgermanske?",
+          "options": ["Tysk, nederlandsk og engelsk", "Dansk, norsk, svensk, islandsk og færøsk", "Latin, fransk og spansk", "Gotisk, vandalisk og burgundisk"],
+          "answer": "Dansk, norsk, svensk, islandsk og færøsk"
+        }
+      ]
+    },
+    {
+      "id": "reading_divergens",
+      "type": "reading",
+      "title": "Læs: Hvornår skilte sprogene sig ad?",
+      "text": "Urnordisk var relativt ensartet i hele Skandinavien i de første århundreder. Men fra omkring 800 e.Kr. — netop da vikingetiden begyndte — startede en gradvis divergens. De vigtigste skillelinjer opstod mellem øst og vest: østnordisk (som udviklede sig til dansk og svensk) og vestnordisk (som udviklede sig til norsk, islandsk og færøsk). Dansk og svensk er altså nærmere beslægtede med hinanden end med norsk — i hvert fald historisk set. I praksis forstår danskere og nordmænd hinanden bedre mundtligt end danskere og svenskere, fordi dansk og norsk deler mange prosodiske og leksikalske træk. Islandsk og færøsk er de mest arkaiske af de nordgermanske sprog. De har bevaret mange grammatiske træk fra urnordisk — for eksempel et rigt kasussystem med fire kasus (nominativ, akkusativ, dativ, genitiv) — som dansk, norsk og svensk for længst har tabt.",
+      "glossary": [
+        { "da": "ensartet",      "en": "uniform / homogeneous" },
+        { "da": "divergens",     "en": "divergence" },
+        { "da": "skillelinjer",  "en": "dividing lines" },
+        { "da": "prosodiske",    "en": "prosodic" },
+        { "da": "leksikalske",   "en": "lexical" },
+        { "da": "træk",          "en": "features" },
+        { "da": "arkaiske",      "en": "archaic" },
+        { "da": "kasussystem",   "en": "case system" },
+        { "da": "bevaret",       "en": "preserved / retained" }
+      ],
+      "questions": [
+        {
+          "prompt": "Hvad er forholdet mellem dansk og svensk historisk set?",
+          "options": ["De tilhører forskellig sprogfamilier", "De er nærmere beslægtede med hinanden end med norsk", "Dansk er tættere på islandsk end på svensk", "De nedstammer fra vestnordisk"],
+          "answer": "De er nærmere beslægtede med hinanden end med norsk"
+        },
+        {
+          "prompt": "Hvorfor forstår danskere og nordmænd hinanden bedre mundtligt end danskere og svenskere?",
+          "options": ["Fordi dansk og norsk er identiske sprog", "Fordi dansk og norsk deler prosodiske og leksikalske træk", "Fordi norsk er et dialekt af dansk", "Fordi norsk og dansk begge bruger det latinske alfabet"],
+          "answer": "Fordi dansk og norsk deler prosodiske og leksikalske træk"
+        },
+        {
+          "prompt": "Hvad kendetegner islandsk og færøsk sammenlignet med dansk?",
+          "options": ["De er nyere sprog med færre grammatiske regler", "De er mere arkaiske og har bevaret kasussystem fra urnordisk", "De har mistet alle vokaler fra urnordisk", "De er romanske sprog med nordisk indflydelse"],
+          "answer": "De er mere arkaiske og har bevaret kasussystem fra urnordisk"
+        }
+      ]
+    },
+    {
+      "id": "mc_tree",
+      "type": "multiple_choice",
+      "title": "Sprogslægtskab — tjek din forståelse",
+      "instruction": "Vælg det rigtige svar.",
+      "questions": [
+        {
+          "prompt": "Hvad betyder det, at to sprog er 'kognater'?",
+          "options": ["De lyder identiske", "De nedstammer fra det samme ursprog og deler beslægtede ord", "De er hinandens oversættelser", "De skrives med det samme alfabet"],
+          "answer": "De nedstammer fra det samme ursprog og deler beslægtede ord"
+        },
+        {
+          "prompt": "Hvad er den korrekte rækkefølge i sproglig nedstamning?",
+          "options": ["Urnordisk → PIE → nordgermansk → dansk", "PIE → germansk → nordgermansk → urnordisk → dansk", "Dansk → urnordisk → PIE → germansk", "Nordgermansk → PIE → vestgermansk → dansk"],
+          "answer": "PIE → germansk → nordgermansk → urnordisk → dansk"
+        },
+        {
+          "prompt": "Hvilket af disse sprog er IKKE nordgermansk?",
+          "options": ["Islandsk", "Færøsk", "Nederlandsk", "Svensk"],
+          "answer": "Nederlandsk"
+        },
+        {
+          "prompt": "Hvordan rekonstruerer sprogforskere proto-indoeuropæisk?",
+          "options": ["Ved at finde nedskrevne PIE-tekster i arkiver", "Ved systematisk sammenligning af beslægtede sprog", "Ved at studere latinsk grammatik", "Ved at analysere DNA fra forhistoriske mennesker"],
+          "answer": "Ved systematisk sammenligning af beslægtede sprog"
+        }
+      ]
+    },
+    {
+      "id": "fill_kognater",
+      "type": "fill_blank",
+      "title": "Kognater på tværs af sprog",
+      "instruction": "Udfyld det manglende danske ord. Alle disse ord er kognater — de har samme oprindelse som de givne norske/svenske ord.",
+      "items": [
+        { "before": "NO/SV: vann/vatten → DA: ", "after": "", "answer": "vand", "hint": "PIE-roden *wódr̥" },
+        { "before": "NO/SV: natt/natt → DA: ", "after": "", "answer": "nat", "hint": "mørkets tid" },
+        { "before": "NO/SV: hus/hus → DA: ", "after": "", "answer": "hus", "hint": "dette er identisk" },
+        { "before": "NO/SV: tre/tre → DA: ", "after": "", "answer": "tre", "hint": "tallet 3" },
+        { "before": "NO/SV: hjerte/hjärta → DA: ", "after": "", "answer": "hjerte", "hint": "latin: cor/cordis" },
+        { "before": "NO/SV: navn/namn → DA: ", "after": "", "answer": "navn", "hint": "hvad du hedder" }
+      ]
+    },
+    {
+      "id": "sentence_1",
+      "type": "sentence_construction",
+      "title": "Byg sætningen",
+      "instruction": "Sæt ordene i den rigtige rækkefølge.",
+      "mode": "drag",
+      "items": [
+        {
+          "words": ["nordgermanske", "De", "fra", "nedstammer", "urnordisk", "sprog", "."],
+          "answer": ["De", "nordgermanske", "sprog", "nedstammer", "fra", "urnordisk", "."],
+          "translation": "The North Germanic languages descend from Proto-Norse."
+        },
+        {
+          "words": ["dansk", "beslægtede", "og", "Svensk", "hinanden", "er", "med", "."],
+          "answer": ["Svensk", "og", "dansk", "er", "beslægtede", "med", "hinanden", "."],
+          "translation": "Swedish and Danish are related to each other."
+        },
+        {
+          "words": ["rekonstrueret", "er", "PIE", "et", "sprog", "."],
+          "answer": ["PIE", "er", "et", "rekonstrueret", "sprog", "."],
+          "translation": "PIE is a reconstructed language."
+        }
+      ]
+    },
+    {
+      "id": "cultural_vikingetid",
+      "type": "cultural_note",
+      "title": "Sproglig nysgerrighed: Hvad siger runerne?",
+      "heading": "Urnordisk i praksis — runeskriften",
+      "content": "Det ældste bevarede skriftlige belæg for nordgermansk er runeskrift — en skrift med 24 tegn kaldet det ældre futharken (opkaldt efter de seks første tegn: f-u-þ-a-r-k). Runerne bruges fra ca. det 2. århundrede e.Kr. og vidner om en sprogform, der endnu var fælles for hele Skandinavien. Et eksempel: en runeindskrift fra Gallehus i Sønderjylland (ca. 400 e.Kr.) lyder: ᛖᚲᚺᛚᛖᚹᚨᚷᚨᛊᛏᛁᛉ᛬ᚺᛟᛚᛏᛁᛃᚨᛉ᛬ᚺᛟᚱᚾᚨᛉ᛬ᚹᛁᛞᛁᛞᛖ — oversat: 'Jeg, Hlewagastiz af Holt, lavede hornet.' Sproget er genkendelig germansk — men det er ikke dansk endnu. Prøv at identificere kendte germanske rødder: ᛖᚲ = jeg (tysk: ich, engelsk: I), ᚺᛟᚱᚾᚨᛉ = hornet."
+    },
+    {
+      "id": "listening_1",
+      "type": "listening_placeholder",
+      "title": "Lyt: Nordgermanske sprog side om side",
+      "description": "Samme sætning på dansk, norsk bokmål, nynorsk og svensk — udtalt af modersmålstalende. Lytteøvelse tilgængelig når TTS-integration er på plads."
+    }
+  ],
+  "completion": {
+    "threshold": 75,
+    "counted_sections": ["reading_pie", "reading_divergens", "mc_tree", "fill_kognater", "sentence_1"]
+  }
+}

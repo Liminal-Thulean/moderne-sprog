@@ -932,6 +932,8 @@ function ModuleMap({course, progress, onSelectUnit}) {
   const isUnitUnlocked = (moduleIdx, unitIdx) => {
     if (progress.isModerator) return true;
     const mod = course.modules[moduleIdx];
+    // Nordic-only module requires explicit access grant
+    if (mod.nordic_only) return progress.nordicAccess === true;
     if (unitIdx===0 && moduleIdx===0) return true;
     if (unitIdx===0) {
       const prevMod = course.modules[moduleIdx-1];
@@ -959,7 +961,12 @@ function ModuleMap({course, progress, onSelectUnit}) {
               </div>
               <div className="module-info">
                 <div className="module-title">{mod.title} — {mod.subtitle}</div>
-                <div className="module-sub">{completedInMod}/{mod.weeks.length} units complete{completedInMod>0?` · ${modPct}%`:""}</div>
+                <div className="module-sub">
+                  {mod.nordic_only && !progress.nordicAccess && !progress.isModerator
+                    ? "Tildeles manuelt af læreren · Kun for nordiske modersmålstalende"
+                    : `${completedInMod}/${mod.weeks.length} units complete${completedInMod>0?` · ${modPct}%`:""}`
+                  }
+                </div>
               </div>
               <span className="module-cefr" style={{borderColor:mod.color,color:mod.color}}>{mod.cefr}</span>
               <span className={`module-chevron${isOpen?" open":""}`}>▾</span>
@@ -1045,14 +1052,19 @@ function App() {
             fetch("course.json").then(r=>r.json()),
             _supabase.from("unit_progress")
               .select("unit_id, status, score_pct")
+              .eq("user_id", u.id),
+            _supabase.from("language_access")
+              .select("language")
               .eq("user_id", u.id)
-          ]).then(([courseData, {data:unitRows}])=>{
+              .eq("language", "nordic")
+              .eq("active", true)
+          ]).then(([courseData, {data:unitRows}, {data:nordicRows}])=>{
             setCourse(courseData);
             const completed = (unitRows||[])
               .filter(r=>r.status==="complete")
               .map(r=>r.unit_id);
-            // Moderators see all units unlocked
-            setProgress({completed, current:null, isModerator:mod});
+            const nordicAccess = mod ? true : (nordicRows && nordicRows.length > 0);
+            setProgress({completed, current:null, isModerator:mod, nordicAccess});
             setLoading(false);
           }).catch(e=>{ setError(e.message); setLoading(false); });
         });
