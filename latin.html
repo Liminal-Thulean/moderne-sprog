@@ -1435,6 +1435,7 @@ function App() {
   const [showAnswers, setShowAnswers] = React.useState(false);
   const [user, setUser] = React.useState(null);
   const [userName, setUserName] = React.useState("");
+  const [authReady, setAuthReady] = React.useState(false);
 
   React.useEffect(()=>{
     _supabase.auth.getSession().then(({data:{session}})=>{
@@ -1442,8 +1443,15 @@ function App() {
       const u = session.user;
       setUser(u);
       setUserName((u.user_metadata?.full_name||u.user_metadata?.name||u.email||"").split(" ")[0]);
+      setAuthReady(true);
     });
   },[]);
+
+  if (!authReady) return (
+    <div style={{minHeight:"100vh",background:"#f5f0e8",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"3px",color:"#9a7a3a"}}>LOADING…</div>
+    </div>
+  );
 
   const category = CATEGORIES[catIdx];
   const word = category.words[wordIdx];
