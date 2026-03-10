@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Latin Practice Tables</title>
+<title>Latin — Language Nexus</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #f5f0e8; }
@@ -16,6 +17,39 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f0e8d0; }
   ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+
+  /* ── Platform topbar ── */
+  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3);font-family:'DM Sans',sans-serif}
+  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25);flex-shrink:0}
+  .topbar-lang{font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .topbar-user{font-size:12px;color:rgba(255,255,255,0.8)}
+  .topbar-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;letter-spacing:0.8px;padding:5px 14px;border-radius:20px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+  .topbar-btn:hover{background:rgba(255,255,255,0.25);opacity:1}
+
+  /* ── Module system ── */
+  .mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:20px}
+  .mod-card{background:#fffdf6;border:1px solid #d4bc84;border-radius:6px;padding:16px 18px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden}
+  .mod-card:hover{background:#fff8e8;box-shadow:0 3px 12px rgba(44,31,14,0.1);transform:translateY(-2px)}
+  .mod-card.locked{opacity:0.5;cursor:default;pointer-events:none}
+  .mod-card.complete::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#2d7a50}
+  .mod-card-week{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#9a7a3a;margin-bottom:5px;text-transform:uppercase}
+  .mod-card-title{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:#2c1f0e;margin-bottom:3px}
+  .mod-card-theme{font-size:11px;color:#7a5c2a;font-style:italic;line-height:1.4}
+  .mod-card-lock{position:absolute;top:12px;right:12px;font-size:12px;opacity:0.4}
+
+  /* ── Reader improvements ── */
+  .reader-library{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:16px}
+  .text-card{background:#fffdf6;border:1px solid #d4bc84;border-radius:4px;padding:14px 16px;cursor:pointer;transition:all 0.15s}
+  .text-card:hover{background:#fff8e8;border-color:#c9a84c;box-shadow:0 2px 8px rgba(44,31,14,0.08)}
+  .text-card-author{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#9a7a3a;text-transform:uppercase;margin-bottom:4px}
+  .text-card-title{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:#2c1f0e;margin-bottom:3px}
+  .text-card-desc{font-size:11px;color:#7a5c2a;font-style:italic;line-height:1.4}
+  .text-card-diff{display:inline-block;font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:10px;border:1px solid #c9b48a;color:#8a6914;font-family:'Cinzel',serif;text-transform:uppercase;margin-top:6px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .fade-up{animation:fadeUp 0.3s ease both}
 </style>
 </head>
 <body>
@@ -1039,8 +1073,10 @@ function WordToken({ text, dict, activeId, setActiveId, idx }) {
 function ReaderMode() {
   const [dict, setDict]         = React.useState(null);
   const [err, setErr]           = React.useState(null);
-  const [pidx, setPidx]         = React.useState(0);
+  const [pidx, setPidx]         = React.useState(null); // null = library view
   const [activeId, setActiveId] = React.useState(null);
+  const [page, setPage]         = React.useState(0);
+  const WORDS_PER_PAGE          = 120;
 
   React.useEffect(()=>{
     fetch("latin_dict.json")
@@ -1048,22 +1084,74 @@ function ReaderMode() {
       .then(setDict).catch(e=>setErr(e.message));
   },[]);
 
-  const passage    = PASSAGES[pidx];
-  const tokens     = React.useMemo(()=>tokenise(passage.text),[pidx]);
-  const wordTokens = tokens.filter(t=>t.type==="word");
-  const inDict     = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
-  const coverage   = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
+  // Group passages by author for the library
+  const library = React.useMemo(()=>{
+    const byAuthor = {};
+    PASSAGES.forEach((p,i)=>{
+      if (!byAuthor[p.author]) byAuthor[p.author] = [];
+      byAuthor[p.author].push({...p, idx:i});
+    });
+    return byAuthor;
+  },[]);
+
+  const openText = (i) => { setPidx(i); setPage(0); setActiveId(null); };
+
+  // Paginate tokens
+  const passage = pidx !== null ? PASSAGES[pidx] : null;
+  const allTokens = React.useMemo(()=> passage ? tokenise(passage.text) : [],[pidx]);
+  const wordTokens = allTokens.filter(t=>t.type==="word");
+
+  // Split into pages by word count
+  const pages = React.useMemo(()=>{
+    if (!allTokens.length) return [];
+    const result = [];
+    let current = [];
+    let wc = 0;
+    allTokens.forEach(t=>{
+      current.push(t);
+      if (t.type==="word") wc++;
+      if (wc >= WORDS_PER_PAGE) { result.push(current); current=[]; wc=0; }
+    });
+    if (current.length) result.push(current);
+    return result;
+  },[pidx]);
+
+  const pageTokens = pages[page] || [];
+  const inDict = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
+  const coverage = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
   let wc = 0;
 
-  return (
-    <div style={{marginTop:"16px"}}>
-      <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginBottom:"14px"}}>
-        {PASSAGES.map((p,i)=>(
-          <button key={p.id} onClick={()=>{setPidx(i);setActiveId(null);}} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"5px 14px",border:"1px solid",borderColor:i===pidx?"#b8973e":"#c9b48a",borderRadius:"20px",background:i===pidx?"#3a2410":"transparent",color:i===pidx?"#e8c97a":"#7a5c2a",cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-            {p.author.split(" ").pop()} · {p.title}
-          </button>
+  // ── LIBRARY VIEW ──
+  if (pidx === null) {
+    return (
+      <div style={{marginTop:"16px"}}>
+        {err && <div style={{padding:"10px 14px",background:"rgba(180,30,30,0.06)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#c84040"}}>Dictionary not found — hover parsing unavailable. Error: {err}</div>}
+        <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:"#7a5c2a",marginBottom:"18px"}}>Select a text to begin reading. Click any word for its dictionary entry and morphological analysis.</div>
+        {Object.entries(library).map(([author, texts])=>(
+          <div key={author} style={{marginBottom:"24px"}}>
+            <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"3px",color:"#9a7a3a",textTransform:"uppercase",marginBottom:"10px",paddingBottom:"6px",borderBottom:"1px solid #e8dfc0"}}>{author}</div>
+            <div className="reader-library">
+              {texts.map(p=>(
+                <div key={p.id} className="text-card" onClick={()=>openText(p.idx)}>
+                  <div className="text-card-author">{p.work||p.title}</div>
+                  <div className="text-card-title">{p.title}</div>
+                  <div className="text-card-desc">{p.intro||p.date}</div>
+                  <div className="text-card-diff">{p.date}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
+    );
+  }
+
+  // ── READING VIEW ──
+  return (
+    <div style={{marginTop:"16px"}}>
+      <button onClick={()=>setPidx(null)} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"5px 14px",border:"1px solid #c9b48a",borderRadius:"20px",background:"transparent",color:"#7a5c2a",cursor:"pointer",marginBottom:"14px"}}>
+        ← Library
+      </button>
       {err && (
         <div style={{padding:"14px",background:"rgba(180,30,30,0.06)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px"}}>
           <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#c84040",marginBottom:"5px"}}>DICTIONARY NOT FOUND</div>
@@ -1104,11 +1192,29 @@ function ReaderMode() {
           </span>
         </div>
         <div style={{fontFamily:"'EB Garamond',serif",fontSize:"22px",lineHeight:"2.4",color:"#2c1f0e",marginBottom:"18px"}}>
-          {tokens.map((token,i)=>{
+          {pageTokens.map((token,i)=>{
             if(token.type==="punct") return <span key={i} style={{color:"#7a5c2a"}}>{token.text}{" "}</span>;
             const id=wc++;
             return <React.Fragment key={i}><WordToken text={token.text} dict={dict} activeId={activeId} setActiveId={setActiveId} idx={id}/>{" "}</React.Fragment>;
           })}
+        </div>
+
+        {/* Pagination */}
+        {pages.length > 1 && (
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"16px",padding:"14px 0",borderTop:"1px solid #e8dfc0",marginBottom:"14px"}}>
+            <button onClick={()=>{setPage(p=>Math.max(0,p-1));setActiveId(null);}} disabled={page===0}
+              style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"6px 16px",border:"1px solid #c9b48a",borderRadius:"2px",background:"transparent",color:page===0?"#c9b48a":"#7a5c2a",cursor:page===0?"default":"pointer"}}>
+              ← PREV
+            </button>
+            <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#9a7a3a",letterSpacing:"1px"}}>
+              {page+1} / {pages.length}
+            </span>
+            <button onClick={()=>{setPage(p=>Math.min(pages.length-1,p+1));setActiveId(null);}} disabled={page===pages.length-1}
+              style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"6px 16px",border:"1px solid",borderColor:page===pages.length-1?"#c9b48a":"#b8973e",borderRadius:"2px",background:page===pages.length-1?"transparent":"#3a2410",color:page===pages.length-1?"#c9b48a":"#e8c97a",cursor:page===pages.length-1?"default":"pointer"}}>
+              NEXT →
+            </button>
+          </div>
+        )}
         </div>
         <details>
           <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:"#8a6914",cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
@@ -1203,15 +1309,141 @@ function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onI
   );
 }
 
+const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ─── LATIN MODULES DATA ───────────────────────────────────────────────────────
+
+const LATIN_MODULES = [
+  {
+    id: "lm1", title: "Modul I", subtitle: "Fundamenta",
+    color: "#c9a84c", cefr: "I",
+    description: "Noun declensions, present tense conjugations, and basic sentence structure.",
+    units: [
+      { id: "lm1_u1", week: 1, title: "Prima Declinatio", theme: "1st declension nouns — a-stems" },
+      { id: "lm1_u2", week: 2, title: "Secunda Declinatio", theme: "2nd declension — o-stems, masculines & neuters" },
+      { id: "lm1_u3", week: 3, title: "Praesens Indicativum", theme: "Present active indicative — all conjugations" },
+      { id: "lm1_u4", week: 4, title: "Lectio Prima", theme: "Reading: Caesar, De Bello Gallico I.1" }
+    ]
+  },
+  {
+    id: "lm2", title: "Modul II", subtitle: "Progressus",
+    color: "#8a6914", cefr: "II",
+    description: "3rd declension, imperfect and future tenses, pronouns.",
+    units: [
+      { id: "lm2_u1", week: 1, title: "Tertia Declinatio", theme: "3rd declension — consonant and i-stems" },
+      { id: "lm2_u2", week: 2, title: "Imperfectum et Futurum", theme: "Imperfect and future active indicative" },
+      { id: "lm2_u3", week: 3, title: "Pronomina", theme: "Personal, demonstrative, and relative pronouns" },
+      { id: "lm2_u4", week: 4, title: "Lectio Secunda", theme: "Reading: Cicero, In Catilinam I.1" }
+    ]
+  },
+  {
+    id: "lm3", title: "Modul III", subtitle: "Syntaxis",
+    color: "#6a3aaa", cefr: "III",
+    description: "Passive voice, subjunctive mood, and subordinate clauses.",
+    units: [
+      { id: "lm3_u1", week: 1, title: "Vox Passiva", theme: "Present, imperfect, future passive" },
+      { id: "lm3_u2", week: 2, title: "Modus Subiunctivus", theme: "Present and imperfect subjunctive" },
+      { id: "lm3_u3", week: 3, title: "Propositiones Subordinatae", theme: "Cum, ut, dum — subordinate clauses" },
+      { id: "lm3_u4", week: 4, title: "Lectio Tertia", theme: "Reading: Vergil, Aeneid I.1–11" }
+    ]
+  }
+];
+
+// ─── MODULE MAP COMPONENT ─────────────────────────────────────────────────────
+
+function ModulesTab({user}) {
+  const [completedUnits, setCompletedUnits] = React.useState([]);
+  const [openMod, setOpenMod] = React.useState("lm1");
+
+  React.useEffect(()=>{
+    if (!user) return;
+    _supabase.from("unit_progress")
+      .select("unit_id, status")
+      .eq("user_id", user.id)
+      .eq("status", "complete")
+      .then(({data})=> setCompletedUnits((data||[]).map(r=>r.unit_id)));
+  },[user]);
+
+  const isUnlocked = (modIdx, unitIdx) => {
+    if (!user) return false;
+    if (modIdx === 0 && unitIdx === 0) return true;
+    if (unitIdx === 0) {
+      const prevMod = LATIN_MODULES[modIdx-1];
+      return prevMod.units.every(u => completedUnits.includes(u.id));
+    }
+    return completedUnits.includes(LATIN_MODULES[modIdx].units[unitIdx-1].id);
+  };
+
+  return (
+    <div style={{marginTop:"20px"}}>
+      <p style={{fontStyle:"italic",color:"#7a5c2a",fontSize:"13px",marginBottom:"20px"}}>
+        Structured study modules — grammar, vocabulary, and reading fluency. Complete each unit to unlock the next.
+      </p>
+      {LATIN_MODULES.map((mod, mi) => {
+        const isOpen = openMod === mod.id;
+        const completed = mod.units.filter(u=>completedUnits.includes(u.id)).length;
+        return (
+          <div key={mod.id} style={{marginBottom:"12px",background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"6px",overflow:"hidden"}}>
+            <div onClick={()=>setOpenMod(isOpen?null:mod.id)}
+              style={{padding:"14px 18px",display:"flex",alignItems:"center",gap:"12px",cursor:"pointer",background:isOpen?"#fff8e8":"#fffdf6",transition:"background 0.15s"}}>
+              <div style={{width:"40px",height:"40px",borderRadius:"6px",background:mod.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span style={{fontFamily:"'Cinzel',serif",fontSize:"13px",fontWeight:"700",color:"#fff"}}>{mod.cefr}</span>
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:"'Cinzel',serif",fontSize:"14px",fontWeight:"600",color:"#2c1f0e"}}>{mod.title} — {mod.subtitle}</div>
+                <div style={{fontSize:"11px",color:"#9a7a3a",marginTop:"2px"}}>{completed}/{mod.units.length} complete</div>
+              </div>
+              <span style={{color:"#9a7a3a",fontSize:"13px",transition:"transform 0.2s",transform:isOpen?"rotate(180deg)":"none"}}>▾</span>
+            </div>
+            {isOpen && (
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:"1px",background:"#d4bc84"}}>
+                {mod.units.map((unit, ui) => {
+                  const unlocked = isUnlocked(mi, ui);
+                  const done = completedUnits.includes(unit.id);
+                  return (
+                    <div key={unit.id} className={`mod-card${done?" complete":""}${!unlocked?" locked":""}`}>
+                      {!unlocked && <span className="mod-card-lock">🔒</span>}
+                      <div className="mod-card-week">Unit {unit.week}</div>
+                      <div className="mod-card-title">{unit.title}</div>
+                      <div className="mod-card-theme">{unit.theme}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+      <div style={{marginTop:"16px",padding:"14px 18px",background:"#f5f0e8",border:"1px dashed #c9b48a",borderRadius:"6px",textAlign:"center"}}>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#9a7a3a",letterSpacing:"1px"}}>MODULE UNITS COMING SOON</div>
+        <div style={{fontSize:"12px",color:"#9a7a3a",fontStyle:"italic",marginTop:"4px"}}>Full exercises, grammar drills, and reading fluency tasks per unit</div>
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
 function App() {
-  const [mode, setMode] = React.useState("tables"); // "tables" | "matching"
+  const [mode, setMode] = React.useState("tables");
   const [catIdx, setCatIdx] = React.useState(0);
   const [wordIdx, setWordIdx] = React.useState(0);
   const [inputs, setInputs] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
   const [showAnswers, setShowAnswers] = React.useState(false);
+  const [user, setUser] = React.useState(null);
+  const [userName, setUserName] = React.useState("");
+
+  React.useEffect(()=>{
+    _supabase.auth.getSession().then(({data:{session}})=>{
+      if (!session) { window.location.href="/login.html"; return; }
+      const u = session.user;
+      setUser(u);
+      setUserName((u.user_metadata?.full_name||u.user_metadata?.name||u.email||"").split(" ")[0]);
+    });
+  },[]);
 
   const category = CATEGORIES[catIdx];
   const word = category.words[wordIdx];
@@ -1253,21 +1485,32 @@ function App() {
   return (
     <div style={{ minHeight:"100vh", background:"#f5f0e8", backgroundImage:"radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily:"'EB Garamond','Palatino Linotype',Palatino,serif", color:"#2c1f0e", paddingBottom:"60px" }}>
 
-      {/* Header */}
-      <header style={{ borderBottom:"2px solid #b8973e", background:"linear-gradient(180deg,#2c1f0e 0%,#3d2c12 100%)", padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px" }}>
-        <div>
-          <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", color:"#b8973e", marginBottom:"4px" }}>GRAMMATICA LATINA</div>
-          <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"22px", fontWeight:"700", color:"#f0e4c4", margin:0, letterSpacing:"1px" }}>Latin Practice Tables</h1>
+      {/* Platform topbar */}
+      <nav className="topbar">
+        <a href="index.html" className="topbar-logo">Language Nexus</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-lang">Latin</span>
+        <div className="topbar-right">
+          {userName && <span className="topbar-user">{userName}</span>}
+          <button className="topbar-btn" onClick={()=>_supabase.auth.signOut().then(()=>window.location.href="/login.html")}>Sign Out</button>
         </div>
-        <div style={{ marginLeft:"auto", fontStyle:"italic", color:"#7a5a2a", fontSize:"13px", paddingBottom:"2px" }}>Repetitio est mater studiōrum</div>
-      </header>
+      </nav>
 
       <div style={{ maxWidth:"860px", margin:"0 auto", padding:"0 20px" }}>
 
+        {/* Subtitle bar */}
+        <div style={{ padding:"16px 0 0", display:"flex", alignItems:"baseline", gap:"14px", borderBottom:"2px solid #c9a84c", paddingBottom:"0" }}>
+          <div>
+            <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", color:"#b8973e", marginBottom:"3px" }}>GRAMMATICA LATINA</div>
+            <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"20px", fontWeight:"700", color:"#2c1f0e", letterSpacing:"1px" }}>Latin</h1>
+          </div>
+          <div style={{ marginLeft:"auto", fontStyle:"italic", color:"#9a7a3a", fontSize:"13px", paddingBottom:"4px" }}>Repetitio est mater studiōrum</div>
+        </div>
+
         {/* Mode tabs */}
-        <div style={{ display:"flex", gap:"0", marginTop:"24px", borderBottom:"2px solid #c9a84c" }}>
-          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"]].map(([m, label]) => (
-            <button key={m} onClick={() => setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 22px", border:"none", borderBottom: mode===m?"2px solid #2c1f0e":"2px solid transparent", marginBottom:"-2px", background: mode===m?"#f5f0e8":"transparent", color: mode===m?"#2c1f0e":"#7a5c2a", cursor:"pointer", fontWeight: mode===m?"600":"400", transition:"all 0.15s" }}>
+        <div style={{ display:"flex", gap:"0", borderBottom:"2px solid #c9a84c", marginTop:"0" }}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"],["modules","📚  Modules"]].map(([m, label]) => (
+            <button key={m} onClick={() => setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 20px", border:"none", borderBottom: mode===m?"2px solid #2c1f0e":"2px solid transparent", marginBottom:"-2px", background: mode===m?"#f5f0e8":"transparent", color: mode===m?"#2c1f0e":"#7a5c2a", cursor:"pointer", fontWeight: mode===m?"600":"400", transition:"all 0.15s" }}>
               {label}
             </button>
           ))}
@@ -1278,6 +1521,9 @@ function App() {
 
         {/* READER MODE */}
         {mode === "reader" && <ReaderMode />}
+
+        {/* MODULES MODE */}
+        {mode === "modules" && <ModulesTab user={user} />}
 
         {/* TABLES MODE */}
         {mode === "tables" && <div>
