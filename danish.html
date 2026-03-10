@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Dansk — Language Nexus</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -861,7 +862,7 @@ function UnitView({unit, courseUnit, onBack, onComplete}) {
           </div>
           <div className="complete-actions">
             <button className="btn btn-secondary" onClick={()=>setShowComplete(false)}>Review Unit</button>
-            {passed && <button className="btn btn-success" onClick={()=>onComplete(unit.id)}>Next Unit →</button>}
+            {passed && <button className="btn btn-success" onClick={()=>onComplete(unit.id, scores)}>Next Unit →</button>}
           </div>
         </div>
       </div>
@@ -929,6 +930,7 @@ function ModuleMap({course, progress, onSelectUnit}) {
   };
 
   const isUnitUnlocked = (moduleIdx, unitIdx) => {
+    if (progress.isModerator) return true;
     const mod = course.modules[moduleIdx];
     if (unitIdx===0 && moduleIdx===0) return true;
     if (unitIdx===0) {
@@ -1009,19 +1011,52 @@ function ModuleMap({course, progress, onSelectUnit}) {
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
+const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 function App() {
-  const [course, setCourse]       = React.useState(null);
+  const [course, setCourse]         = React.useState(null);
   const [activeUnit, setActiveUnit] = React.useState(null);
-  const [unitData, setUnitData]   = React.useState(null);
-  const [progress, setProgress]   = React.useState({completed:[], current:null});
-  const [loading, setLoading]     = React.useState(true);
-  const [error, setError]         = React.useState(null);
+  const [unitData, setUnitData]     = React.useState(null);
+  const [progress, setProgress]     = React.useState({completed:[], current:null});
+  const [loading, setLoading]       = React.useState(true);
+  const [error, setError]           = React.useState(null);
+  const [user, setUser]             = React.useState(null);
+  const [isModerator, setIsModerator] = React.useState(false);
+  const [saving, setSaving]         = React.useState(false);
 
   React.useEffect(()=>{
-    fetch("course.json")
-      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(c=>{ setCourse(c); setLoading(false); })
-      .catch(e=>{ setError(e.message); setLoading(false); });
+    // 1. Check auth session
+    _supabase.auth.getSession().then(({data:{session}})=>{
+      if (!session) { window.location.href="/login.html"; return; }
+
+      const u = session.user;
+      setUser(u);
+
+      // 2. Get user profile (role check)
+      _supabase.from("users").select("role").eq("id", u.id).single()
+        .then(({data:profile})=>{
+          const mod = profile && profile.role === "moderator";
+          setIsModerator(mod);
+
+          // 3. Load course.json and progress in parallel
+          Promise.all([
+            fetch("course.json").then(r=>r.json()),
+            _supabase.from("unit_progress")
+              .select("unit_id, status, score_pct")
+              .eq("user_id", u.id)
+          ]).then(([courseData, {data:unitRows}])=>{
+            setCourse(courseData);
+            const completed = (unitRows||[])
+              .filter(r=>r.status==="complete")
+              .map(r=>r.unit_id);
+            // Moderators see all units unlocked
+            setProgress({completed, current:null, isModerator:mod});
+            setLoading(false);
+          }).catch(e=>{ setError(e.message); setLoading(false); });
+        });
+    });
   },[]);
 
   const selectUnit = (unitId) => {
@@ -1032,14 +1067,62 @@ function App() {
       .catch(e=>{ setError(`Could not load unit: ${e.message}`); setLoading(false); });
   };
 
-  const completeUnit = (unitId) => {
+  const completeUnit = async (unitId, scores) => {
+    // Update local state immediately so UI feels instant
     setProgress(p=>({
       ...p,
-      completed: p.completed.includes(unitId)?p.completed:[...p.completed,unitId],
+      completed: p.completed.includes(unitId) ? p.completed : [...p.completed, unitId],
       current: null
     }));
     setActiveUnit(null);
     setUnitData(null);
+
+    // Save to Supabase in background
+    if (user) {
+      setSaving(true);
+
+      // Find module id from course
+      let moduleId = null;
+      if (course) {
+        for (const mod of course.modules) {
+          if (mod.weeks.find(w=>w.id===unitId)) { moduleId=mod.id; break; }
+        }
+      }
+
+      // Calculate overall score
+      const scoreValues = Object.values(scores);
+      const totalCorrect = scoreValues.reduce((s,v)=>s+(v.correct||0), 0);
+      const totalPossible = scoreValues.reduce((s,v)=>s+(v.total||0), 0);
+      const scorePct = totalPossible > 0 ? Math.round((totalCorrect/totalPossible)*100) : 0;
+
+      // Save unit completion
+      await _supabase.from("unit_progress").upsert({
+        user_id: user.id,
+        unit_id: unitId,
+        module_id: moduleId,
+        status: "complete",
+        score_pct: scorePct,
+        attempts: 1,
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }, {onConflict:"user_id,unit_id"});
+
+      // Save individual section scores
+      const sectionRows = Object.entries(scores).map(([sectionId, sc])=>({
+        user_id: user.id,
+        unit_id: unitId,
+        section_id: sectionId,
+        correct: sc.correct||0,
+        total: sc.total||0,
+        attempted_at: new Date().toISOString(),
+      }));
+      if (sectionRows.length > 0) {
+        await _supabase.from("section_scores")
+          .upsert(sectionRows, {onConflict:"user_id,unit_id,section_id"});
+      }
+
+      setSaving(false);
+    }
   };
 
   const getCourseUnit = (unitId) => {
@@ -1060,6 +1143,14 @@ function App() {
         {activeUnit && (
           <div className="topbar-right">
             <button className="back-btn" onClick={()=>{setActiveUnit(null);setUnitData(null);}}>← Course Map</button>
+          </div>
+        )}
+        {!activeUnit && (
+          <div className="topbar-right">
+            {saving && <span style={{fontSize:"11px",color:"rgba(255,255,255,0.7)",fontStyle:"italic"}}>Saving…</span>}
+            {isModerator && <span style={{fontFamily:"'DM Mono',monospace",fontSize:"9px",letterSpacing:"1.5px",padding:"3px 10px",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:"10px",color:"#fff",textTransform:"uppercase"}}>Moderator</span>}
+            {user && <span style={{fontSize:"12px",color:"rgba(255,255,255,0.8)"}}>{(user.user_metadata?.full_name||user.user_metadata?.name||user.email||"").split(" ")[0]}</span>}
+            <button className="back-btn" onClick={()=>_supabase.auth.signOut().then(()=>window.location.href="/login.html")}>Sign Out</button>
           </div>
         )}
       </nav>
