@@ -1,10 +1,9 @@
 {
   "id": "n0_u1",
   "module": 0,
-  "week": 1,
   "title": "Sprogenes stamtræ",
   "theme": "Fra proto-indoeuropæisk til nordgermansk",
-  "description": "Et historisk overblik over de nordgermanske sprogs oprindelse og udvikling — fra det rekonstruerede ursprog til moderne dansk, norsk og svensk.",
+  "description": "Et historisk overblik over de nordgermanske sprogs oprindelse og udvikling; fra det rekonstruerede ursprog til moderne dansk, norsk og svensk.",
   "module_n": true,
   "sections": [
     {
@@ -18,19 +17,19 @@
       "id": "reading_pie",
       "type": "reading",
       "title": "Læs: Sprogenes fælles oprindelse",
-      "text": "For cirka 6.000 år siden talte en gruppe mennesker på de eurasiske stepper et sprog, som sprogforskere i dag kalder proto-indoeuropæisk (PIE). Det talte sprog er ikke bevaret i skriftlige kilder — det er rekonstrueret gennem systematisk sammenligning af beslægtede sprog. Fra PIE udviklede sig de fleste af Europas og Sydasiens store sprogfamilier: romanske, germanske, slaviske, baltiske, keltiske, indo-iranske og flere andre. Den germanske gren opstod for omkring 2.500 år siden. Inden for germansk skelner man traditionelt mellem tre undergrupper: vestgermansk (engelsk, tysk, nederlandsk), østgermansk (gotisk — nu uddødt) og nordgermansk. De nordgermanske sprog, også kaldet de nordiske eller skandinaviske sprog, nedstammer alle fra urnordisk — et fælles ursprog, der taltes i Skandinavien fra cirka 200 til 800 e.Kr. Fra urnordisk udviklede sig gradvist de sprog, vi kender i dag: dansk, norsk (i flere varianter), svensk, islandsk og færøsk.",
+      "text": "For cirka 6.000 år siden talte en gruppe mennesker på de eurasiske stepper et sprog, som sprogforskere i dag kalder proto-indoeuropæisk (PIE). Det talte sprog er ikke bevaret i skriftlige kilder, det er rekonstrueret gennem systematisk sammenligning af beslægtede sprog. Fra PIE udviklede sig de fleste af Europas og Sydasiens store sprogfamilier: romanske, germanske, slaviske, baltiske, keltiske, indo-iranske og flere andre. Den germanske gren opstod for omkring 2.500 år siden. Inden for germansk skelner man traditionelt mellem tre undergrupper: vestgermansk (engelsk, tysk, nederlandsk), østgermansk (gotisk — nu uddødt) og nordgermansk. De nordgermanske sprog, også kaldet de nordiske eller skandinaviske sprog, nedstammer alle fra urnordisk, et fælles ursprog, der taltes i Skandinavien fra cirka 200 til 800 e.Kr. Fra urnordisk udviklede sig gradvist de sprog, vi kender i dag: dansk, norsk (i flere varianter), svensk, islandsk og færøsk.",
       "glossary": [
-        { "da": "stepper",         "en": "steppes" },
-        { "da": "rekonstrueret",   "en": "reconstructed" },
-        { "da": "systematisk",     "en": "systematic" },
-        { "da": "sammenligning",   "en": "comparison" },
-        { "da": "beslægtede",      "en": "related / cognate" },
-        { "da": "gren",            "en": "branch" },
-        { "da": "skelner",         "en": "distinguishes" },
-        { "da": "undergrupper",    "en": "subgroups" },
-        { "da": "nedstammer",      "en": "descend from" },
-        { "da": "uddødt",          "en": "extinct" },
-        { "da": "gradvist",        "en": "gradually" }
+        { "da": "stepper",         "no/sv": " - / stäpperna" },
+        { "da": "rekonstrueret",   "no/sv": "rekonstruert / rekonstruerad" },
+        { "da": "systematisk",     "no/sv": " - / -" },
+        { "da": "sammenligning",   "no/sv": " - / jämförelse" },
+        { "da": "beslægtede",      "no/sv": "relatert / släkt" },
+        { "da": "gren",            "no/sv": " - / -" },
+        { "da": "skelner",         "no/sv": "skiller / skiljer" },
+        { "da": "undergrupper",    "no/sv": " - / -" },
+        { "da": "nedstammer",      "no/sv": "stammer fra / härstammar från" },
+        { "da": "uddødt",          "no/sv": "utdødd / utdöd" },
+        { "da": "gradvist",        "no/sv": "gradvis / gradvis" }
       ],
       "questions": [
         {

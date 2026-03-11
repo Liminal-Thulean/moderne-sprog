@@ -101,7 +101,7 @@
       "id": "sentence_1",
       "type": "sentence_construction",
       "title": "Byg sætningen — Build the Sentence",
-      "instruction": "Drag the word tiles into the correct order to build a Danish sentence.",
+      "instruction": "Drag the tiles into the correct order to build a sentence.",
       "mode": "drag",
       "items": [
         {
@@ -135,8 +135,8 @@
       "rows": [
         { "label": "1st person singular", "answers": ["jeg", "I"] },
         { "label": "2nd person singular (informal)", "answers": ["du", "you"] },
-        { "label": "3rd person singular masculine", "answers": ["han", "he"] },
-        { "label": "3rd person singular feminine", "answers": ["hun", "she"] },
+        { "label": "3rd person singular (male)", "answers": ["han", "he"] },
+        { "label": "3rd person singular (female)", "answers": ["hun", "she"] },
         { "label": "1st person plural", "answers": ["vi", "we"] }
       ]
     },
@@ -147,10 +147,10 @@
       "instruction": "Translate each phrase into Danish. Small spelling variations are accepted.",
       "direction": "en_to_da",
       "items": [
-        { "prompt": "Hello!", "answer": "Hej!", "alternatives": ["Goddag!"] },
+        { "prompt": "Hello!", "answer": "Hej!", "alternatives": ["Goddag!", "dav'"] },
         { "prompt": "Thank you.", "answer": "Tak.", "alternatives": [] },
-        { "prompt": "My name is ___. (use your own name or write 'Anna')", "answer": "Mit navn er Anna.", "alternatives": ["Jeg hedder Anna."] },
-        { "prompt": "I am from Denmark.", "answer": "Jeg er fra Danmark.", "alternatives": [] },
+        { "prompt": "My name is ___. (use your own name or write 'Anne')", "answer": "Mit navn er Anne.", "alternatives": ["Jeg hedder Anna.", "Jeg hedder ''"] },
+        { "prompt": "I am from Denmark.", "answer": "Jeg er fra Danmark.", "alternatives": ["Jeg kommer fra Danmark."] },
         { "prompt": "Excuse me.", "answer": "Undskyld.", "alternatives": [] }
       ]
     },
@@ -205,7 +205,7 @@
       "type": "cultural_note",
       "title": "Kulturelt hjørne — Cultural Corner",
       "heading": "Greetings in Denmark",
-      "content": "Danes typically greet each other with 'hej' in almost all situations — with friends, teachers, shopkeepers, and even doctors. Unlike many other cultures, the formal 'De' (capital D) is rarely used in modern Denmark and may even sound strange to younger Danes. Your teacher will almost certainly ask you to call them by their first name. This reflects a core Danish value: lighed (equality). Everyone, regardless of age or position, is approachable. Don't be surprised if your Danish classmates seem very informal — it is not rudeness, it is culture."
+      "content": "Danes typically greet each other with 'hej' in almost all situations: with friends, teachers, shopkeepers, and even doctors. Unlike many other cultures, the formal 'De' is rarely used in modern Denmark and may even sound strange to younger Danes. Your teacher will almost certainly ask you to call them by their first name. This reflects a core Danish value: lighed (equality). Everyone, regardless of age or position, is approachable. Don't be surprised if your Danes seem very informal or direct; it isn't rudeness, it's culture."
     }
   ],
   "completion": {

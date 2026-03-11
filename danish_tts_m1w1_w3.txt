@@ -1,0 +1,235 @@
+
+# ── Hej Danmark (m1_w1.json) ──────────────────────────
+
+# Nye ord — New Words
+hej
+goddag
+farvel
+tak
+ja
+nej
+undskyld
+hvad
+hedde
+jeg
+du
+navn
+fra
+Danmark
+klassen
+
+# Examples — Nye ord — New Words
+Hej! Jeg hedder Anna. | ex_hej_jeg_hedder_anna
+Goddag, jeg hedder hr. Hansen. | ex_goddag_jeg_hedder_hr_hansen
+Farvel! Vi ses i morgen. | ex_farvel_vi_ses_i_morgen
+Tak for hjælpen! | ex_tak_for_hjælpen
+Ja, det er rigtigt. | ex_ja_det_er_rigtigt
+Nej, det er forkert. | ex_nej_det_er_forkert
+Undskyld, hvad hedder du? | ex_undskyld_hvad_hedder_du
+Hvad hedder du? | ex_hvad_hedder_du
+Jeg hedder Maria. | ex_jeg_hedder_maria
+Jeg er fra Polen. | ex_jeg_er_fra_polen
+Hvad hedder du? | ex_hvad_hedder_du
+Mit navn er Lars. | ex_mit_navn_er_lars
+Jeg er fra Danmark. | ex_jeg_er_fra_danmark
+Vi bor i Danmark. | ex_vi_bor_i_danmark
+Velkommen til klassen! | ex_velkommen_til_klassen
+
+# Reading: Læs og forstå — Read and Understand
+Hej! | reading_m1_w1_s01
+Jeg hedder Marco. | reading_m1_w1_s02
+Jeg er fra Italien, men jeg bor i Danmark nu. | reading_m1_w1_s03
+Jeg går i klasse 8B. | reading_m1_w1_s04
+Min lærer hedder fru Christensen. | reading_m1_w1_s05
+Hun er meget venlig. | reading_m1_w1_s06
+I klassen er der mange elever fra forskellige lande. | reading_m1_w1_s07
+Vi taler dansk sammen. | reading_m1_w1_s08
+
+
+# ── Hvem er du? (m1_w2.json) ──────────────────────────
+
+# Tal 0–20 — Numbers 0–20
+nul
+en / et | en_et
+to
+tre
+fire
+fem
+seks
+syv
+otte
+ni
+ti
+elleve
+tolv
+tretten
+fjorten
+femten
+seksten
+sytten
+atten
+nitten
+tyve
+
+# Examples — Tal 0–20 — Numbers 0–20
+Mit nummer er nul-to-tre. | ex_mit_nummer_er_nul-to-tre
+Jeg har en bror og et søskende. | ex_jeg_har_en_bror_og_et_søskende
+Jeg har to søstre. | ex_jeg_har_to_søstre
+Vi er tre i familien. | ex_vi_er_tre_i_familien
+Jeg er fire år gammel... nej, fjorten! | ex_jeg_er_fire_år_gammel_nej_fjorten
+Klassen har fem drenge. | ex_klassen_har_fem_drenge
+Vi starter klokken seks. | ex_vi_starter_klokken_seks
+Ugen har syv dage. | ex_ugen_har_syv_dage
+Jeg sover otte timer. | ex_jeg_sover_otte_timer
+Klassen har ni piger. | ex_klassen_har_ni_piger
+Jeg er ti år gammel. | ex_jeg_er_ti_år_gammel
+Han er elleve år. | ex_han_er_elleve_år
+Der er tolv måneder i et år. | ex_der_er_tolv_måneder_i_et_år
+Hun er tretten år gammel. | ex_hun_er_tretten_år_gammel
+Jeg er fjorten år gammel. | ex_jeg_er_fjorten_år_gammel
+Vi er femten elever i klassen. | ex_vi_er_femten_elever_i_klassen
+Han er seksten år. | ex_han_er_seksten_år
+Hun fylder sytten i morgen. | ex_hun_fylder_sytten_i_morgen
+Han er atten år. | ex_han_er_atten_år
+Hun er nitten år gammel. | ex_hun_er_nitten_år_gammel
+Der er tyve elever i klassen. | ex_der_er_tyve_elever_i_klassen
+
+# Personlige oplysninger — Personal Information
+alder
+gammel
+år
+adresse
+telefon
+bor
+kommer fra
+land
+by
+Danmark
+skole
+klasse
+nummer
+mit / min | mit_min
+dit / din | dit_din
+
+# Examples — Personlige oplysninger — Personal Information
+Hvad er din alder? Jeg er fjorten. | ex_hvad_er_din_alder_jeg_er_fjorten
+Jeg er fjorten år gammel. | ex_jeg_er_fjorten_år_gammel
+Jeg er tolv år. | ex_jeg_er_tolv_år
+Min adresse er Skolevej 3. | ex_min_adresse_er_skolevej_3
+Mit telefonnummer er 12 34 56 78. | ex_mit_telefonnummer_er_12_34_56_78
+Jeg bor i Aarhus. | ex_jeg_bor_i_aarhus
+Jeg kommer fra Somalia. | ex_jeg_kommer_fra_somalia
+Hvilket land kommer du fra? | ex_hvilket_land_kommer_du_fra
+Jeg bor i en lille by. | ex_jeg_bor_i_en_lille_by
+Jeg bor i Danmark nu. | ex_jeg_bor_i_danmark_nu
+Jeg går på Skipper Clement Skolen. | ex_jeg_går_på_skipper_clement_skolen
+Jeg er i 8. klasse. | ex_jeg_er_i_8_klasse
+Hvad er dit telefonnummer? | ex_hvad_er_dit_telefonnummer
+Mit navn er Ali. Min skole er stor. | ex_mit_navn_er_ali_min_skole_er_stor
+Hvad er dit navn? Hvad er din adresse? | ex_hvad_er_dit_navn_hvad_er_din_adresse
+
+# Reading: Læs om dem — Read About Them
+Hej! | reading_m1_w2_s01
+Jeg hedder Yusuf. | reading_m1_w2_s02
+Jeg er tretten år gammel. | reading_m1_w2_s03
+Jeg kommer fra Somalia, men jeg bor i Danmark nu. | reading_m1_w2_s04
+Jeg bor i Aalborg. | reading_m1_w2_s05
+Jeg går i 7. | reading_m1_w2_s06
+klasse. | reading_m1_w2_s07
+Jeg har tre søskende — to brødre og en søster. | reading_m1_w2_s08
+Mit telefonnummer er 71 23 45 67. | reading_m1_w2_s09
+Hej! | reading_m1_w2_s10
+Jeg hedder Lena. | reading_m1_w2_s11
+Jeg er femten år. | reading_m1_w2_s12
+Jeg kommer fra Ukraine. | reading_m1_w2_s13
+Jeg bor i Aarhus med min mor og min far. | reading_m1_w2_s14
+Jeg har ikke nogen søskende. | reading_m1_w2_s15
+Jeg er i 9. | reading_m1_w2_s16
+klasse. | reading_m1_w2_s17
+Min adresse er Bakkevej 12. | reading_m1_w2_s18
+
+
+# ── Min familie (m1_w3.json) ──────────────────────────
+
+# Familien — The Family
+far
+mor
+forældre
+søn
+datter
+bror
+søster
+søskende
+bedstefar
+bedstemor
+bedsteforældre
+onkel
+tante
+fætter
+kusine
+barn / børn | barn_børn
+familie
+gift
+skilt
+kæreste
+
+# Examples — Familien — The Family
+Min far hedder Lars. | ex_min_far_hedder_lars
+Min mor er lærer. | ex_min_mor_er_lærer
+Mine forældre er fra Danmark. | ex_mine_forældre_er_fra_danmark
+De har en søn. | ex_de_har_en_søn
+Hun er deres datter. | ex_hun_er_deres_datter
+Jeg har en bror. | ex_jeg_har_en_bror
+Min søster hedder Sofie. | ex_min_søster_hedder_sofie
+Jeg har to søskende. | ex_jeg_har_to_søskende
+Min bedstefar bor i Aarhus. | ex_min_bedstefar_bor_i_aarhus
+Min bedstemor laver god mad. | ex_min_bedstemor_laver_god_mad
+Mine bedsteforældre er ældre. | ex_mine_bedsteforældre_er_ældre
+Min onkel har tre børn. | ex_min_onkel_har_tre_børn
+Min tante bor i København. | ex_min_tante_bor_i_københavn
+Min fætter er tolv år. | ex_min_fætter_er_tolv_år
+Min kusine hedder Emma. | ex_min_kusine_hedder_emma
+De har to børn. | ex_de_har_to_børn
+Min familie er stor. | ex_min_familie_er_stor
+Mine forældre er gift. | ex_mine_forældre_er_gift
+Min far er skilt. | ex_min_far_er_skilt
+Min mor har en ny kæreste. | ex_min_mor_har_en_ny_kæreste
+
+# Beskrivende ord — Describing People
+gammel
+ung
+lille
+stor
+sjov
+venlig
+stille
+aktiv
+
+# Examples — Beskrivende ord — Describing People
+Min bedstefar er gammel. | ex_min_bedstefar_er_gammel
+Min søster er ung. | ex_min_søster_er_ung
+Jeg har en lille bror. | ex_jeg_har_en_lille_bror
+Min bror er stor. | ex_min_bror_er_stor
+Min onkel er meget sjov. | ex_min_onkel_er_meget_sjov
+Min tante er venlig. | ex_min_tante_er_venlig
+Min søster er stille. | ex_min_søster_er_stille
+Min far er meget aktiv. | ex_min_far_er_meget_aktiv
+
+# Reading: Læs om Yasmin — Read About Yasmin
+Hej! | reading_m1_w3_s01
+Jeg hedder Yasmin, og jeg er fjorten år gammel. | reading_m1_w3_s02
+Jeg bor i Odense med min familie. | reading_m1_w3_s03
+Min familie er ikke så stor. | reading_m1_w3_s04
+Vi er fire personer: min mor, min far, min bror og mig. | reading_m1_w3_s05
+Min far hedder Hassan. | reading_m1_w3_s06
+Han er toogfyrre år gammel. | reading_m1_w3_s07
+Min mor hedder Fatima. | reading_m1_w3_s08
+Hun er fireogfyrre og er lærer på en skole. | reading_m1_w3_s09
+Min bror hedder Adam. | reading_m1_w3_s10
+Han er ni år gammel og går i 3. | reading_m1_w3_s11
+klasse. | reading_m1_w3_s12
+Han er lidt stille, men meget sjov. | reading_m1_w3_s13
+Mine bedsteforældre bor i Marokko. | reading_m1_w3_s14
+Jeg ser dem ikke så tit, men vi taler i telefon. | reading_m1_w3_s15
+Jeg har også en onkel og en tante her i Danmark. | reading_m1_w3_s16
+De bor i Aarhus med deres tre børn — min fætter Karim og mine kusiner Nadia og Lina. | reading_m1_w3_s17
