@@ -1210,12 +1210,25 @@ function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onI
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
+const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 function App() {
   const [mode, setMode] = React.useState("tables"); // "tables" | "matching"
   const [catIdx, setCatIdx] = React.useState(0);
   const [wordIdx, setWordIdx] = React.useState(0);
   const [inputs, setInputs] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
+  const [userName, setUserName] = React.useState("");
+
+  React.useEffect(()=>{
+    _supabase.auth.getSession().then(({data:{session}})=>{
+      if (!session) { window.location.href="/login.html"; return; }
+      const u = session.user;
+      setUserName((u.user_metadata?.full_name||u.user_metadata?.name||u.email||"").split(" ")[0]);
+    });
+  },[]);
   const [showAnswers, setShowAnswers] = React.useState(false);
 
   const category = CATEGORIES[catIdx];
@@ -1264,7 +1277,8 @@ function App() {
         <span style={{width:"1px",height:"18px",background:"rgba(255,255,255,0.25)",margin:"0 4px",display:"inline-block"}}></span>
         <span className="topbar-lang">Latin</span>
         <div className="topbar-right">
-          <a href="index.html" style={{color:"#fff",fontSize:"12px",textDecoration:"none"}}>← Home</a>
+          {userName && <span style={{fontSize:"12px",color:"rgba(255,255,255,0.8)"}}>{userName}</span>}
+          <button style={{background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.25)",color:"#fff",fontSize:"11px",fontWeight:"600",letterSpacing:"0.8px",padding:"5px 14px",borderRadius:"20px",textTransform:"uppercase",cursor:"pointer"}} onClick={()=>_supabase.auth.signOut().then(()=>window.location.href="/login.html")}>Sign Out</button>
         </div>
       </nav>
 
