@@ -17,14 +17,10 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f0e8d0; }
   ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
-  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3);font-family:'DM Sans',sans-serif}
-  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
-  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25);flex-shrink:0;display:inline-block}
-  .topbar-lang{font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
-  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-  .topbar-user{font-size:12px;color:rgba(255,255,255,0.8)}
-  .topbar-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;letter-spacing:0.8px;padding:5px 14px;border-radius:20px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif}
-  .topbar-btn:hover{background:rgba(255,255,255,0.25)}
+  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;font-family:sans-serif}
+  .topbar-logo{font-size:16px;font-weight:600;color:#fff;text-decoration:none}
+  .topbar-lang{font-size:12px;color:rgba(255,255,255,0.85)}
+  .topbar-right{margin-left:auto}
 </style>
 </head>
 <body>
@@ -1221,28 +1217,6 @@ function App() {
   const [inputs, setInputs] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
   const [showAnswers, setShowAnswers] = React.useState(false);
-  const [userName, setUserName] = React.useState("");
-  const [authReady, setAuthReady] = React.useState(false);
-  const supaRef = React.useRef(null);
-
-  React.useEffect(() => {
-    supaRef.current = window.supabase.createClient(
-      "https://tdyvlwiayrbkeqdcvtdi.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94"
-    );
-    supaRef.current.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { window.location.href = "/login.html"; return; }
-      const u = session.user;
-      setUserName((u.user_metadata?.full_name || u.user_metadata?.name || u.email || "").split(" ")[0]);
-      setAuthReady(true);
-    });
-  }, []);
-
-  if (!authReady) return (
-    <div style={{ minHeight:"100vh", background:"#f5f0e8", display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <div style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"3px", color:"#9a7a3a" }}>LOADING…</div>
-    </div>
-  );
 
   const category = CATEGORIES[catIdx];
   const word = category.words[wordIdx];
@@ -1287,11 +1261,10 @@ function App() {
       {/* Platform topbar */}
       <nav className="topbar">
         <a href="index.html" className="topbar-logo">Language Nexus</a>
-        <span className="topbar-sep"></span>
+        <span style={{width:"1px",height:"18px",background:"rgba(255,255,255,0.25)",margin:"0 4px",display:"inline-block"}}></span>
         <span className="topbar-lang">Latin</span>
         <div className="topbar-right">
-          {userName && <span className="topbar-user">{userName}</span>}
-          <button className="topbar-btn" onClick={() => supaRef.current && supaRef.current.auth.signOut().then(() => window.location.href = "/login.html")}>Sign Out</button>
+          <a href="index.html" style={{color:"#fff",fontSize:"12px",textDecoration:"none"}}>← Home</a>
         </div>
       </nav>
 
