@@ -949,62 +949,50 @@ function MatchingMode() {
 //  HOW TO ADD WORDS: edit latin_dict.json
 //  key = lowercase, no diacritics.
 
-// ─── LIBRARY ──────────────────────────────────────────────────────────────────
-// Each work groups one or more passages (chapters/sections).
-// Add new works here; add new passages inside their work's `passages` array.
-
-const LIBRARY = [
+const PASSAGES = [
   {
-    id: "dbg",
-    title: "Commentāriī Dē Bellō Gallicō",
-    author: "C. Iūlius Caesar",
-    date: "58–49 BC",
-    description: "Caesar's first-hand account of the Gallic Wars — the most widely read Latin prose in the classroom tradition.",
-    image: null,
-    passages: [
-      {
-        id: "dbg_1_1", title: "I.1", section: "Book I, Chapter 1",
-        intro: "The famous opening, establishing the tripartite division of Gaul and its three peoples.",
-        text: `Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur. Hi omnes lingua, institutis, legibus inter se differunt. Gallos ab Aquitanis Garumna flumen, a Belgis Matrona et Sequana dividit. Horum omnium fortissimi sunt Belgae, propterea quod a cultu atque humanitate provinciae longissime absunt, minimeque ad eos mercatores saepe commeant atque ea quae ad effeminandos animos pertinent important, proximique sunt Germanis, qui trans Rhenum incolunt, quibuscum continenter bellum gerunt. Qua de causa Helvetii quoque reliquos Gallos virtute praecedunt, quod fere cotidianis proeliis cum Germanis contendunt, cum aut suis finibus eos prohibent aut ipsi in eorum finibus bellum gerunt.`
-      },
-      {
-        id: "dbg_1_2", title: "I.2", section: "Book I, Chapter 2",
-        intro: "Orgetorix, the most noble and wealthy of the Helvetii, conspires to seize power.",
-        text: `Apud Helvetios longe nobilissimus fuit et ditissimus Orgetorix. Is Marco Messala et Marco Pisone consulibus regni cupiditate inductus coniurationem nobilitatis fecit et civitati persuasit ut de finibus suis cum omnibus copiis exirent: perfacile esse, cum virtute omnibus praestaret, totius Galliae imperio potiri. Id hoc facilius eis persuasit, quod undique loci natura Helvetii continentur: una ex parte flumine Rheno latissimo atque altissimo, qui agrum Helvetium a Germanis dividit; altera ex parte monte Iura altissimo, qui est inter Sequanos et Helvetios; tertia lacu Lemanno et flumine Rhodano, qui provinciam nostram ab Helvetiis dividit.`
-      },
-      {
-        id: "dbg_1_3", title: "I.3", section: "Book I, Chapter 3",
-        intro: "Orgetorix is sent to neighboring peoples to forge alliances for his plan.",
-        text: `His rebus adducti et auctoritate Orgetorigis permoti constituerunt ea quae ad proficiscendum pertinerent comparare, iumentorum et carrorum quam maximum numerum coemere, sementes quam maximas facere, ut in itinere copia frumenti suppeteret, cum proximis civitatibus pacem et amicitiam confirmare. Ad eas res conficiendas biennium sibi satis esse duxerunt; in tertium annum profectionem lege confirmant. Ad eas res conficiendas Orgetorix deligitur. Is sibi legationem ad civitates suscepit. In eo itinere persuadet Castico, Catamantaloedis filio, Sequano, cuius pater regnum in Sequanis multos annos obtinuerat et a senatu populi Romani amicus appellatus erat, ut regnum in civitate sua occuparet, quod pater ante habuerat.`
-      },
-      {
-        id: "dbg_1_4", title: "I.4", section: "Book I, Chapter 4",
-        intro: "Orgetorix's conspiracy is discovered; he is summoned to trial.",
-        text: `Orgetorix mortem sibi conscivit. Ea res, uti Helvetii arbitrabantur, ita accidit: propter amplitudinem gratiae suae a iudicio discedere non potuerat. Helvetii nihilominus id quod constituerant facere conantur, ut e finibus suis exeant. Ubi iam se ad eam rem paratos esse arbitrati sunt, oppida sua omnia, numero ad duodecim, vicos ad quadringentos, reliqua privata aedificia incendunt; frumentum omne, praeter quod secum portaturi erant, comburunt, ut domum reditionis spe sublata paratiores ad omnia pericula subeunda essent; trium mensum molita cibaria sibi quemque domo efferre iubent.`
-      },
-      {
-        id: "dbg_1_5", title: "I.5", section: "Book I, Chapter 5",
-        intro: "The Helvetii prepare to migrate and seek passage through the Roman province.",
-        text: `Erant omnino itinera duo, quibus itineribus domo exire possent: unum per Sequanos, angustum et difficile, inter montem Iuram et flumen Rhodanum, vix qua singuli carri ducerentur, mons autem altissimus impendebat, ut facile perpauci prohibere possent; alterum per provinciam nostram, multo facilius atque expeditius, propterea quod inter fines Helvetiorum et Allobrogum, qui nuper pacati erant, Rhodanus fluit isque non nullis locis vado transitur. Extremum oppidum Allobrogum est proximumque Helvetiorum finibus Genava. Ex eo oppido pons ad Helvetios pertinet. Allobrogibus sese vel persuasuros, quod nondum bono animo in populum Romanum viderentur, existimabant vel vi coacturos ut per suos fines eos ire paterentur.`
-      },
-      {
-        id: "dbg_1_6", title: "I.6", section: "Book I, Chapter 6",
-        intro: "Caesar races to Geneva and orders the bridge broken to stop the Helvetii.",
-        text: `Caesari cum id nuntiatum esset, eos per provinciam nostram iter facere conari, maturat ab urbe proficisci et quam maximis potest itineribus in Galliam ulteriorem contendit et ad Genavam pervenit. Provinciae toti quam maximum potest militum numerum imperat (erat omnino in Gallia ulteriore legio una), pontem qui erat ad Genavam iubet rescindi. Ubi de eius adventu Helvetii certiores facti sunt, legatos ad eum mittunt nobilissimos civitatis, cuius legationis Nammeius et Verucloetius principem locum obtinebant, qui dicerent sibi esse in animo sine ullo maleficio iter per provinciam facere, propterea quod aliud iter haberent nullum: rogare ut eius voluntate id sibi facere liceat.`
-      },
-      {
-        id: "dbg_1_7", title: "I.7", section: "Book I, Chapter 7",
-        intro: "Caesar stalls for time while fortifying the Rhône against the Helvetii.",
-        text: `Caesar, quod memoria tenebat Lucium Cassium consulem occisum exercitumque eius ab Helvetiis pulsum et sub iugum missum, concedendum non putabat; neque homines inimico animo, data facultate per provinciam itineris faciundi, temperaturos ab iniuria et maleficio existimabat. Tamen, ut spatium intercedere posset dum milites quos imperaverat convenirent, legatis respondit diem se ad deliberandum sumpturum: si quid vellent, ad Id. April. reverterentur. Interea ea legione quam secum habebat militibusque qui ex provincia convenerant a lacu Lemanno, qui in flumen Rhodanum influit, ad montem Iuram, qui fines Sequanorum ab Helvetiis dividit, milia passuum undeviginti murum in altitudinem pedum sedecim fossamque perducit.`
-      },
-    ]
-  }
+    id:"dbg_1_1", title:"I.1", section:"Book I, Chapter 1",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"The famous opening, establishing the tripartite division of Gaul and its three peoples.",
+    text:`Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur. Hi omnes lingua, institutis, legibus inter se differunt. Gallos ab Aquitanis Garumna flumen, a Belgis Matrona et Sequana dividit. Horum omnium fortissimi sunt Belgae, propterea quod a cultu atque humanitate provinciae longissime absunt, minimeque ad eos mercatores saepe commeant atque ea quae ad effeminandos animos pertinent important, proximique sunt Germanis, qui trans Rhenum incolunt, quibuscum continenter bellum gerunt. Qua de causa Helvetii quoque reliquos Gallos virtute praecedunt, quod fere cotidianis proeliis cum Germanis contendunt, cum aut suis finibus eos prohibent aut ipsi in eorum finibus bellum gerunt.`
+  },
+  {
+    id:"dbg_1_2", title:"I.2", section:"Book I, Chapter 2",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"Orgetorix, the most noble and wealthy of the Helvetii, conspires to seize power.",
+    text:`Apud Helvetios longe nobilissimus fuit et ditissimus Orgetorix. Is Marco Messala et Marco Pisone consulibus regni cupiditate inductus coniurationem nobilitatis fecit et civitati persuasit ut de finibus suis cum omnibus copiis exirent: perfacile esse, cum virtute omnibus praestaret, totius Galliae imperio potiri. Id hoc facilius eis persuasit, quod undique loci natura Helvetii continentur: una ex parte flumine Rheno latissimo atque altissimo, qui agrum Helvetium a Germanis dividit; altera ex parte monte Iura altissimo, qui est inter Sequanos et Helvetios; tertia lacu Lemanno et flumine Rhodano, qui provinciam nostram ab Helvetiis dividit.`
+  },
+  {
+    id:"dbg_1_3", title:"I.3", section:"Book I, Chapter 3",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"Orgetorix is sent to neighboring peoples to forge alliances for his plan.",
+    text:`His rebus adducti et auctoritate Orgetorigis permoti constituerunt ea quae ad proficiscendum pertinerent comparare, iumentorum et carrorum quam maximum numerum coemere, sementes quam maximas facere, ut in itinere copia frumenti suppeteret, cum proximis civitatibus pacem et amicitiam confirmare. Ad eas res conficiendas biennium sibi satis esse duxerunt; in tertium annum profectionem lege confirmant. Ad eas res conficiendas Orgetorix deligitur. Is sibi legationem ad civitates suscepit. In eo itinere persuadet Castico, Catamantaloedis filio, Sequano, cuius pater regnum in Sequanis multos annos obtinuerat et a senatu populi Romani amicus appellatus erat, ut regnum in civitate sua occuparet, quod pater ante habuerat.`
+  },
+  {
+    id:"dbg_1_4", title:"I.4", section:"Book I, Chapter 4",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"Orgetorix's conspiracy is discovered; he is summoned to trial but dies before it.",
+    text:`Orgetorix mortem sibi conscivit. Ea res, uti Helvetii arbitrabantur, ita accidit: propter amplitudinem gratiae suae a iudicio discedere non potuerat. Helvetii nihilominus id quod constituerant facere conantur, ut e finibus suis exeant. Ubi iam se ad eam rem paratos esse arbitrati sunt, oppida sua omnia, numero ad duodecim, vicos ad quadringentos, reliqua privata aedificia incendunt; frumentum omne, praeter quod secum portaturi erant, comburunt, ut domum reditionis spe sublata paratiores ad omnia pericula subeunda essent; trium mensum molita cibaria sibi quemque domo efferre iubent.`
+  },
+  {
+    id:"dbg_1_5", title:"I.5", section:"Book I, Chapter 5",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"The Helvetii prepare to migrate and seek passage through the Roman province.",
+    text:`Erant omnino itinera duo, quibus itineribus domo exire possent: unum per Sequanos, angustum et difficile, inter montem Iuram et flumen Rhodanum, vix qua singuli carri ducerentur, mons autem altissimus impendebat, ut facile perpauci prohibere possent; alterum per provinciam nostram, multo facilius atque expeditius, propterea quod inter fines Helvetiorum et Allobrogum, qui nuper pacati erant, Rhodanus fluit isque non nullis locis vado transitur. Extremum oppidum Allobrogum est proximumque Helvetiorum finibus Genava. Ex eo oppido pons ad Helvetios pertinet. Allobrogibus sese vel persuasuros, quod nondum bono animo in populum Romanum viderentur, existimabant vel vi coacturos ut per suos fines eos ire paterentur.`
+  },
+  {
+    id:"dbg_1_6", title:"I.6", section:"Book I, Chapter 6",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"Caesar races to Geneva and orders the bridge broken to stop the Helvetii.",
+    text:`Caesari cum id nuntiatum esset, eos per provinciam nostram iter facere conari, maturat ab urbe proficisci et quam maximis potest itineribus in Galliam ulteriorem contendit et ad Genavam pervenit. Provinciae toti quam maximum potest militum numerum imperat (erat omnino in Gallia ulteriore legio una), pontem qui erat ad Genavam iubet rescindi. Ubi de eius adventu Helvetii certiores facti sunt, legatos ad eum mittunt nobilissimos civitatis, cuius legationis Nammeius et Verucloetius principem locum obtinebant, qui dicerent sibi esse in animo sine ullo maleficio iter per provinciam facere, propterea quod aliud iter haberent nullum: rogare ut eius voluntate id sibi facere liceat.`
+  },
+  {
+    id:"dbg_1_7", title:"I.7", section:"Book I, Chapter 7",
+    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
+    intro:"Caesar stalls for time while fortifying the Rhône against the Helvetii.",
+    text:`Caesar, quod memoria tenebat Lucium Cassium consulem occisum exercitumque eius ab Helvetiis pulsum et sub iugum missum, concedendum non putabat; neque homines inimico animo, data facultate per provinciam itineris faciundi, temperaturos ab iniuria et maleficio existimabat. Tamen, ut spatium intercedere posset dum milites quos imperaverat convenirent, legatis respondit diem se ad deliberandum sumpturum: si quid vellent, ad Id. April. reverterentur. Interea ea legione quam secum habebat militibusque qui ex provincia convenerant a lacu Lemanno, qui in flumen Rhodanum influit, ad montem Iuram, qui fines Sequanorum ab Helvetiis dividit, milia passuum undeviginti murum in altitudinem pedum sedecim fossamque perducit.`
+  },
 ];
-
-// Flat passage list for the reader (derived from library)
-const PASSAGES = LIBRARY.flatMap(work =>
-  work.passages.map(p => ({ ...p, author: work.author, work: work.title, date: work.date }))
-);
 
 function toKey(w) {
   return w.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,"");
@@ -1080,8 +1068,7 @@ function WordToken({ text, dict, activeId, setActiveId, idx }) {
 function ReaderMode() {
   const [dict, setDict]         = React.useState(null);
   const [err, setErr]           = React.useState(null);
-  const [view, setView]         = React.useState("library"); // "library" | "reader"
-  const [workId, setWorkId]     = React.useState(null);
+  const [view, setView]         = React.useState("library");
   const [pidx, setPidx]         = React.useState(0);
   const [page, setPage]         = React.useState(0);
   const [activeId, setActiveId] = React.useState(null);
@@ -1093,58 +1080,57 @@ function ReaderMode() {
       .then(setDict).catch(e=>setErr(e.message));
   },[]);
 
-  const openWork = (id) => { setWorkId(id); setView("library"); };
   const openPassage = (idx) => { setPidx(idx); setPage(0); setActiveId(null); setView("reader"); };
-  const backToLibrary = () => { setView("library"); setWorkId(null); };
-  const backToWork = () => { setView("library"); };
+  const goLibrary   = ()    => { setView("library"); };
 
-  const work = workId ? LIBRARY.find(w => w.id === workId) : null;
-  const passage = PASSAGES[pidx];
+  const passage    = PASSAGES[pidx];
+  const allTokens  = React.useMemo(()=> passage ? tokenise(passage.text) : [], [pidx]);
+  const wordTokens = allTokens.filter(t=>t.type==="word");
+  const inDict     = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
+  const coverage   = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
 
-  // Pagination
-  const allTokens = React.useMemo(() => passage ? tokenise(passage.text) : [], [pidx]);
-  const pages = React.useMemo(() => {
-    if (!allTokens.length) return [];
-    const result = []; let current = []; let wc = 0;
-    allTokens.forEach(t => {
-      current.push(t);
-      if (t.type === "word") wc++;
-      if (wc >= WORDS_PER_PAGE) { result.push(current); current = []; wc = 0; }
+  const pages = React.useMemo(()=>{
+    if(!allTokens.length) return [];
+    const result=[]; let cur=[]; let wc=0;
+    allTokens.forEach(t=>{
+      cur.push(t);
+      if(t.type==="word") wc++;
+      if(wc>=WORDS_PER_PAGE){ result.push(cur); cur=[]; wc=0; }
     });
-    if (current.length) result.push(current);
+    if(cur.length) result.push(cur);
     return result;
-  }, [pidx]);
+  },[pidx]);
 
   const pageTokens = pages[page] || [];
-  const wordTokens = allTokens.filter(t => t.type === "word");
-  const inDict     = dict ? wordTokens.filter(t => dict[toKey(t.text)]).length : 0;
-  const coverage   = wordTokens.length > 0 ? Math.round((inDict / wordTokens.length) * 100) : 0;
   let wc = 0;
 
-  // ── LIBRARY ROOT ──────────────────────────────────────────────────────────
-  if (view === "library" && !workId) {
+  // ── LIBRARY VIEW ──────────────────────────────────────────────────────────
+  if(view==="library") {
     return (
       <div style={{marginTop:"20px"}}>
-        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"4px",color:"#9a7a3a",marginBottom:"16px",textTransform:"uppercase"}}>Library</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"16px"}}>
-          {LIBRARY.map(w => (
-            <div key={w.id} onClick={() => openWork(w.id)}
-              style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"6px",overflow:"hidden",cursor:"pointer",transition:"box-shadow 0.15s",boxShadow:"0 1px 4px rgba(44,31,14,0.07)"}}
-              onMouseEnter={e=>e.currentTarget.style.boxShadow="0 4px 16px rgba(44,31,14,0.15)"}
-              onMouseLeave={e=>e.currentTarget.style.boxShadow="0 1px 4px rgba(44,31,14,0.07)"}>
-              {/* Image slot */}
-              <div style={{height:"120px",background:"linear-gradient(135deg,#3a2410 0%,#6a4820 100%)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                {w.image
-                  ? <img src={w.image} alt={w.title} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                  : <div style={{fontFamily:"'Cinzel',serif",fontSize:"28px",color:"rgba(200,160,80,0.3)",letterSpacing:"4px"}}>SPQR</div>
-                }
-              </div>
-              <div style={{padding:"14px 16px"}}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:"#9a7a3a",marginBottom:"4px",textTransform:"uppercase"}}>{w.author}</div>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"14px",fontWeight:"600",color:"#2c1f0e",marginBottom:"6px",lineHeight:"1.3"}}>{w.title}</div>
-                <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.5",marginBottom:"8px"}}>{w.description}</div>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#b8973e"}}>{w.date} · {w.passages.length} sections</div>
-              </div>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"4px",color:"#9a7a3a",marginBottom:"16px"}}>LIBRARY</div>
+        {err && <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#c06060",fontStyle:"italic",marginBottom:"12px"}}>Dictionary unavailable: {err}</div>}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"16px",marginBottom:"28px"}}>
+          <div style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"6px",overflow:"hidden",cursor:"pointer"}} onClick={()=>openPassage(0)}>
+            <div style={{height:"120px",background:"linear-gradient(135deg,#3a2410 0%,#6a4820 100%)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"28px",color:"rgba(200,160,80,0.35)",letterSpacing:"4px"}}>SPQR</div>
+            </div>
+            <div style={{padding:"14px 16px"}}>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#9a7a3a",marginBottom:"4px"}}>C. IŪLIUS CAESAR</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"14px",fontWeight:"600",color:"#2c1f0e",marginBottom:"6px"}}>Dē Bellō Gallicō</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.5",marginBottom:"8px"}}>Caesar's first-hand account of the Gallic Wars — the most widely read Latin prose in the classroom tradition.</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#b8973e"}}>58–49 BC · {PASSAGES.length} sections</div>
+            </div>
+          </div>
+        </div>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"3px",color:"#9a7a3a",marginBottom:"12px"}}>SECTIONS</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:"8px"}}>
+          {PASSAGES.map((p,i)=>(
+            <div key={p.id} onClick={()=>openPassage(i)}
+              style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",padding:"14px 16px",cursor:"pointer"}}>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#b8973e",marginBottom:"4px"}}>{p.section}</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"13px",fontWeight:"600",color:"#2c1f0e",marginBottom:"5px"}}>{p.title}</div>
+              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.4"}}>{p.intro}</div>
             </div>
           ))}
         </div>
@@ -1152,66 +1138,27 @@ function ReaderMode() {
     );
   }
 
-  // ── WORK / PASSAGE LIST ───────────────────────────────────────────────────
-  if (view === "library" && workId) {
-    return (
-      <div style={{marginTop:"20px"}}>
-        <button onClick={backToLibrary}
-          style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"5px 14px",border:"1px solid #c9b48a",borderRadius:"20px",background:"transparent",color:"#7a5c2a",cursor:"pointer",marginBottom:"20px"}}>
-          ← Library
-        </button>
-        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"3px",color:"#9a7a3a",marginBottom:"4px",textTransform:"uppercase"}}>{work.author}</div>
-        <div style={{fontFamily:"'Cinzel',serif",fontSize:"18px",fontWeight:"700",color:"#2c1f0e",marginBottom:"16px"}}>{work.title}</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:"8px"}}>
-          {work.passages.map((p, i) => {
-            const globalIdx = PASSAGES.findIndex(gp => gp.id === p.id);
-            return (
-              <div key={p.id} onClick={() => openPassage(globalIdx)}
-                style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",padding:"14px 16px",cursor:"pointer",transition:"all 0.15s"}}
-                onMouseEnter={e=>e.currentTarget.style.background="#fff8e8"}
-                onMouseLeave={e=>e.currentTarget.style.background="#fffdf6"}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#b8973e",marginBottom:"4px",textTransform:"uppercase"}}>{p.section}</div>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"13px",fontWeight:"600",color:"#2c1f0e",marginBottom:"5px"}}>{p.title}</div>
-                <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.4"}}>{p.intro}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  // ── READER ────────────────────────────────────────────────────────────────
+  // ── READER VIEW ───────────────────────────────────────────────────────────
   return (
     <div style={{marginTop:"16px"}}>
-      <button onClick={backToWork}
+      <button onClick={goLibrary}
         style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"5px 14px",border:"1px solid #c9b48a",borderRadius:"20px",background:"transparent",color:"#7a5c2a",cursor:"pointer",marginBottom:"16px"}}>
-        ← {passage.work}
+        ← Library
       </button>
-
-      {err && (
-        <div style={{padding:"14px",background:"rgba(180,30,30,0.06)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px"}}>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#c84040",marginBottom:"5px"}}>DICTIONARY NOT FOUND</div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#9a7a3a",lineHeight:"1.6"}}>Could not load <code>latin_dict.json</code>.</div>
-        </div>
-      )}
-
       <div style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",boxShadow:"0 2px 16px rgba(44,31,14,0.09)",padding:"24px 28px"}}>
-
-        {/* Passage header */}
         <div style={{marginBottom:"14px",paddingBottom:"12px",borderBottom:"1px solid #e8dfc0"}}>
           <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",flexWrap:"wrap",gap:"8px"}}>
             <div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#9a7a3a",marginBottom:"3px",textTransform:"uppercase"}}>{passage.section}</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#9a7a3a",marginBottom:"3px"}}>{passage.section}</div>
               <h2 style={{fontFamily:"'Cinzel',serif",fontSize:"17px",fontWeight:"700",color:"#2c1f0e",marginBottom:"3px"}}>{passage.work} {passage.title}</h2>
               <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"13px",color:"#7a5c2a"}}>{passage.author} · {passage.date}</div>
             </div>
             {dict && (
               <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",flexShrink:0}}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:"#9a7a3a",textTransform:"uppercase"}}>Coverage</div>
+                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:"#9a7a3a"}}>COVERAGE</div>
                 <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
                   <div style={{width:"70px",height:"3px",background:"#e8dfc0",borderRadius:"2px",overflow:"hidden"}}>
-                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?"#b8973e":coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}} />
+                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?"#b8973e":coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}}></div>
                   </div>
                   <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#8a6914",fontWeight:"600"}}>{coverage}%</span>
                 </div>
@@ -1220,8 +1167,6 @@ function ReaderMode() {
           </div>
           {passage.intro && <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#9a7a3a",lineHeight:"1.6",fontStyle:"italic"}}>{passage.intro}</div>}
         </div>
-
-        {/* POS legend */}
         <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginBottom:"14px",alignItems:"center"}}>
           {Object.entries(POS_COLORS).map(([pos,c])=>(
             <span key={pos} style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",textTransform:"uppercase",padding:"2px 6px",borderRadius:"10px",background:c.bg,border:"1px solid "+c.border,color:c.border}}>{pos}</span>
@@ -1230,8 +1175,6 @@ function ReaderMode() {
             {dict?"hover or tap any word":"loading dictionary…"}
           </span>
         </div>
-
-        {/* Text */}
         <div style={{fontFamily:"'EB Garamond',serif",fontSize:"22px",lineHeight:"2.4",color:"#2c1f0e",marginBottom:"18px"}}>
           {pageTokens.map((token,i)=>{
             if(token.type==="punct") return <span key={i} style={{color:"#7a5c2a"}}>{token.text}{" "}</span>;
@@ -1239,28 +1182,22 @@ function ReaderMode() {
             return <React.Fragment key={i}><WordToken text={token.text} dict={dict} activeId={activeId} setActiveId={setActiveId} idx={id}/>{" "}</React.Fragment>;
           })}
         </div>
-
-        {/* Pagination */}
-        {pages.length > 1 && (
+        {pages.length>1 && (
           <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"20px",padding:"16px 0",borderTop:"1px solid #e8dfc0",marginBottom:"16px"}}>
             <button onClick={()=>{setPage(p=>Math.max(0,p-1));setActiveId(null);}} disabled={page===0}
               style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"7px 18px",border:"1px solid #c9b48a",borderRadius:"2px",background:"transparent",color:page===0?"#c9b48a":"#7a5c2a",cursor:page===0?"default":"pointer"}}>
               ← PREV
             </button>
-            <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#9a7a3a",letterSpacing:"1px"}}>
-              {page+1} / {pages.length}
-            </span>
+            <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#9a7a3a",letterSpacing:"1px"}}>{page+1} / {pages.length}</span>
             <button onClick={()=>{setPage(p=>Math.min(pages.length-1,p+1));setActiveId(null);}} disabled={page===pages.length-1}
               style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"7px 18px",border:"1px solid",borderColor:page===pages.length-1?"#c9b48a":"#b8973e",borderRadius:"2px",background:page===pages.length-1?"transparent":"#3a2410",color:page===pages.length-1?"#c9b48a":"#e8c97a",cursor:page===pages.length-1?"default":"pointer"}}>
               NEXT →
             </button>
           </div>
         )}
-
-        {/* Word list */}
         <details>
           <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:"#8a6914",cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
-            ▸ Word List {dict?`(${inDict} found · ${wordTokens.length-inDict} missing)`:""}
+            ▸ Word List {dict?"("+inDict+" found · "+(wordTokens.length-inDict)+" missing)":""}
           </summary>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(250px,1fr))",gap:"4px",marginTop:"10px"}}>
             {wordTokens.map((token,i)=>{
@@ -1270,102 +1207,10 @@ function ReaderMode() {
                 <div key={i} style={{display:"flex",alignItems:"baseline",gap:"6px",padding:"5px 9px",background:entry?"rgba(200,170,100,0.05)":"rgba(150,50,50,0.04)",border:"1px solid",borderColor:entry?"#e8dfc0":"#e0c0c0",borderRadius:"3px"}}>
                   <span style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"15px",color:entry?"#8a6914":"#c08080",minWidth:"72px"}}>{token.text}</span>
                   {entry
-                    ? <><span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
-                        <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic"}}>{entry.eng}</span></>
-                    : <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",color:"#c08080"}}>{dict?"not in dictionary":"loading…"}</span>
-                  }
-                </div>
-              );
-            })}
-          </div>
-        </details>
-      </div>
-    </div>
-  );
-}
-
-  React.useEffect(()=>{
-    fetch("latin_dict.json")
-      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(setDict).catch(e=>setErr(e.message));
-  },[]);
-
-  const passage    = PASSAGES[pidx];
-  const tokens     = React.useMemo(()=>tokenise(passage.text),[pidx]);
-  const wordTokens = tokens.filter(t=>t.type==="word");
-  const inDict     = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
-  const coverage   = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
-  let wc = 0;
-
-  return (
-    <div style={{marginTop:"16px"}}>
-      <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginBottom:"14px"}}>
-        {PASSAGES.map((p,i)=>(
-          <button key={p.id} onClick={()=>{setPidx(i);setActiveId(null);}} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"5px 14px",border:"1px solid",borderColor:i===pidx?"#b8973e":"#c9b48a",borderRadius:"20px",background:i===pidx?"#3a2410":"transparent",color:i===pidx?"#e8c97a":"#7a5c2a",cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-            {p.author.split(" ").pop()} · {p.title}
-          </button>
-        ))}
-      </div>
-      {err && (
-        <div style={{padding:"14px",background:"rgba(180,30,30,0.06)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px"}}>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#c84040",marginBottom:"5px"}}>DICTIONARY NOT FOUND</div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#9a7a3a",lineHeight:"1.6"}}>
-            Could not load <code>latin_dict.json</code>. Ensure it is in the same folder and you are serving from Netlify or <code>npx serve .</code> — not opening the file directly.
-          </div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#c06060",marginTop:"5px",fontStyle:"italic"}}>Error: {err}</div>
-        </div>
-      )}
-      <div style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",boxShadow:"0 2px 16px rgba(44,31,14,0.09)",padding:"24px 28px"}}>
-        <div style={{marginBottom:"14px",paddingBottom:"12px",borderBottom:"1px solid #e8dfc0"}}>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",flexWrap:"wrap",gap:"8px"}}>
-            <div>
-              <h2 style={{fontFamily:"'Cinzel',serif",fontSize:"17px",fontWeight:"700",color:"#2c1f0e",marginBottom:"3px"}}>{passage.title}</h2>
-              <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"13px",color:"#7a5c2a"}}>{passage.author} · <em>{passage.work}</em> · {passage.date}</div>
-            </div>
-            {dict && (
-              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",flexShrink:0}}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:"#9a7a3a",textTransform:"uppercase"}}>Dictionary coverage</div>
-                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                  <div style={{width:"70px",height:"3px",background:"#e8dfc0",borderRadius:"2px",overflow:"hidden"}}>
-                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?"#b8973e":coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}}/>
-                  </div>
-                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#8a6914",fontWeight:"600"}}>{coverage}%</span>
-                </div>
-                <div style={{fontFamily:"'EB Garamond',serif",fontSize:"11px",color:"#9a7a3a",fontStyle:"italic"}}>{inDict}/{wordTokens.length} words</div>
-              </div>
-            )}
-          </div>
-          {passage.intro && <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#9a7a3a",lineHeight:"1.6",fontStyle:"italic"}}>{passage.intro}</div>}
-        </div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginBottom:"14px",alignItems:"center"}}>
-          {Object.entries(POS_COLORS).map(([pos,c])=>(
-            <span key={pos} style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",textTransform:"uppercase",padding:"2px 6px",borderRadius:"10px",background:c.bg,border:"1px solid "+c.border,color:c.border}}>{pos}</span>
-          ))}
-          <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#9a7a3a",fontStyle:"italic",marginLeft:"6px"}}>
-            {dict?"hover or tap any word":"loading dictionary…"}
-          </span>
-        </div>
-        <div style={{fontFamily:"'EB Garamond',serif",fontSize:"22px",lineHeight:"2.4",color:"#2c1f0e",marginBottom:"18px"}}>
-          {tokens.map((token,i)=>{
-            if(token.type==="punct") return <span key={i} style={{color:"#7a5c2a"}}>{token.text}{" "}</span>;
-            const id=wc++;
-            return <React.Fragment key={i}><WordToken text={token.text} dict={dict} activeId={activeId} setActiveId={setActiveId} idx={id}/>{" "}</React.Fragment>;
-          })}
-        </div>
-        <details>
-          <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:"#8a6914",cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
-            ▸ Word List {dict?`(${inDict} found · ${wordTokens.length-inDict} missing)`:""}
-          </summary>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(250px,1fr))",gap:"4px",marginTop:"10px"}}>
-            {wordTokens.map((token,i)=>{
-              const entry=dict?dict[toKey(token.text)]:null;
-              const pc=entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
-              return (
-                <div key={i} style={{display:"flex",alignItems:"baseline",gap:"6px",padding:"5px 9px",background:entry?"rgba(200,170,100,0.05)":"rgba(150,50,50,0.04)",border:"1px solid",borderColor:entry?"#e8dfc0":"#e0c0c0",borderRadius:"3px"}}>
-                  <span style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"15px",color:entry?"#8a6914":"#c08080",minWidth:"72px"}}>{token.text}</span>
-                  {entry
-                    ? <><span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
-                        <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic"}}>{entry.eng}</span></>
+                    ? <React.Fragment>
+                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
+                        <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic"}}>{entry.eng}</span>
+                      </React.Fragment>
                     : <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",color:"#c08080"}}>{dict?"not in dictionary":"loading…"}</span>
                   }
                 </div>
