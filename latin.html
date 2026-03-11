@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Latin — Language Nexus</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<title>Latin Practice Tables</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #f5f0e8; }
@@ -17,14 +16,6 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f0e8d0; }
   ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
-  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3);font-family:'DM Sans',sans-serif}
-  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
-  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25);flex-shrink:0}
-  .topbar-lang{font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
-  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-  .topbar-user{font-size:12px;color:rgba(255,255,255,0.8)}
-  .topbar-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:600;letter-spacing:0.8px;padding:5px 14px;border-radius:20px;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif}
-  .topbar-btn:hover{background:rgba(255,255,255,0.25)}
 </style>
 </head>
 <body>
@@ -1214,36 +1205,13 @@ function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onI
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
-const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
-
 function App() {
-  const [mode, setMode] = React.useState("tables");
+  const [mode, setMode] = React.useState("tables"); // "tables" | "matching"
   const [catIdx, setCatIdx] = React.useState(0);
   const [wordIdx, setWordIdx] = React.useState(0);
   const [inputs, setInputs] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
   const [showAnswers, setShowAnswers] = React.useState(false);
-  const [userName, setUserName] = React.useState("");
-  const [authReady, setAuthReady] = React.useState(false);
-  const [supa, setSupa] = React.useState(null);
-
-  React.useEffect(() => {
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    setSupa(client);
-    client.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { window.location.href = "/login.html"; return; }
-      const u = session.user;
-      setUserName((u.user_metadata?.full_name || u.user_metadata?.name || u.email || "").split(" ")[0]);
-      setAuthReady(true);
-    });
-  }, []);
-
-  if (!authReady) return (
-    <div style={{ minHeight:"100vh", background:"#f5f0e8", display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <div style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"3px", color:"#9a7a3a" }}>LOADING…</div>
-    </div>
-  );
 
   const category = CATEGORIES[catIdx];
   const word = category.words[wordIdx];
@@ -1285,16 +1253,14 @@ function App() {
   return (
     <div style={{ minHeight:"100vh", background:"#f5f0e8", backgroundImage:"radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily:"'EB Garamond','Palatino Linotype',Palatino,serif", color:"#2c1f0e", paddingBottom:"60px" }}>
 
-      {/* Platform topbar */}
-      <nav className="topbar">
-        <a href="index.html" className="topbar-logo">Language Nexus</a>
-        <div className="topbar-sep" />
-        <span className="topbar-lang">Latin</span>
-        <div className="topbar-right">
-          {userName && <span className="topbar-user">{userName}</span>}
-          <button className="topbar-btn" onClick={() => supa && supa.auth.signOut().then(() => window.location.href = "/login.html")}>Sign Out</button>
+      {/* Header */}
+      <header style={{ borderBottom:"2px solid #b8973e", background:"linear-gradient(180deg,#2c1f0e 0%,#3d2c12 100%)", padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px" }}>
+        <div>
+          <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", color:"#b8973e", marginBottom:"4px" }}>GRAMMATICA LATINA</div>
+          <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"22px", fontWeight:"700", color:"#f0e4c4", margin:0, letterSpacing:"1px" }}>Latin Practice Tables</h1>
         </div>
-      </nav>
+        <div style={{ marginLeft:"auto", fontStyle:"italic", color:"#7a5a2a", fontSize:"13px", paddingBottom:"2px" }}>Repetitio est mater studiōrum</div>
+      </header>
 
       <div style={{ maxWidth:"860px", margin:"0 auto", padding:"0 20px" }}>
 
