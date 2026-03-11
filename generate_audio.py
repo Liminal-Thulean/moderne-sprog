@@ -60,7 +60,7 @@ import ssl
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 
-SPEECH_KEY    = os.environ.get("AZURE_SPEECH_KEY", "3ADtxoIMrHasg9Gwy9DcltVct2nh4yYk1oL8Ng3bVmlfrgRysSZ8JQQJ99BJACYeBjFXJ3w3AAAYACOG65lj")
+SPEECH_KEY    = os.environ.get("AZURE_SPEECH_KEY", "YOUR_KEY_HERE")
 SPEECH_REGION = os.environ.get("AZURE_SPEECH_REGION", "eastus")
 VOICE         = "da-DK-ChristelNeural"
 OUTPUT_DIR    = pathlib.Path("audio/da")
