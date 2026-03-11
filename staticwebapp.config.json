@@ -8,6 +8,7 @@
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": [
+      "*.html",
       "*.json",
       "*.png",
       "*.jpg",
