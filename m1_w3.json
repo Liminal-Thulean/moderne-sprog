@@ -12,26 +12,106 @@
       "type": "vocab_intro",
       "title": "Familien — The Family",
       "words": [
-        { "da": "far", "en": "father / dad", "example": "Min far hedder Lars." },
-        { "da": "mor", "en": "mother / mum", "example": "Min mor er lærer." },
-        { "da": "forældre", "en": "parents", "example": "Mine forældre er fra Danmark." },
-        { "da": "søn", "en": "son", "example": "De har en søn." },
-        { "da": "datter", "en": "daughter", "example": "Hun er deres datter." },
-        { "da": "bror", "en": "brother", "example": "Jeg har en bror." },
-        { "da": "søster", "en": "sister", "example": "Min søster hedder Sofie." },
-        { "da": "søskende", "en": "siblings", "example": "Jeg har to søskende." },
-        { "da": "bedstefar", "en": "grandfather", "example": "Min bedstefar bor i Aarhus." },
-        { "da": "bedstemor", "en": "grandmother", "example": "Min bedstemor laver god mad." },
-        { "da": "bedsteforældre", "en": "grandparents", "example": "Mine bedsteforældre er ældre." },
-        { "da": "onkel", "en": "uncle", "example": "Min onkel har tre børn." },
-        { "da": "tante", "en": "aunt", "example": "Min tante bor i København." },
-        { "da": "fætter", "en": "male cousin", "example": "Min fætter er tolv år." },
-        { "da": "kusine", "en": "female cousin", "example": "Min kusine hedder Emma." },
-        { "da": "barn / børn", "en": "child / children", "example": "De har to børn." },
-        { "da": "familie", "en": "family", "example": "Min familie er stor." },
-        { "da": "gift", "en": "married", "example": "Mine forældre er gift." },
-        { "da": "skilt", "en": "divorced", "example": "Min far er skilt." },
-        { "da": "kæreste", "en": "boyfriend / girlfriend / partner", "example": "Min mor har en ny kæreste." }
+        {
+          "da": "far",
+          "en": "father / dad",
+          "example": "Min far hedder Lars."
+        },
+        {
+          "da": "mor",
+          "en": "mother / mum",
+          "example": "Min mor er lærer."
+        },
+        {
+          "da": "forældre",
+          "en": "parents",
+          "example": "Mine forældre er fra Danmark."
+        },
+        {
+          "da": "søn",
+          "en": "son",
+          "example": "De har en søn."
+        },
+        {
+          "da": "datter",
+          "en": "daughter",
+          "example": "Hun er deres datter."
+        },
+        {
+          "da": "bror",
+          "en": "brother",
+          "example": "Jeg har en bror."
+        },
+        {
+          "da": "søster",
+          "en": "sister",
+          "example": "Min søster hedder Sofie."
+        },
+        {
+          "da": "søskende",
+          "en": "siblings",
+          "example": "Jeg har to søskende."
+        },
+        {
+          "da": "bedstefar",
+          "en": "grandfather",
+          "example": "Min bedstefar bor i Aarhus."
+        },
+        {
+          "da": "bedstemor",
+          "en": "grandmother",
+          "example": "Min bedstemor laver god mad."
+        },
+        {
+          "da": "bedsteforældre",
+          "en": "grandparents",
+          "example": "Mine bedsteforældre er ældre."
+        },
+        {
+          "da": "onkel",
+          "en": "uncle",
+          "example": "Min onkel har tre børn."
+        },
+        {
+          "da": "tante",
+          "en": "aunt",
+          "example": "Min tante bor i København."
+        },
+        {
+          "da": "fætter",
+          "en": "male cousin",
+          "example": "Min fætter er tolv år."
+        },
+        {
+          "da": "kusine",
+          "en": "female cousin",
+          "example": "Min kusine hedder Emma."
+        },
+        {
+          "da": "barn / børn",
+          "en": "child / children",
+          "example": "De har to børn."
+        },
+        {
+          "da": "familie",
+          "en": "family",
+          "example": "Min familie er stor."
+        },
+        {
+          "da": "gift",
+          "en": "married",
+          "example": "Mine forældre er gift."
+        },
+        {
+          "da": "skilt",
+          "en": "divorced",
+          "example": "Min far er skilt."
+        },
+        {
+          "da": "kæreste",
+          "en": "boyfriend / girlfriend / partner",
+          "example": "Min mor har en ny kæreste."
+        }
       ]
     },
     {
@@ -39,14 +119,46 @@
       "type": "vocab_intro",
       "title": "Beskrivende ord — Describing People",
       "words": [
-        { "da": "gammel", "en": "old", "example": "Min bedstefar er gammel." },
-        { "da": "ung", "en": "young", "example": "Min søster er ung." },
-        { "da": "lille", "en": "small / little", "example": "Jeg har en lille bror." },
-        { "da": "stor", "en": "big / tall", "example": "Min bror er stor." },
-        { "da": "sjov", "en": "funny / fun", "example": "Min onkel er meget sjov." },
-        { "da": "venlig", "en": "kind / friendly", "example": "Min tante er venlig." },
-        { "da": "stille", "en": "quiet", "example": "Min søster er stille." },
-        { "da": "aktiv", "en": "active", "example": "Min far er meget aktiv." }
+        {
+          "da": "gammel",
+          "en": "old",
+          "example": "Min bedstefar er gammel."
+        },
+        {
+          "da": "ung",
+          "en": "young",
+          "example": "Min søster er ung."
+        },
+        {
+          "da": "lille",
+          "en": "small / little",
+          "example": "Jeg har en lille bror."
+        },
+        {
+          "da": "stor",
+          "en": "big / tall",
+          "example": "Min bror er stor."
+        },
+        {
+          "da": "sjov",
+          "en": "funny / fun",
+          "example": "Min onkel er meget sjov."
+        },
+        {
+          "da": "venlig",
+          "en": "kind / friendly",
+          "example": "Min tante er venlig."
+        },
+        {
+          "da": "stille",
+          "en": "quiet",
+          "example": "Min søster er stille."
+        },
+        {
+          "da": "aktiv",
+          "en": "active",
+          "example": "Min far er meget aktiv."
+        }
       ]
     },
     {
@@ -54,14 +166,61 @@
       "type": "grammar_table",
       "title": "Grammatik: Ejeformer — Possessives",
       "explanation": "Danish possessives change depending on the gender of the noun they describe — not the owner. Use 'min' with en-words (common gender), 'mit' with et-words (neuter), and 'mine' with plurals. Hans, hendes, vores and deres do not change form.",
-      "headers": ["", "en-ord (en far)", "et-ord (et barn)", "flertal (børn)"],
+      "headers": [
+        "",
+        "en-ord (en far)",
+        "et-ord (et barn)",
+        "flertal (børn)"
+      ],
       "rows": [
-        { "label": "jeg → my", "answers": ["min", "mit", "mine"] },
-        { "label": "du → your", "answers": ["din", "dit", "dine"] },
-        { "label": "han → his", "answers": ["hans", "hans", "hans"] },
-        { "label": "hun → her", "answers": ["hendes", "hendes", "hendes"] },
-        { "label": "vi → our", "answers": ["vores", "vores", "vores"] },
-        { "label": "de → their", "answers": ["deres", "deres", "deres"] }
+        {
+          "label": "jeg → my",
+          "answers": [
+            "min",
+            "mit",
+            "mine"
+          ]
+        },
+        {
+          "label": "du → your",
+          "answers": [
+            "din",
+            "dit",
+            "dine"
+          ]
+        },
+        {
+          "label": "han → his",
+          "answers": [
+            "hans",
+            "hans",
+            "hans"
+          ]
+        },
+        {
+          "label": "hun → her",
+          "answers": [
+            "hendes",
+            "hendes",
+            "hendes"
+          ]
+        },
+        {
+          "label": "vi → our",
+          "answers": [
+            "vores",
+            "vores",
+            "vores"
+          ]
+        },
+        {
+          "label": "de → their",
+          "answers": [
+            "deres",
+            "deres",
+            "deres"
+          ]
+        }
       ]
     },
     {
@@ -69,14 +228,38 @@
       "type": "matching",
       "title": "Match familien — Match the Family",
       "pairs": [
-        { "da": "far", "en": "father" },
-        { "da": "mor", "en": "mother" },
-        { "da": "bror", "en": "brother" },
-        { "da": "søster", "en": "sister" },
-        { "da": "bedstefar", "en": "grandfather" },
-        { "da": "bedstemor", "en": "grandmother" },
-        { "da": "onkel", "en": "uncle" },
-        { "da": "tante", "en": "aunt" }
+        {
+          "da": "far",
+          "en": "father"
+        },
+        {
+          "da": "mor",
+          "en": "mother"
+        },
+        {
+          "da": "bror",
+          "en": "brother"
+        },
+        {
+          "da": "søster",
+          "en": "sister"
+        },
+        {
+          "da": "bedstefar",
+          "en": "grandfather"
+        },
+        {
+          "da": "bedstemor",
+          "en": "grandmother"
+        },
+        {
+          "da": "onkel",
+          "en": "uncle"
+        },
+        {
+          "da": "tante",
+          "en": "aunt"
+        }
       ]
     },
     {
@@ -87,42 +270,82 @@
       "questions": [
         {
           "prompt": "___ far er lærer. (my — en-word)",
-          "options": ["Min", "Mit", "Mine", "Din"],
+          "options": [
+            "Min",
+            "Mit",
+            "Mine",
+            "Din"
+          ],
           "answer": "Min"
         },
         {
           "prompt": "___ barn hedder Noah. (her — et-word)",
-          "options": ["Hans", "Hendes", "Min", "Deres"],
+          "options": [
+            "Hans",
+            "Hendes",
+            "Min",
+            "Deres"
+          ],
           "answer": "Hendes"
         },
         {
           "prompt": "Vi elsker ___ bedsteforældre. (our — plural)",
-          "options": ["mine", "deres", "vores", "hans"],
+          "options": [
+            "mine",
+            "deres",
+            "vores",
+            "hans"
+          ],
           "answer": "vores"
         },
         {
           "prompt": "___ søster er meget sjov. (his — en-word)",
-          "options": ["Hendes", "Din", "Hans", "Vores"],
+          "options": [
+            "Hendes",
+            "Din",
+            "Hans",
+            "Vores"
+          ],
           "answer": "Hans"
         },
         {
           "prompt": "Har du ___ telefon med? (your — et-word)",
-          "options": ["din", "dit", "dine", "min"],
+          "options": [
+            "din",
+            "dit",
+            "dine",
+            "min"
+          ],
           "answer": "dit"
         },
         {
           "prompt": "___ børn er glade. (their — plural)",
-          "options": ["Vores", "Hans", "Deres", "Mine"],
+          "options": [
+            "Vores",
+            "Hans",
+            "Deres",
+            "Mine"
+          ],
           "answer": "Deres"
         },
         {
           "prompt": "Jeg elsker ___ familie. (my — en-word)",
-          "options": ["mit", "mine", "min", "din"],
+          "options": [
+            "mit",
+            "mine",
+            "min",
+            "din"
+          ],
           "answer": "min"
         },
         {
           "prompt": "___ søskende bor i Odense. (our — plural)",
-          "options": ["Mine", "Vores", "Deres", "Hans"],
+          "options": [
+            "Mine",
+            "Vores",
+            "Deres",
+            "Hans"
+          ],
           "answer": "Vores"
         }
       ]
@@ -133,14 +356,46 @@
       "title": "Udfyld med ejeformen — Fill in the Possessive",
       "instruction": "Fill in the correct possessive form.",
       "items": [
-        { "before": "", "after": " mor hedder Kirsten. (my — en-word)", "answer": "Min" },
-        { "before": "Han bor hos ", "after": " bedstefar. (his)", "answer": "hans" },
-        { "before": "Hun har ", "after": " barn med sig. (her — et-word)", "answer": "hendes" },
-        { "before": "Vi spiser med ", "after": " familie i dag. (our)", "answer": "vores" },
-        { "before": "De besøger ", "after": " tante i weekenden. (their)", "answer": "deres" },
-        { "before": "Er det ", "after": " bror? (your — en-word)", "answer": "din" },
-        { "before": "", "after": " søstre hedder Lea og Maja. (my — plural)", "answer": "Mine" },
-        { "before": "Hvor gammel er ", "after": " far? (your — en-word)", "answer": "din" }
+        {
+          "before": "",
+          "after": " mor hedder Kirsten. (my — en-word)",
+          "answer": "Min"
+        },
+        {
+          "before": "Han bor hos ",
+          "after": " bedstefar. (his)",
+          "answer": "hans"
+        },
+        {
+          "before": "Hun har ",
+          "after": " barn med sig. (her — et-word)",
+          "answer": "hendes"
+        },
+        {
+          "before": "Vi spiser med ",
+          "after": " familie i dag. (our)",
+          "answer": "vores"
+        },
+        {
+          "before": "De besøger ",
+          "after": " tante i weekenden. (their)",
+          "answer": "deres"
+        },
+        {
+          "before": "Er det ",
+          "after": " bror? (your — en-word)",
+          "answer": "din"
+        },
+        {
+          "before": "",
+          "after": " søstre hedder Lea og Maja. (my — plural)",
+          "answer": "Mine"
+        },
+        {
+          "before": "Hvor gammel er ",
+          "after": " far? (your — en-word)",
+          "answer": "din"
+        }
       ]
     },
     {
@@ -151,28 +406,102 @@
       "mode": "drag",
       "items": [
         {
-          "words": ["far", "Min", "lærer", "er", "."],
-          "answer": ["Min", "far", "er", "lærer", "."]
+          "words": [
+            "far",
+            "Min",
+            "lærer",
+            "er",
+            "."
+          ],
+          "answer": [
+            "Min",
+            "far",
+            "er",
+            "lærer",
+            "."
+          ]
         },
         {
-          "words": ["søskende", "Hun", "to", "har", "."],
-          "answer": ["Hun", "har", "to", "søskende", "."]
+          "words": [
+            "søskende",
+            "Hun",
+            "to",
+            "har",
+            "."
+          ],
+          "answer": [
+            "Hun",
+            "har",
+            "to",
+            "søskende",
+            "."
+          ]
         },
         {
-          "words": ["bedstemor", "Hans", "i", "København", "bor", "."],
-          "answer": ["Hans", "bedstemor", "bor", "i", "København", "."]
+          "words": [
+            "bedstemor",
+            "Hans",
+            "i",
+            "København",
+            "bor",
+            "."
+          ],
+          "answer": [
+            "Hans",
+            "bedstemor",
+            "bor",
+            "i",
+            "København",
+            "."
+          ]
         },
         {
-          "words": ["familie", "er", "stor", "Vores", "."],
-          "answer": ["Vores", "familie", "er", "stor", "."]
+          "words": [
+            "familie",
+            "er",
+            "stor",
+            "Vores",
+            "."
+          ],
+          "answer": [
+            "Vores",
+            "familie",
+            "er",
+            "stor",
+            "."
+          ]
         },
         {
-          "words": ["du", "en", "søster", "Har", "?"],
-          "answer": ["Har", "du", "en", "søster", "?"]
+          "words": [
+            "du",
+            "en",
+            "søster",
+            "Har",
+            "?"
+          ],
+          "answer": [
+            "Har",
+            "du",
+            "en",
+            "søster",
+            "?"
+          ]
         },
         {
-          "words": ["børn", "Deres", "unge", "er", "."],
-          "answer": ["Deres", "børn", "er", "unge", "."]
+          "words": [
+            "børn",
+            "Deres",
+            "unge",
+            "er",
+            "."
+          ],
+          "answer": [
+            "Deres",
+            "børn",
+            "er",
+            "unge",
+            "."
+          ]
         }
       ]
     },
@@ -182,34 +511,68 @@
       "title": "Læs om Yasmin — Read About Yasmin",
       "text": "Hej! Jeg hedder Yasmin, og jeg er fjorten år gammel. Jeg bor i Odense med min familie. Min familie er ikke så stor. Vi er fire personer: min mor, min far, min bror og mig.\n\nMin far hedder Hassan. Han er toogfyrre år gammel. Min mor hedder Fatima. Hun er fireogfyrre og er lærer på en skole. Min bror hedder Adam. Han er ni år gammel og går i 3. klasse. Han er lidt stille, men meget sjov.\n\nMine bedsteforældre bor i Marokko. Jeg ser dem ikke så tit, men vi taler i telefon. Jeg har også en onkel og en tante her i Danmark. De bor i Aarhus med deres tre børn — min fætter Karim og mine kusiner Nadia og Lina.",
       "glossary": [
-        { "da": "person/personer", "en": "person/people" },
-        { "da": "tit", "en": "often" },
-        { "da": "taler i telefon", "en": "talk on the phone" }
+        {
+          "da": "person/personer",
+          "en": "person/people"
+        },
+        {
+          "da": "tit",
+          "en": "often"
+        },
+        {
+          "da": "taler i telefon",
+          "en": "talk on the phone"
+        }
       ],
       "questions": [
         {
           "prompt": "Hvor bor Yasmin?",
-          "options": ["I Aarhus", "I København", "I Odense", "I Marokko"],
+          "options": [
+            "I Aarhus",
+            "I København",
+            "I Odense",
+            "I Marokko"
+          ],
           "answer": "I Odense"
         },
         {
           "prompt": "Hvad arbejder Yasmins mor som?",
-          "options": ["Læge", "Lærer", "Chauffør", "Sygeplejerske"],
+          "options": [
+            "Læge",
+            "Lærer",
+            "Chauffør",
+            "Sygeplejerske"
+          ],
           "answer": "Lærer"
         },
         {
           "prompt": "Hvor gammel er Adam?",
-          "options": ["Syv år", "Ni år", "Tolv år", "Fjorten år"],
+          "options": [
+            "Syv år",
+            "Ni år",
+            "Tolv år",
+            "Fjorten år"
+          ],
           "answer": "Ni år"
         },
         {
           "prompt": "Hvor bor Yasmins bedsteforældre?",
-          "options": ["I Odense", "I Aarhus", "I Danmark", "I Marokko"],
+          "options": [
+            "I Odense",
+            "I Aarhus",
+            "I Danmark",
+            "I Marokko"
+          ],
           "answer": "I Marokko"
         },
         {
           "prompt": "Hvor mange kusiner har Yasmin?",
-          "options": ["En", "To", "Tre", "Ingen"],
+          "options": [
+            "En",
+            "To",
+            "Tre",
+            "Ingen"
+          ],
           "answer": "To"
         }
       ]
@@ -221,12 +584,36 @@
       "instruction": "Translate each sentence into Danish.",
       "direction": "en_to_da",
       "items": [
-        { "prompt": "My mother is 45 years old.", "answer": "Min mor er femogfyrre år gammel.", "alternatives": ["Min mor er 45 år gammel."] },
-        { "prompt": "He has a big family.", "answer": "Han har en stor familie." },
-        { "prompt": "Her sister lives in Aarhus.", "answer": "Hendes søster bor i Aarhus." },
-        { "prompt": "Do you have any siblings?", "answer": "Har du nogen søskende?", "alternatives": ["Har du søskende?"] },
-        { "prompt": "Our grandmother is very kind.", "answer": "Vores bedstemor er meget venlig." },
-        { "prompt": "Their children go to school.", "answer": "Deres børn går i skole." }
+        {
+          "prompt": "My mother is 45 years old.",
+          "answer": "Min mor er femogfyrre år gammel.",
+          "alternatives": [
+            "Min mor er 45 år gammel."
+          ]
+        },
+        {
+          "prompt": "He has a big family.",
+          "answer": "Han har en stor familie."
+        },
+        {
+          "prompt": "Her sister lives in Aarhus.",
+          "answer": "Hendes søster bor i Aarhus."
+        },
+        {
+          "prompt": "Do you have any siblings?",
+          "answer": "Har du nogen søskende?",
+          "alternatives": [
+            "Har du søskende?"
+          ]
+        },
+        {
+          "prompt": "Our grandmother is very kind.",
+          "answer": "Vores bedstemor er meget venlig."
+        },
+        {
+          "prompt": "Their children go to school.",
+          "answer": "Deres børn går i skole."
+        }
       ]
     },
     {
@@ -247,5 +634,17 @@
       "title": "Kulturelt hjørne — Families in Denmark",
       "content": "Danish families come in many shapes and sizes. Denmark has one of the world's highest rates of children born outside of marriage — over half of all children are born to unmarried parents, though many live in stable partnerships ('papirløst samlevende'). The word 'kæreste' is gender-neutral and means boyfriend, girlfriend, or partner. Note also that Danish distinguishes which side of the family a grandparent comes from: 'farmor' is your father's mother, 'mormor' is your mother's mother, 'farfar' is your father's father, and 'morfar' is your mother's father. When speaking to Danes, using first names is the norm — even with teachers and older relatives."
     }
-  ]
+  ],
+  "completion": {
+    "threshold": 75,
+    "counted_sections": [
+      "grammar_possessives",
+      "matching_family",
+      "mc_possessives",
+      "fill_possessives",
+      "sentence_family",
+      "reading_family",
+      "translation_family"
+    ]
+  }
 }
