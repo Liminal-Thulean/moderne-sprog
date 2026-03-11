@@ -1214,10 +1214,8 @@ function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onI
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
-const _supa = window.supabase.createClient(
-  "https://tdyvlwiayrbkeqdcvtdi.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94"
-);
+const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
 
 function App() {
   const [mode, setMode] = React.useState("tables");
@@ -1228,9 +1226,12 @@ function App() {
   const [showAnswers, setShowAnswers] = React.useState(false);
   const [userName, setUserName] = React.useState("");
   const [authReady, setAuthReady] = React.useState(false);
+  const [supa, setSupa] = React.useState(null);
 
   React.useEffect(() => {
-    _supa.auth.getSession().then(({ data: { session } }) => {
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    setSupa(client);
+    client.auth.getSession().then(({ data: { session } }) => {
       if (!session) { window.location.href = "/login.html"; return; }
       const u = session.user;
       setUserName((u.user_metadata?.full_name || u.user_metadata?.name || u.email || "").split(" ")[0]);
@@ -1291,7 +1292,7 @@ function App() {
         <span className="topbar-lang">Latin</span>
         <div className="topbar-right">
           {userName && <span className="topbar-user">{userName}</span>}
-          <button className="topbar-btn" onClick={() => _supa.auth.signOut().then(() => window.location.href = "/login.html")}>Sign Out</button>
+          <button className="topbar-btn" onClick={() => supa && supa.auth.signOut().then(() => window.location.href = "/login.html")}>Sign Out</button>
         </div>
       </nav>
 
