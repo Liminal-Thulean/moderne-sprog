@@ -27,6 +27,7 @@
   --green-light:rgba(45,122,80,0.08);
   --green-border:rgba(45,122,80,0.25);
   --gold:#b8860b;
+  --blue:#3c64c8;
   --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
   --shadow:0 4px 16px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
   --shadow-lg:0 12px 40px rgba(0,0,0,0.12),0 4px 8px rgba(0,0,0,0.06);
@@ -72,6 +73,7 @@ input:focus{outline:none}
 .unit-card{background:var(--surface);padding:16px 18px;cursor:pointer;transition:background 0.15s;position:relative;overflow:hidden}
 .unit-card:hover:not(.locked){background:#faf8f5}
 .unit-card.locked{cursor:default;opacity:0.55}
+.unit-card.available{border-color:var(--gold);background:#fffdf6}
 .unit-card.complete::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
 .unit-card.in-progress::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
 .unit-week{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
@@ -840,8 +842,12 @@ function UnitView({unit, courseUnit, onBack, onComplete}) {
           <div className="complete-title">{passed?"Godt klaret!":"Prøv igen!"}</div>
           <div className="complete-sub">
             {passed
-              ? `You scored ${overallPct}% — above the ${unit.completion.threshold}% threshold. Unit complete.`
-              : `You scored ${overallPct}% — the threshold is ${unit.completion.threshold}%. Review the exercises and try again.`
+              ? courseUnit?.isAssessment
+                ? `You scored ${overallPct}% — module assessment passed. The next module is now unlocked.`
+                : `You scored ${overallPct}% — above the ${unit.completion.threshold}% threshold. Unit complete.`
+              : courseUnit?.isAssessment
+                ? `You scored ${overallPct}% — you need ${unit.completion.threshold}% to pass the module assessment and unlock the next module.`
+                : `You scored ${overallPct}% — the threshold is ${unit.completion.threshold}%. Review the exercises and try again.`
             }
           </div>
           <div className="score-breakdown">
@@ -851,7 +857,7 @@ function UnitView({unit, courseUnit, onBack, onComplete}) {
               return (
                 <div key={s.id} className="score-row">
                   <span className="score-label">{TYPE_LABELS[s.type]||s.type}</span>
-                  <span className={`score-val ${p>=75?"pass":"fail"}`}>{sc?`${sc.correct}/${sc.total} · ${p}%`:"—"}</span>
+                  <span className={`score-val ${p>=unit.completion.threshold?"pass":"fail"}`}>{sc?`${sc.correct}/${sc.total} · ${p}%`:"—"}</span>
                 </div>
               );
             })}
@@ -923,9 +929,10 @@ function ModuleMap({course, progress, onSelectUnit}) {
 
   const toggleModule = (id) => setOpenModules(o=>({...o,[id]:!o[id]}));
 
-  const getUnitStatus = (unitId) => {
+  const getUnitStatus = (unitId, unlocked) => {
     if (progress.completed?.includes(unitId)) return "complete";
     if (progress.current===unitId) return "in_progress";
+    if (unlocked) return "available";
     return "locked";
   };
 
@@ -934,11 +941,17 @@ function ModuleMap({course, progress, onSelectUnit}) {
     const mod = course.modules[moduleIdx];
     // Nordic-only module requires explicit access grant
     if (mod.nordic_only) return progress.nordicAccess === true;
+    // First unit of first module always unlocked
     if (unitIdx===0 && moduleIdx===0) return true;
+    // Assessment (last unit of any module) always unlocked
+    if (unitIdx===mod.weeks.length-1) return true;
+    // First unit of subsequent modules: unlocked when previous module's assessment is complete
     if (unitIdx===0) {
       const prevMod = course.modules[moduleIdx-1];
-      return prevMod.weeks.every(w=>progress.completed?.includes(w.id));
+      const assessmentId = prevMod.weeks[prevMod.weeks.length-1].id;
+      return progress.completed?.includes(assessmentId);
     }
+    // All other units: unlock sequentially
     return progress.completed?.includes(mod.weeks[unitIdx-1].id);
   };
 
@@ -976,15 +989,18 @@ function ModuleMap({course, progress, onSelectUnit}) {
               <div className="unit-grid">
                 {mod.weeks.map((unit, ui) => {
                   const unlocked = isUnitUnlocked(mi, ui);
-                  const status = getUnitStatus(unit.id);
-                  const statusColor = status==="complete"?"var(--green)":status==="in_progress"?"var(--gold)":"var(--border2)";
-                  const statusLabel = status==="complete"?"Complete":status==="in_progress"?"In Progress":"Locked";
+                  const status = getUnitStatus(unit.id, unlocked);
+                  const statusColor = status==="complete"?"var(--green)":status==="in_progress"?"var(--gold)":status==="available"?"var(--gold)":"var(--border2)";
+                  const statusLabel = status==="complete"?"Complete":status==="in_progress"?"In Progress":status==="available"?"Available":"Locked";
                   return (
                     <div key={unit.id}
                       className={`unit-card ${status} ${!unlocked?"locked":""}`}
                       onClick={()=>unlocked&&onSelectUnit(unit.id)}>
                       {!unlocked && <span className="lock-icon">🔒</span>}
-                      <div className="unit-week">Week {unit.week}</div>
+                      <div className="unit-week">
+                        Week {unit.week}
+                        {ui===mod.weeks.length-1 && <span style={{marginLeft:"6px",fontSize:"9px",letterSpacing:"1px",padding:"1px 5px",borderRadius:"8px",background:"rgba(60,100,200,0.1)",color:"var(--blue)",border:"1px solid var(--blue)",verticalAlign:"middle"}}>PRØVE</span>}
+                      </div>
                       <div className="unit-title">{unit.title}</div>
                       <div className="unit-theme">{unit.theme}</div>
                       <div className="unit-status">
@@ -1140,8 +1156,11 @@ function App() {
   const getCourseUnit = (unitId) => {
     if (!course) return null;
     for (const mod of course.modules) {
-      const week = mod.weeks.find(w=>w.id===unitId);
-      if (week) return {...week, module:mod.id};
+      const idx = mod.weeks.findIndex(w=>w.id===unitId);
+      if (idx !== -1) {
+        const isAssessment = idx === mod.weeks.length - 1;
+        return {...mod.weeks[idx], module:mod.id, isAssessment};
+      }
     }
     return null;
   };
