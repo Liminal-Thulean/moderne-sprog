@@ -1,0 +1,266 @@
+{
+  "id": "m1_w5",
+  "module": 1,
+  "week": 5,
+  "title": "Mad og drikke",
+  "theme": "Food, drink, meals, and modal verbs",
+  "description": "Learn to talk about food and drink — what you like, what you want, and what you need. Introduce the five most important Danish modal verbs: vil, kan, må, skal, and vil gerne.",
+  "module_n": false,
+  "completion": {
+    "threshold": 75,
+    "counted_sections": [
+      "grammar_modals",
+      "matching_food",
+      "mc_food",
+      "fill_modals",
+      "sentence_food",
+      "reading_food",
+      "translation_food"
+    ]
+  },
+  "sections": [
+    {
+      "id": "vocab_food",
+      "type": "vocab_intro",
+      "title": "Mad og drikke — Food and Drink",
+      "words": [
+        { "da": "mad", "en": "food", "example": "Jeg kan godt lide dansk mad." },
+        { "da": "drikke", "en": "drink / drinks", "example": "Hvad vil du drikke?" },
+        { "da": "morgenmad", "en": "breakfast", "example": "Jeg spiser morgenmad klokken syv." },
+        { "da": "frokost", "en": "lunch", "example": "Vi spiser frokost i kantinen." },
+        { "da": "aftensmad", "en": "dinner / supper", "example": "Aftensmaden er klar klokken seks." },
+        { "da": "brød", "en": "bread", "example": "Danskerne spiser meget rugbrød." },
+        { "da": "rugbrød", "en": "rye bread", "example": "Rugbrød er typisk dansk mad." },
+        { "da": "smørrebrød", "en": "open sandwich", "example": "Til frokost spiser vi smørrebrød." },
+        { "da": "ost", "en": "cheese", "example": "Må jeg få noget ost?" },
+        { "da": "æg", "en": "egg", "example": "Jeg spiser to æg til morgenmad." },
+        { "da": "kød", "en": "meat", "example": "Han spiser ikke kød." },
+        { "da": "fisk", "en": "fish", "example": "Vi spiser fisk om fredagen." },
+        { "da": "frugt", "en": "fruit", "example": "Vil du have noget frugt?" },
+        { "da": "grøntsager", "en": "vegetables", "example": "Spis dine grøntsager!" },
+        { "da": "kartofler", "en": "potatoes", "example": "Danskerne elsker kartofler." },
+        { "da": "vand", "en": "water", "example": "Må jeg få et glas vand?" },
+        { "da": "mælk", "en": "milk", "example": "Jeg drikker et glas mælk." },
+        { "da": "juice", "en": "juice", "example": "Vil du have appelsinjuice?" },
+        { "da": "kaffe", "en": "coffee", "example": "Min mor drikker kaffe om morgenen." },
+        { "da": "te", "en": "tea", "example": "Vil du have en kop te?" }
+      ]
+    },
+    {
+      "id": "vocab_meals",
+      "type": "vocab_intro",
+      "title": "Nyttige udtryk — Useful Expressions",
+      "words": [
+        { "da": "jeg er sulten", "en": "I am hungry", "example": "Jeg er meget sulten — hvornår spiser vi?" },
+        { "da": "jeg er tørstig", "en": "I am thirsty", "example": "Jeg er tørstig. Må jeg få noget vand?" },
+        { "da": "jeg kan godt lide", "en": "I like", "example": "Jeg kan godt lide pizza." },
+        { "da": "jeg kan ikke lide", "en": "I don't like", "example": "Jeg kan ikke lide løg." },
+        { "da": "må jeg få", "en": "may I have", "example": "Må jeg få et stykke brød?" },
+        { "da": "vil du have", "en": "would you like / do you want", "example": "Vil du have mere mælk?" },
+        { "da": "tak for mad", "en": "thank you for the meal", "example": "Tak for mad — det smagte godt." },
+        { "da": "velbekomme", "en": "you're welcome (after a meal)", "example": "Velbekomme!" }
+      ]
+    },
+    {
+      "id": "grammar_modals",
+      "type": "grammar_table",
+      "title": "Grammatik: Modalverber — Modal Verbs",
+      "explanation": "Modal verbs in Danish are used with an infinitive (without 'at'). They never change form regardless of the subject — 'jeg vil', 'du vil', 'han vil' are all the same. This makes them easier than English modals in some ways. The verb after a modal is always in the infinitive form.",
+      "headers": ["Modal", "Meaning", "Example"],
+      "rows": [
+        { "label": "vil", "answers": ["want to / will", "Jeg vil have en kop kaffe."] },
+        { "label": "vil gerne", "answers": ["would like to (polite)", "Jeg vil gerne have et stykke brød."] },
+        { "label": "kan", "answers": ["can / be able to", "Kan du lave mad?"] },
+        { "label": "må", "answers": ["may / be allowed to", "Må jeg få noget vand?"] },
+        { "label": "skal", "answers": ["must / have to / shall", "Du skal spise dine grøntsager."] },
+        { "label": "behøver ikke", "answers": ["don't need to / needn't", "Du behøver ikke spise det hele."] }
+      ]
+    },
+    {
+      "id": "matching_food",
+      "type": "matching",
+      "title": "Match mad og drikke — Match Food and Drink",
+      "pairs": [
+        { "da": "rugbrød", "en": "rye bread" },
+        { "da": "æg", "en": "egg" },
+        { "da": "kød", "en": "meat" },
+        { "da": "grøntsager", "en": "vegetables" },
+        { "da": "kartofler", "en": "potatoes" },
+        { "da": "mælk", "en": "milk" },
+        { "da": "frokost", "en": "lunch" },
+        { "da": "aftensmad", "en": "dinner" }
+      ]
+    },
+    {
+      "id": "mc_food",
+      "type": "multiple_choice",
+      "title": "Vælg det rigtige — Choose the Correct Answer",
+      "instruction": "Choose the correct modal verb or food word.",
+      "questions": [
+        {
+          "prompt": "You want to politely ask for a glass of water. Which is most appropriate?",
+          "options": ["Jeg vil have vand.", "Må jeg få et glas vand?", "Jeg skal have vand.", "Du vil have vand."],
+          "answer": "Må jeg få et glas vand?"
+        },
+        {
+          "prompt": "Which modal verb expresses obligation — 'you must eat your vegetables'?",
+          "options": ["vil", "kan", "skal", "må"],
+          "answer": "skal"
+        },
+        {
+          "prompt": "What does 'jeg kan ikke lide fisk' mean?",
+          "options": ["I love fish.", "I can't find fish.", "I don't like fish.", "I can't eat fish."],
+          "answer": "I don't like fish."
+        },
+        {
+          "prompt": "What do Danes say after a meal to thank the cook?",
+          "options": ["Velbekomme", "Tak for mad", "God appetit", "Mange tak"],
+          "answer": "Tak for mad"
+        },
+        {
+          "prompt": "Which sentence means 'Would you like some fruit?'",
+          "options": ["Vil du have noget frugt?", "Skal du have noget frugt?", "Kan du have noget frugt?", "Må du have noget frugt?"],
+          "answer": "Vil du have noget frugt?"
+        },
+        {
+          "prompt": "What is 'smørrebrød'?",
+          "options": ["A type of cake", "An open sandwich", "Buttered rye bread loaf", "A breakfast cereal"],
+          "answer": "An open sandwich"
+        },
+        {
+          "prompt": "Which is the polite form — 'I would like a cup of tea'?",
+          "options": ["Jeg vil have en kop te.", "Jeg vil gerne have en kop te.", "Jeg skal have en kop te.", "Jeg kan have en kop te."],
+          "answer": "Jeg vil gerne have en kop te."
+        },
+        {
+          "prompt": "What does 'jeg er sulten' mean?",
+          "options": ["I am thirsty.", "I am tired.", "I am hungry.", "I am full."],
+          "answer": "I am hungry."
+        }
+      ]
+    },
+    {
+      "id": "fill_modals",
+      "type": "fill_blank",
+      "title": "Udfyld med modalverbet — Fill in the Modal Verb",
+      "instruction": "Fill in the correct modal verb: vil, vil gerne, kan, må, or skal.",
+      "items": [
+        { "before": "Jeg ", "after": " gerne have et stykke rugbrød. (would like)", "answer": "vil" },
+        { "before": "Du ", "after": " spise dine grøntsager. (must)", "answer": "skal" },
+        { "before": "", "after": " jeg få et glas vand? (may I)", "answer": "Må" },
+        { "before": "Hvad ", "after": " du have til aftensmad? (do you want)", "answer": "vil" },
+        { "before": "Jeg ", "after": " ikke lide ost. (don't like — use 'kan')", "answer": "kan" },
+        { "before": "Han ", "after": " ikke spise kød — han er vegetar. (cannot)", "answer": "kan" },
+        { "before": "Vi ", "after": " spise frokost klokken tolv. (shall / will)", "answer": "skal" },
+        { "before": "Jeg ", "after": " gerne bestille en kop kaffe. (would like — polite)", "answer": "vil" }
+      ]
+    },
+    {
+      "id": "sentence_food",
+      "type": "sentence_construction",
+      "title": "Byg sætningen — Build the Sentence",
+      "instruction": "Drag the word tiles into the correct order.",
+      "mode": "drag",
+      "items": [
+        {
+          "words": ["vand", "et", "Må", "glas", "få", "jeg", "?"],
+          "answer": ["Må", "jeg", "få", "et", "glas", "vand", "?"]
+        },
+        {
+          "words": ["grøntsager", "dine", "Du", "spise", "skal", "."],
+          "answer": ["Du", "skal", "spise", "dine", "grøntsager", "."]
+        },
+        {
+          "words": ["lide", "kan", "ikke", "Jeg", "løg", "."],
+          "answer": ["Jeg", "kan", "ikke", "lide", "løg", "."]
+        },
+        {
+          "words": ["gerne", "kop", "te", "en", "vil", "Jeg", "have", "."],
+          "answer": ["Jeg", "vil", "gerne", "have", "en", "kop", "te", "."]
+        },
+        {
+          "words": ["spiser", "Vi", "kantinen", "frokost", "i", "."],
+          "answer": ["Vi", "spiser", "frokost", "i", "kantinen", "."]
+        },
+        {
+          "words": ["mad", "Tak", "for", "!"],
+          "answer": ["Tak", "for", "mad", "!"]
+        }
+      ]
+    },
+    {
+      "id": "reading_food",
+      "type": "reading",
+      "title": "Læs om frokost i kantinen — Lunch in the Canteen",
+      "text": "Det er torsdag, og klassen har fri klokken tolv. Jonas og hans venner går hen til skolekantinen for at spise frokost.\n\nI kantinen er der mange valgmuligheder. Der er smørrebrød med ost, æg eller fisk. Der er også frugt og grøntsager. Jonas kan godt lide fisk, men han kan ikke lide ost. Han tager et stykke rugbrød med fisk og en appelsin.\n\nHans ven Ali vil gerne have noget varmt. Han spørger kantinedamen: 'Må jeg få en varm ret?' Kantinedamen siger: 'I dag er der kartofler med kød.' Ali siger: 'Ja tak, det vil jeg gerne have.'\n\nEfter maden siger de: 'Tak for mad.' Kantinedamen svarer: 'Velbekomme!'",
+      "glossary": [
+        { "da": "har fri", "en": "have a break / finish" },
+        { "da": "valgmuligheder", "en": "options / choices" },
+        { "da": "tager", "en": "takes" },
+        { "da": "appelsin", "en": "orange" },
+        { "da": "varm ret", "en": "hot dish" },
+        { "da": "kantinedame", "en": "canteen lady" }
+      ],
+      "questions": [
+        {
+          "prompt": "Hvornår har klassen fri?",
+          "options": ["Klokken elleve", "Klokken tolv", "Klokken et", "Klokken to"],
+          "answer": "Klokken tolv"
+        },
+        {
+          "prompt": "Hvad tager Jonas at spise?",
+          "options": ["Rugbrød med ost", "Rugbrød med æg", "Rugbrød med fisk", "Kartofler med kød"],
+          "answer": "Rugbrød med fisk"
+        },
+        {
+          "prompt": "Hvad vil Ali have?",
+          "options": ["Noget koldt", "Noget varmt", "Frugt og grøntsager", "En kop kaffe"],
+          "answer": "Noget varmt"
+        },
+        {
+          "prompt": "Hvad svarer kantinedamen på 'tak for mad'?",
+          "options": ["Tak selv", "Ingen årsag", "Velbekomme", "Mange tak"],
+          "answer": "Velbekomme"
+        },
+        {
+          "prompt": "Hvad kan Jonas ikke lide?",
+          "options": ["Fisk", "Rugbrød", "Ost", "Frugt"],
+          "answer": "Ost"
+        }
+      ]
+    },
+    {
+      "id": "translation_food",
+      "type": "translation",
+      "title": "Oversæt — Translate",
+      "instruction": "Translate each sentence into Danish.",
+      "direction": "en_to_da",
+      "items": [
+        { "prompt": "May I have a glass of water?", "answer": "Må jeg få et glas vand?" },
+        { "prompt": "I don't like meat.", "answer": "Jeg kan ikke lide kød." },
+        { "prompt": "We eat lunch at twelve o'clock.", "answer": "Vi spiser frokost klokken tolv." },
+        { "prompt": "I would like a cup of coffee.", "answer": "Jeg vil gerne have en kop kaffe." },
+        { "prompt": "You must eat your vegetables.", "answer": "Du skal spise dine grøntsager." },
+        { "prompt": "Would you like some fruit?", "answer": "Vil du have noget frugt?" }
+      ]
+    },
+    {
+      "id": "listening_w5",
+      "type": "listening_placeholder",
+      "title": "Lyt og forstå — Listen and Understand",
+      "description": "A family discusses what to have for dinner. Listen and answer the questions.",
+      "transcript": "Mor: Hvad vil I have til aftensmad i dag? Far: Jeg vil gerne have fisk. Sofie: Jeg kan ikke lide fisk. Kan vi ikke få pasta? Mor: Vi har ikke pasta. Men vi har kartofler og kød. Sofie: Okay, det vil jeg gerne have. Far: Skal jeg hjælpe med at lave mad? Mor: Ja tak, det vil jeg gerne. Du kan skrælle kartoflerne. Far: Okay. Sofie, du skal dække bord. Sofie: Okay mor.",
+      "questions": [
+        "Hvad vil far have til aftensmad?",
+        "Hvad kan Sofie ikke lide?",
+        "Hvad skal Sofie gøre?"
+      ]
+    },
+    {
+      "id": "cultural_w5",
+      "type": "cultural_note",
+      "title": "Kulturelt hjørne — Danish Food Culture",
+      "content": "Danish food culture centres on a few distinctive elements. Rugbrød — dense, dark rye bread — is eaten daily and considered a staple, quite unlike the light rye found elsewhere. Smørrebrød (open sandwiches) are the classic Danish lunch, traditionally eaten with knife and fork. The warm phrase 'tak for mad' said to the cook after every meal is deeply ingrained — not saying it would be considered rude. 'Velbekomme' is the standard response. Denmark also has a strong café and hygge culture around coffee and cake — 'en kop kaffe og et stykke kage' is a social ritual. The Danish school canteen (kantine) is common in secondary schools, and many Danish families eat dinner together early — often between 5:30 and 6:30pm."
+    }
+  ]
+}
