@@ -304,7 +304,7 @@ function toAudioStem(text) {
 
 function playAudio(stem, e) {
   if (e) e.stopPropagation();
-  const audio = new Audio(`audio/da/${stem}.mp3`);
+  const audio = new Audio(`../audio/da/${stem}.mp3`);
   audio.play().catch(()=>{});
 }
 
@@ -315,7 +315,7 @@ function VocabIntro({section}) {
   const handlePlay = (text, i, e) => {
     if (e) e.stopPropagation();
     const stem = toAudioStem(text);
-    const audio = new Audio(`audio/da/${stem}.mp3`);
+    const audio = new Audio(`../audio/da/${stem}.mp3`);
     setPlaying(i);
     audio.play().catch(()=>{});
     audio.onended = () => setPlaying(null);
@@ -1201,7 +1201,7 @@ function App() {
   return (
     <div className="app">
       <nav className="topbar">
-        <a href="index.html" className="topbar-logo">Language Nexus</a>
+        <a href="../index.html" className="topbar-logo">Language Nexus</a>
         <div className="topbar-sep"/>
         <span className="topbar-course">Dansk</span>
         {activeUnit && (
