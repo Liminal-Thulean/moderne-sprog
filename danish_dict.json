@@ -1,0 +1,2582 @@
+{
+  "jeg": {
+    "en": "I",
+    "gender": null,
+    "pos": "pron"
+  },
+  "du": {
+    "en": "you (sg.)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "han": {
+    "en": "he",
+    "gender": null,
+    "pos": "pron"
+  },
+  "hun": {
+    "en": "she",
+    "gender": null,
+    "pos": "pron"
+  },
+  "den": {
+    "en": "it (en-word)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "det": {
+    "en": "it (et-word)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "vi": {
+    "en": "we",
+    "gender": null,
+    "pos": "pron"
+  },
+  "i": {
+    "en": "you (pl.)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "de": {
+    "en": "they",
+    "gender": null,
+    "pos": "pron"
+  },
+  "man": {
+    "en": "one / you (impersonal)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "mig": {
+    "en": "me",
+    "gender": null,
+    "pos": "pron"
+  },
+  "dig": {
+    "en": "you (obj.)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "ham": {
+    "en": "him",
+    "gender": null,
+    "pos": "pron"
+  },
+  "hende": {
+    "en": "her",
+    "gender": null,
+    "pos": "pron"
+  },
+  "os": {
+    "en": "us",
+    "gender": null,
+    "pos": "pron"
+  },
+  "dem": {
+    "en": "them",
+    "gender": null,
+    "pos": "pron"
+  },
+  "sig": {
+    "en": "himself / herself / themselves",
+    "gender": null,
+    "pos": "pron"
+  },
+  "min": {
+    "en": "my (en-word)",
+    "gender": "en",
+    "pos": "pron"
+  },
+  "mit": {
+    "en": "my (et-word)",
+    "gender": "et",
+    "pos": "pron"
+  },
+  "mine": {
+    "en": "my (plural)",
+    "gender": "pl",
+    "pos": "pron"
+  },
+  "din": {
+    "en": "your (en-word)",
+    "gender": "en",
+    "pos": "pron"
+  },
+  "dit": {
+    "en": "your (et-word)",
+    "gender": "et",
+    "pos": "pron"
+  },
+  "dine": {
+    "en": "your (plural)",
+    "gender": "pl",
+    "pos": "pron"
+  },
+  "hans": {
+    "en": "his",
+    "gender": null,
+    "pos": "pron"
+  },
+  "hendes": {
+    "en": "her",
+    "gender": null,
+    "pos": "pron"
+  },
+  "vores": {
+    "en": "our",
+    "gender": null,
+    "pos": "pron"
+  },
+  "jeres": {
+    "en": "your (pl.)",
+    "gender": null,
+    "pos": "pron"
+  },
+  "deres": {
+    "en": "their",
+    "gender": null,
+    "pos": "pron"
+  },
+  "være": {
+    "en": "to be",
+    "gender": null,
+    "pos": "verb"
+  },
+  "have": {
+    "en": "garden",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "blive": {
+    "en": "to become / to stay",
+    "gender": null,
+    "pos": "verb"
+  },
+  "gøre": {
+    "en": "to do / to make",
+    "gender": null,
+    "pos": "verb"
+  },
+  "sige": {
+    "en": "to say",
+    "gender": null,
+    "pos": "verb"
+  },
+  "se": {
+    "en": "to see",
+    "gender": null,
+    "pos": "verb"
+  },
+  "komme": {
+    "en": "to come",
+    "gender": null,
+    "pos": "verb"
+  },
+  "gå": {
+    "en": "to go / to walk",
+    "gender": null,
+    "pos": "verb"
+  },
+  "tage": {
+    "en": "to take",
+    "gender": null,
+    "pos": "verb"
+  },
+  "vide": {
+    "en": "to know (fact)",
+    "gender": null,
+    "pos": "verb"
+  },
+  "give": {
+    "en": "to give",
+    "gender": null,
+    "pos": "verb"
+  },
+  "få": {
+    "en": "to get / to have",
+    "gender": null,
+    "pos": "verb"
+  },
+  "stå": {
+    "en": "to stand",
+    "gender": null,
+    "pos": "verb"
+  },
+  "sætte": {
+    "en": "to put / to set",
+    "gender": null,
+    "pos": "verb"
+  },
+  "hedde": {
+    "en": "to be called",
+    "gender": null,
+    "pos": "verb"
+  },
+  "arbejde": {
+    "en": "work / job",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "bo": {
+    "en": "to live / to reside",
+    "gender": null,
+    "pos": "verb"
+  },
+  "spise": {
+    "en": "to eat",
+    "gender": null,
+    "pos": "verb"
+  },
+  "drikke": {
+    "en": "to drink",
+    "gender": null,
+    "pos": "verb"
+  },
+  "lære": {
+    "en": "to learn / to teach",
+    "gender": null,
+    "pos": "verb"
+  },
+  "tale": {
+    "en": "to speak / to talk",
+    "gender": null,
+    "pos": "verb"
+  },
+  "skrive": {
+    "en": "to write",
+    "gender": null,
+    "pos": "verb"
+  },
+  "læse": {
+    "en": "to read",
+    "gender": null,
+    "pos": "verb"
+  },
+  "lytte": {
+    "en": "to listen",
+    "gender": null,
+    "pos": "verb"
+  },
+  "spørge": {
+    "en": "to ask",
+    "gender": null,
+    "pos": "verb"
+  },
+  "svare": {
+    "en": "to answer",
+    "gender": null,
+    "pos": "verb"
+  },
+  "åbne": {
+    "en": "to open",
+    "gender": null,
+    "pos": "verb"
+  },
+  "lukke": {
+    "en": "to close",
+    "gender": null,
+    "pos": "verb"
+  },
+  "sidde": {
+    "en": "to sit",
+    "gender": null,
+    "pos": "verb"
+  },
+  "forstå": {
+    "en": "to understand",
+    "gender": null,
+    "pos": "verb"
+  },
+  "elske": {
+    "en": "to love",
+    "gender": null,
+    "pos": "verb"
+  },
+  "bruge": {
+    "en": "to use",
+    "gender": null,
+    "pos": "verb"
+  },
+  "huske": {
+    "en": "to remember",
+    "gender": null,
+    "pos": "verb"
+  },
+  "glemme": {
+    "en": "to forget",
+    "gender": null,
+    "pos": "verb"
+  },
+  "prøve": {
+    "en": "test",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lave": {
+    "en": "to make / to do",
+    "gender": null,
+    "pos": "verb"
+  },
+  "hjælpe": {
+    "en": "to help",
+    "gender": null,
+    "pos": "verb"
+  },
+  "tænke": {
+    "en": "to think",
+    "gender": null,
+    "pos": "verb"
+  },
+  "fortælle": {
+    "en": "to tell",
+    "gender": null,
+    "pos": "verb"
+  },
+  "møde": {
+    "en": "to meet",
+    "gender": null,
+    "pos": "verb"
+  },
+  "køre": {
+    "en": "to drive / to ride",
+    "gender": null,
+    "pos": "verb"
+  },
+  "rejse": {
+    "en": "to travel",
+    "gender": null,
+    "pos": "verb"
+  },
+  "flytte": {
+    "en": "to move (residence)",
+    "gender": null,
+    "pos": "verb"
+  },
+  "betale": {
+    "en": "to pay",
+    "gender": null,
+    "pos": "verb"
+  },
+  "sove": {
+    "en": "to sleep",
+    "gender": null,
+    "pos": "verb"
+  },
+  "vågne": {
+    "en": "to wake up",
+    "gender": null,
+    "pos": "verb"
+  },
+  "lide": {
+    "en": "to like / to suffer",
+    "gender": null,
+    "pos": "verb"
+  },
+  "kende": {
+    "en": "to know (person/place)",
+    "gender": null,
+    "pos": "verb"
+  },
+  "kunne": {
+    "en": "can / to be able to",
+    "gender": null,
+    "pos": "verb"
+  },
+  "ville": {
+    "en": "will / to want to",
+    "gender": null,
+    "pos": "verb"
+  },
+  "skulle": {
+    "en": "shall / to have to",
+    "gender": null,
+    "pos": "verb"
+  },
+  "måtte": {
+    "en": "may / must",
+    "gender": null,
+    "pos": "verb"
+  },
+  "burde": {
+    "en": "ought to / should",
+    "gender": null,
+    "pos": "verb"
+  },
+  "begynde": {
+    "en": "to begin",
+    "gender": null,
+    "pos": "verb"
+  },
+  "slutte": {
+    "en": "to finish / to end",
+    "gender": null,
+    "pos": "verb"
+  },
+  "cykle": {
+    "en": "to cycle",
+    "gender": null,
+    "pos": "verb"
+  },
+  "svømme": {
+    "en": "to swim",
+    "gender": null,
+    "pos": "verb"
+  },
+  "danse": {
+    "en": "to dance",
+    "gender": null,
+    "pos": "verb"
+  },
+  "spille": {
+    "en": "to play (game/instrument)",
+    "gender": null,
+    "pos": "verb"
+  },
+  "synge": {
+    "en": "to sing",
+    "gender": null,
+    "pos": "verb"
+  },
+  "løbe": {
+    "en": "to run",
+    "gender": null,
+    "pos": "verb"
+  },
+  "tegne": {
+    "en": "to draw",
+    "gender": null,
+    "pos": "verb"
+  },
+  "male": {
+    "en": "to paint",
+    "gender": null,
+    "pos": "verb"
+  },
+  "bage": {
+    "en": "to bake",
+    "gender": null,
+    "pos": "verb"
+  },
+  "vaske": {
+    "en": "to wash",
+    "gender": null,
+    "pos": "verb"
+  },
+  "handle": {
+    "en": "to shop",
+    "gender": null,
+    "pos": "verb"
+  },
+  "spare": {
+    "en": "to save (money)",
+    "gender": null,
+    "pos": "verb"
+  },
+  "låne": {
+    "en": "to borrow / to lend",
+    "gender": null,
+    "pos": "verb"
+  },
+  "invitere": {
+    "en": "to invite",
+    "gender": null,
+    "pos": "verb"
+  },
+  "studere": {
+    "en": "to study",
+    "gender": null,
+    "pos": "verb"
+  },
+  "undervise": {
+    "en": "to teach",
+    "gender": null,
+    "pos": "verb"
+  },
+  "forklare": {
+    "en": "to explain",
+    "gender": null,
+    "pos": "verb"
+  },
+  "beskrive": {
+    "en": "to describe",
+    "gender": null,
+    "pos": "verb"
+  },
+  "ringe": {
+    "en": "to call / to ring",
+    "gender": null,
+    "pos": "verb"
+  },
+  "smage": {
+    "en": "to taste",
+    "gender": null,
+    "pos": "verb"
+  },
+  "hygge": {
+    "en": "cosiness / conviviality",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mand": {
+    "en": "man / husband",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kvinde": {
+    "en": "woman",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "dreng": {
+    "en": "boy",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "pige": {
+    "en": "girl",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "barn": {
+    "en": "child",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "baby": {
+    "en": "baby",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "person": {
+    "en": "person",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "menneske": {
+    "en": "human being / person",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "folk": {
+    "en": "people",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "far": {
+    "en": "father / dad",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mor": {
+    "en": "mother / mum",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "forældre": {
+    "en": "parents",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "søn": {
+    "en": "son",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "datter": {
+    "en": "daughter",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bror": {
+    "en": "brother",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "søster": {
+    "en": "sister",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "søskende": {
+    "en": "siblings",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "bedstefar": {
+    "en": "grandfather",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bedstemor": {
+    "en": "grandmother",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bedsteforældre": {
+    "en": "grandparents",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "farmor": {
+    "en": "paternal grandmother",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "farfar": {
+    "en": "paternal grandfather",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "morfar": {
+    "en": "maternal grandfather",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mormor": {
+    "en": "maternal grandmother",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "onkel": {
+    "en": "uncle",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tante": {
+    "en": "aunt",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fætter": {
+    "en": "male cousin",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kusine": {
+    "en": "female cousin",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kæreste": {
+    "en": "partner / boyfriend / girlfriend",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ven": {
+    "en": "friend (male)",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "veninde": {
+    "en": "friend (female)",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "nabo": {
+    "en": "neighbour",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kollega": {
+    "en": "colleague",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "chef": {
+    "en": "boss",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "elev": {
+    "en": "pupil / student",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lærer": {
+    "en": "teacher",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "studerende": {
+    "en": "university student",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "skole": {
+    "en": "school",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "klasse": {
+    "en": "class / classroom",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fag": {
+    "en": "subject",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "lektie": {
+    "en": "homework / lesson",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "opgave": {
+    "en": "assignment / task",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "eksamen": {
+    "en": "exam",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "karakter": {
+    "en": "grade / mark",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tavle": {
+    "en": "blackboard",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bord": {
+    "en": "table / desk",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "stol": {
+    "en": "chair",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "vindue": {
+    "en": "window",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "dør": {
+    "en": "door",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bog": {
+    "en": "book",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hæfte": {
+    "en": "exercise book",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "blyant": {
+    "en": "pencil",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kuglepen": {
+    "en": "ballpoint pen",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lineal": {
+    "en": "ruler",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "viskelæder": {
+    "en": "eraser",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "lommeregner": {
+    "en": "calculator",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "computer": {
+    "en": "computer",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "taske": {
+    "en": "bag",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "rygsæk": {
+    "en": "backpack",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mad": {
+    "en": "food",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "morgenmad": {
+    "en": "breakfast",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "frokost": {
+    "en": "lunch",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "aftensmad": {
+    "en": "dinner",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "brød": {
+    "en": "bread",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "rugbrød": {
+    "en": "rye bread",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "smørrebrød": {
+    "en": "open sandwich",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "bolle": {
+    "en": "bread roll",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kage": {
+    "en": "cake",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ost": {
+    "en": "cheese",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "smør": {
+    "en": "butter",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "æg": {
+    "en": "egg",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "kød": {
+    "en": "meat",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "fisk": {
+    "en": "fish",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "frugt": {
+    "en": "fruit",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "grøntsager": {
+    "en": "vegetables",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "kartoffel": {
+    "en": "potato",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ris": {
+    "en": "rice",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "pasta": {
+    "en": "pasta",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "suppe": {
+    "en": "soup",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "salat": {
+    "en": "salad",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "vand": {
+    "en": "water",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "mælk": {
+    "en": "milk",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "juice": {
+    "en": "juice",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kaffe": {
+    "en": "coffee",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "te": {
+    "en": "tea",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "øl": {
+    "en": "beer",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "vin": {
+    "en": "wine",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sodavand": {
+    "en": "soft drink / fizzy drink",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hus": {
+    "en": "house",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "lejlighed": {
+    "en": "apartment / flat",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "værelse": {
+    "en": "room",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "køkken": {
+    "en": "kitchen",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "stue": {
+    "en": "living room",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "soveværelse": {
+    "en": "bedroom",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "badeværelse": {
+    "en": "bathroom",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "væg": {
+    "en": "wall",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "gulv": {
+    "en": "floor",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "loft": {
+    "en": "ceiling / attic",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "trappe": {
+    "en": "stairs",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "by": {
+    "en": "city / town",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "gade": {
+    "en": "street",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "vej": {
+    "en": "road / way",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "plads": {
+    "en": "square / space",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "park": {
+    "en": "park",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "skov": {
+    "en": "forest / wood",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "strand": {
+    "en": "beach",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sø": {
+    "en": "lake",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bjerg": {
+    "en": "mountain",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "mark": {
+    "en": "field",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "land": {
+    "en": "country / countryside",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "landsby": {
+    "en": "village",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hovedstad": {
+    "en": "capital city",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "verden": {
+    "en": "world",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "restaurant": {
+    "en": "restaurant",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "café": {
+    "en": "café",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kantine": {
+    "en": "canteen",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bageri": {
+    "en": "bakery",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "butik": {
+    "en": "shop / store",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "supermarked": {
+    "en": "supermarket",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "bibliotek": {
+    "en": "library",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "posthus": {
+    "en": "post office",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "bank": {
+    "en": "bank",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hospital": {
+    "en": "hospital",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "museum": {
+    "en": "museum",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "biograf": {
+    "en": "cinema",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "teater": {
+    "en": "theatre",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "kirke": {
+    "en": "church",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "station": {
+    "en": "station",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lufthavn": {
+    "en": "airport",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "dag": {
+    "en": "day",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "uge": {
+    "en": "week",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "måned": {
+    "en": "month",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "år": {
+    "en": "year",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "time": {
+    "en": "hour",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "minut": {
+    "en": "minute",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "sekund": {
+    "en": "second",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "weekend": {
+    "en": "weekend",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ferie": {
+    "en": "holiday / vacation",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "morgen": {
+    "en": "morning",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "middag": {
+    "en": "midday / noon",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "aften": {
+    "en": "evening",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "nat": {
+    "en": "night",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mandag": {
+    "en": "Monday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tirsdag": {
+    "en": "Tuesday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "onsdag": {
+    "en": "Wednesday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "torsdag": {
+    "en": "Thursday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fredag": {
+    "en": "Friday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lørdag": {
+    "en": "Saturday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "søndag": {
+    "en": "Sunday",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "januar": {
+    "en": "January",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "februar": {
+    "en": "February",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "marts": {
+    "en": "March",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "april": {
+    "en": "April",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "maj": {
+    "en": "May",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "juni": {
+    "en": "June",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "juli": {
+    "en": "July",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "august": {
+    "en": "August",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "september": {
+    "en": "September",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "oktober": {
+    "en": "October",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "november": {
+    "en": "November",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "december": {
+    "en": "December",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "forår": {
+    "en": "spring",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "sommer": {
+    "en": "summer",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "efterår": {
+    "en": "autumn",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "vinter": {
+    "en": "winter",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "vejr": {
+    "en": "weather",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "sol": {
+    "en": "sun",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "regn": {
+    "en": "rain",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sne": {
+    "en": "snow",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "vind": {
+    "en": "wind",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sky": {
+    "en": "cloud",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "torden": {
+    "en": "thunder",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "temperatur": {
+    "en": "temperature",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bil": {
+    "en": "car",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "cykel": {
+    "en": "bicycle",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bus": {
+    "en": "bus",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tog": {
+    "en": "train",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "fly": {
+    "en": "aeroplane",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "metro": {
+    "en": "metro / underground",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "båd": {
+    "en": "boat",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "billet": {
+    "en": "ticket",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "pas": {
+    "en": "passport",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "kuffert": {
+    "en": "suitcase",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "krop": {
+    "en": "body",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hoved": {
+    "en": "head",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "øje": {
+    "en": "eye",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "øre": {
+    "en": "ear",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "næse": {
+    "en": "nose",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mund": {
+    "en": "mouth",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hånd": {
+    "en": "hand",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "arm": {
+    "en": "arm",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ben": {
+    "en": "leg",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "fod": {
+    "en": "foot",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hjerte": {
+    "en": "heart",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "ryg": {
+    "en": "back",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "mave": {
+    "en": "stomach",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tøj": {
+    "en": "clothes",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "skjorte": {
+    "en": "shirt",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "bukser": {
+    "en": "trousers",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "kjole": {
+    "en": "dress",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "jakke": {
+    "en": "jacket",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "frakke": {
+    "en": "coat",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sweater": {
+    "en": "sweater",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sko": {
+    "en": "shoe(s)",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "støvler": {
+    "en": "boots",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "hat": {
+    "en": "hat",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "tørklæde": {
+    "en": "scarf",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "briller": {
+    "en": "glasses",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "hund": {
+    "en": "dog",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "kat": {
+    "en": "cat",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fugl": {
+    "en": "bird",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "hest": {
+    "en": "horse",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "ko": {
+    "en": "cow",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "gris": {
+    "en": "pig",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "får": {
+    "en": "sheep",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "god": {
+    "en": "good",
+    "gender": null,
+    "pos": "adj"
+  },
+  "dårlig": {
+    "en": "bad",
+    "gender": null,
+    "pos": "adj"
+  },
+  "stor": {
+    "en": "big / large",
+    "gender": null,
+    "pos": "adj"
+  },
+  "lille": {
+    "en": "small / little",
+    "gender": null,
+    "pos": "adj"
+  },
+  "lang": {
+    "en": "long / tall",
+    "gender": null,
+    "pos": "adj"
+  },
+  "kort": {
+    "en": "short",
+    "gender": null,
+    "pos": "adj"
+  },
+  "høj": {
+    "en": "tall / high",
+    "gender": null,
+    "pos": "adj"
+  },
+  "lav": {
+    "en": "low / short",
+    "gender": null,
+    "pos": "adj"
+  },
+  "gammel": {
+    "en": "old",
+    "gender": null,
+    "pos": "adj"
+  },
+  "ung": {
+    "en": "young",
+    "gender": null,
+    "pos": "adj"
+  },
+  "ny": {
+    "en": "new",
+    "gender": null,
+    "pos": "adj"
+  },
+  "smuk": {
+    "en": "beautiful",
+    "gender": null,
+    "pos": "adj"
+  },
+  "glad": {
+    "en": "happy",
+    "gender": null,
+    "pos": "adj"
+  },
+  "ked": {
+    "en": "sad / sorry",
+    "gender": null,
+    "pos": "adj"
+  },
+  "sur": {
+    "en": "angry / sour",
+    "gender": null,
+    "pos": "adj"
+  },
+  "træt": {
+    "en": "tired",
+    "gender": null,
+    "pos": "adj"
+  },
+  "frisk": {
+    "en": "healthy / fresh",
+    "gender": null,
+    "pos": "adj"
+  },
+  "syg": {
+    "en": "ill / sick",
+    "gender": null,
+    "pos": "adj"
+  },
+  "rask": {
+    "en": "healthy / well",
+    "gender": null,
+    "pos": "adj"
+  },
+  "varm": {
+    "en": "warm / hot",
+    "gender": null,
+    "pos": "adj"
+  },
+  "kold": {
+    "en": "cold",
+    "gender": null,
+    "pos": "adj"
+  },
+  "lys": {
+    "en": "light / bright",
+    "gender": null,
+    "pos": "adj"
+  },
+  "mørk": {
+    "en": "dark",
+    "gender": null,
+    "pos": "adj"
+  },
+  "hurtig": {
+    "en": "fast / quick",
+    "gender": null,
+    "pos": "adj"
+  },
+  "langsom": {
+    "en": "slow",
+    "gender": null,
+    "pos": "adj"
+  },
+  "let": {
+    "en": "easy / light",
+    "gender": null,
+    "pos": "adj"
+  },
+  "svær": {
+    "en": "difficult / heavy",
+    "gender": null,
+    "pos": "adj"
+  },
+  "nem": {
+    "en": "easy",
+    "gender": null,
+    "pos": "adj"
+  },
+  "sjov": {
+    "en": "fun / funny",
+    "gender": null,
+    "pos": "adj"
+  },
+  "kedelig": {
+    "en": "boring",
+    "gender": null,
+    "pos": "adj"
+  },
+  "interessant": {
+    "en": "interesting",
+    "gender": null,
+    "pos": "adj"
+  },
+  "vigtig": {
+    "en": "important",
+    "gender": null,
+    "pos": "adj"
+  },
+  "venlig": {
+    "en": "friendly / kind",
+    "gender": null,
+    "pos": "adj"
+  },
+  "rolig": {
+    "en": "calm / quiet",
+    "gender": null,
+    "pos": "adj"
+  },
+  "nervøs": {
+    "en": "nervous",
+    "gender": null,
+    "pos": "adj"
+  },
+  "sulten": {
+    "en": "hungry",
+    "gender": null,
+    "pos": "adj"
+  },
+  "mæt": {
+    "en": "full (after eating)",
+    "gender": null,
+    "pos": "adj"
+  },
+  "tørstig": {
+    "en": "thirsty",
+    "gender": null,
+    "pos": "adj"
+  },
+  "billig": {
+    "en": "cheap",
+    "gender": null,
+    "pos": "adj"
+  },
+  "dyr": {
+    "en": "expensive",
+    "gender": null,
+    "pos": "adj"
+  },
+  "ren": {
+    "en": "clean",
+    "gender": null,
+    "pos": "adj"
+  },
+  "beskidt": {
+    "en": "dirty",
+    "gender": null,
+    "pos": "adj"
+  },
+  "lykkelig": {
+    "en": "happy / lucky",
+    "gender": null,
+    "pos": "adj"
+  },
+  "trist": {
+    "en": "sad",
+    "gender": null,
+    "pos": "adj"
+  },
+  "stærk": {
+    "en": "strong",
+    "gender": null,
+    "pos": "adj"
+  },
+  "svag": {
+    "en": "weak",
+    "gender": null,
+    "pos": "adj"
+  },
+  "modig": {
+    "en": "brave",
+    "gender": null,
+    "pos": "adj"
+  },
+  "bange": {
+    "en": "scared / afraid",
+    "gender": null,
+    "pos": "adj"
+  },
+  "klog": {
+    "en": "clever / wise",
+    "gender": null,
+    "pos": "adj"
+  },
+  "flittig": {
+    "en": "diligent / hardworking",
+    "gender": null,
+    "pos": "adj"
+  },
+  "doven": {
+    "en": "lazy",
+    "gender": null,
+    "pos": "adj"
+  },
+  "aktiv": {
+    "en": "active",
+    "gender": null,
+    "pos": "adj"
+  },
+  "gift": {
+    "en": "married",
+    "gender": null,
+    "pos": "adj"
+  },
+  "skilt": {
+    "en": "divorced",
+    "gender": null,
+    "pos": "adj"
+  },
+  "ugift": {
+    "en": "unmarried",
+    "gender": null,
+    "pos": "adj"
+  },
+  "dansk": {
+    "en": "Danish",
+    "gender": null,
+    "pos": "adj"
+  },
+  "norsk": {
+    "en": "Norwegian",
+    "gender": null,
+    "pos": "adj"
+  },
+  "svensk": {
+    "en": "Swedish",
+    "gender": null,
+    "pos": "adj"
+  },
+  "engelsk": {
+    "en": "English",
+    "gender": null,
+    "pos": "adj"
+  },
+  "tysk": {
+    "en": "German",
+    "gender": null,
+    "pos": "adj"
+  },
+  "fransk": {
+    "en": "French",
+    "gender": null,
+    "pos": "adj"
+  },
+  "spansk": {
+    "en": "Spanish",
+    "gender": null,
+    "pos": "adj"
+  },
+  "arabisk": {
+    "en": "Arabic",
+    "gender": null,
+    "pos": "adj"
+  },
+  "polsk": {
+    "en": "Polish",
+    "gender": null,
+    "pos": "adj"
+  },
+  "tyrkisk": {
+    "en": "Turkish",
+    "gender": null,
+    "pos": "adj"
+  },
+  "nul": {
+    "en": "zero",
+    "gender": null,
+    "pos": "num"
+  },
+  "en": {
+    "en": "one / a (en)",
+    "gender": null,
+    "pos": "num"
+  },
+  "et": {
+    "en": "one / a (et)",
+    "gender": null,
+    "pos": "num"
+  },
+  "to": {
+    "en": "two",
+    "gender": null,
+    "pos": "num"
+  },
+  "tre": {
+    "en": "three",
+    "gender": null,
+    "pos": "num"
+  },
+  "fire": {
+    "en": "four",
+    "gender": null,
+    "pos": "num"
+  },
+  "fem": {
+    "en": "five",
+    "gender": null,
+    "pos": "num"
+  },
+  "seks": {
+    "en": "six",
+    "gender": null,
+    "pos": "num"
+  },
+  "syv": {
+    "en": "seven",
+    "gender": null,
+    "pos": "num"
+  },
+  "otte": {
+    "en": "eight",
+    "gender": null,
+    "pos": "num"
+  },
+  "ni": {
+    "en": "nine",
+    "gender": null,
+    "pos": "num"
+  },
+  "ti": {
+    "en": "ten",
+    "gender": null,
+    "pos": "num"
+  },
+  "elleve": {
+    "en": "eleven",
+    "gender": null,
+    "pos": "num"
+  },
+  "tolv": {
+    "en": "twelve",
+    "gender": null,
+    "pos": "num"
+  },
+  "tretten": {
+    "en": "thirteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "fjorten": {
+    "en": "fourteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "femten": {
+    "en": "fifteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "seksten": {
+    "en": "sixteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "sytten": {
+    "en": "seventeen",
+    "gender": null,
+    "pos": "num"
+  },
+  "atten": {
+    "en": "eighteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "nitten": {
+    "en": "nineteen",
+    "gender": null,
+    "pos": "num"
+  },
+  "tyve": {
+    "en": "twenty",
+    "gender": null,
+    "pos": "num"
+  },
+  "tredive": {
+    "en": "thirty",
+    "gender": null,
+    "pos": "num"
+  },
+  "fyrre": {
+    "en": "forty",
+    "gender": null,
+    "pos": "num"
+  },
+  "halvtreds": {
+    "en": "fifty",
+    "gender": null,
+    "pos": "num"
+  },
+  "tres": {
+    "en": "sixty",
+    "gender": null,
+    "pos": "num"
+  },
+  "halvfjerds": {
+    "en": "seventy",
+    "gender": null,
+    "pos": "num"
+  },
+  "firs": {
+    "en": "eighty",
+    "gender": null,
+    "pos": "num"
+  },
+  "halvfems": {
+    "en": "ninety",
+    "gender": null,
+    "pos": "num"
+  },
+  "hundrede": {
+    "en": "hundred",
+    "gender": null,
+    "pos": "num"
+  },
+  "tusinde": {
+    "en": "thousand",
+    "gender": null,
+    "pos": "num"
+  },
+  "og": {
+    "en": "and",
+    "gender": null,
+    "pos": "conj"
+  },
+  "eller": {
+    "en": "or",
+    "gender": null,
+    "pos": "conj"
+  },
+  "men": {
+    "en": "but",
+    "gender": null,
+    "pos": "conj"
+  },
+  "fordi": {
+    "en": "because",
+    "gender": null,
+    "pos": "conj"
+  },
+  "hvis": {
+    "en": "if",
+    "gender": null,
+    "pos": "conj"
+  },
+  "når": {
+    "en": "when",
+    "gender": null,
+    "pos": "conj"
+  },
+  "da": {
+    "en": "when (past)",
+    "gender": null,
+    "pos": "conj"
+  },
+  "selvom": {
+    "en": "even though",
+    "gender": null,
+    "pos": "conj"
+  },
+  "mens": {
+    "en": "while",
+    "gender": null,
+    "pos": "conj"
+  },
+  "at": {
+    "en": "that / to (infinitive marker)",
+    "gender": null,
+    "pos": "conj"
+  },
+  "som": {
+    "en": "as / who / which",
+    "gender": null,
+    "pos": "conj"
+  },
+  "ikke": {
+    "en": "not",
+    "gender": null,
+    "pos": "adv"
+  },
+  "også": {
+    "en": "also / too",
+    "gender": null,
+    "pos": "adv"
+  },
+  "altid": {
+    "en": "always",
+    "gender": null,
+    "pos": "adv"
+  },
+  "aldrig": {
+    "en": "never",
+    "gender": null,
+    "pos": "adv"
+  },
+  "ofte": {
+    "en": "often",
+    "gender": null,
+    "pos": "adv"
+  },
+  "sjældent": {
+    "en": "rarely",
+    "gender": null,
+    "pos": "adv"
+  },
+  "normalt": {
+    "en": "normally",
+    "gender": null,
+    "pos": "adv"
+  },
+  "sommetider": {
+    "en": "sometimes",
+    "gender": null,
+    "pos": "adv"
+  },
+  "allerede": {
+    "en": "already",
+    "gender": null,
+    "pos": "adv"
+  },
+  "endnu": {
+    "en": "yet / still",
+    "gender": null,
+    "pos": "adv"
+  },
+  "stadig": {
+    "en": "still",
+    "gender": null,
+    "pos": "adv"
+  },
+  "igen": {
+    "en": "again",
+    "gender": null,
+    "pos": "adv"
+  },
+  "nu": {
+    "en": "now",
+    "gender": null,
+    "pos": "adv"
+  },
+  "snart": {
+    "en": "soon",
+    "gender": null,
+    "pos": "adv"
+  },
+  "her": {
+    "en": "here",
+    "gender": null,
+    "pos": "adv"
+  },
+  "der": {
+    "en": "there",
+    "gender": null,
+    "pos": "adv"
+  },
+  "meget": {
+    "en": "very / much",
+    "gender": null,
+    "pos": "adv"
+  },
+  "lidt": {
+    "en": "a little / a few",
+    "gender": null,
+    "pos": "adv"
+  },
+  "måske": {
+    "en": "maybe / perhaps",
+    "gender": null,
+    "pos": "adv"
+  },
+  "selvfølgelig": {
+    "en": "of course",
+    "gender": null,
+    "pos": "adv"
+  },
+  "desværre": {
+    "en": "unfortunately",
+    "gender": null,
+    "pos": "adv"
+  },
+  "heldigvis": {
+    "en": "fortunately",
+    "gender": null,
+    "pos": "adv"
+  },
+  "faktisk": {
+    "en": "actually",
+    "gender": null,
+    "pos": "adv"
+  },
+  "egentlig": {
+    "en": "actually / really",
+    "gender": null,
+    "pos": "adv"
+  },
+  "næsten": {
+    "en": "almost",
+    "gender": null,
+    "pos": "adv"
+  },
+  "kun": {
+    "en": "only / just",
+    "gender": null,
+    "pos": "adv"
+  },
+  "bare": {
+    "en": "just / simply",
+    "gender": null,
+    "pos": "adv"
+  },
+  "jo": {
+    "en": "you know / indeed",
+    "gender": null,
+    "pos": "adv"
+  },
+  "nok": {
+    "en": "probably / enough",
+    "gender": null,
+    "pos": "adv"
+  },
+  "godt": {
+    "en": "well / fine",
+    "gender": null,
+    "pos": "adv"
+  },
+  "af": {
+    "en": "of / by / off",
+    "gender": null,
+    "pos": "prep"
+  },
+  "med": {
+    "en": "with",
+    "gender": null,
+    "pos": "prep"
+  },
+  "til": {
+    "en": "to / for",
+    "gender": null,
+    "pos": "prep"
+  },
+  "fra": {
+    "en": "from",
+    "gender": null,
+    "pos": "prep"
+  },
+  "på": {
+    "en": "on / at",
+    "gender": null,
+    "pos": "prep"
+  },
+  "om": {
+    "en": "about / around",
+    "gender": null,
+    "pos": "prep"
+  },
+  "under": {
+    "en": "under / during",
+    "gender": null,
+    "pos": "prep"
+  },
+  "over": {
+    "en": "over / above",
+    "gender": null,
+    "pos": "prep"
+  },
+  "ved": {
+    "en": "by / near / know",
+    "gender": null,
+    "pos": "prep"
+  },
+  "hos": {
+    "en": "at (someone's place)",
+    "gender": null,
+    "pos": "prep"
+  },
+  "efter": {
+    "en": "after",
+    "gender": null,
+    "pos": "prep"
+  },
+  "før": {
+    "en": "before",
+    "gender": null,
+    "pos": "prep"
+  },
+  "mellem": {
+    "en": "between",
+    "gender": null,
+    "pos": "prep"
+  },
+  "uden": {
+    "en": "without",
+    "gender": null,
+    "pos": "prep"
+  },
+  "mod": {
+    "en": "towards / against",
+    "gender": null,
+    "pos": "prep"
+  },
+  "for": {
+    "en": "for / too",
+    "gender": null,
+    "pos": "prep"
+  },
+  "hvad": {
+    "en": "what",
+    "gender": null,
+    "pos": "pron"
+  },
+  "hvem": {
+    "en": "who",
+    "gender": null,
+    "pos": "pron"
+  },
+  "hvor": {
+    "en": "where",
+    "gender": null,
+    "pos": "adv"
+  },
+  "hvorfor": {
+    "en": "why",
+    "gender": null,
+    "pos": "adv"
+  },
+  "hvordan": {
+    "en": "how",
+    "gender": null,
+    "pos": "adv"
+  },
+  "hvornår": {
+    "en": "when",
+    "gender": null,
+    "pos": "adv"
+  },
+  "hej": {
+    "en": "hello / hi / bye",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "goddag": {
+    "en": "good day",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "farvel": {
+    "en": "goodbye",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "godmorgen": {
+    "en": "good morning",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "godaften": {
+    "en": "good evening",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "godnat": {
+    "en": "good night",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "undskyld": {
+    "en": "excuse me / sorry",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "tak": {
+    "en": "thank you",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "velbekomme": {
+    "en": "you're welcome / enjoy your meal",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "ja": {
+    "en": "yes",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "nej": {
+    "en": "no",
+    "gender": null,
+    "pos": "phrase"
+  },
+  "sprog": {
+    "en": "language",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "ord": {
+    "en": "word",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "navn": {
+    "en": "name",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "nummer": {
+    "en": "number",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "adresse": {
+    "en": "address",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "spørgsmål": {
+    "en": "question",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "svar": {
+    "en": "answer",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "problem": {
+    "en": "problem",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "idé": {
+    "en": "idea",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "musik": {
+    "en": "music",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sang": {
+    "en": "song",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sport": {
+    "en": "sport",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fodbold": {
+    "en": "football",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "film": {
+    "en": "film / movie",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "billede": {
+    "en": "picture / image",
+    "gender": "et",
+    "pos": "noun"
+  },
+  "penge": {
+    "en": "money",
+    "gender": "pl",
+    "pos": "noun"
+  },
+  "krone": {
+    "en": "krone (currency)",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "pris": {
+    "en": "price",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "uddannelse": {
+    "en": "education",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sundhed": {
+    "en": "health",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "sygdom": {
+    "en": "illness",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "medicin": {
+    "en": "medicine",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "stemning": {
+    "en": "atmosphere / mood",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "gave": {
+    "en": "gift",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "fest": {
+    "en": "party",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "farve": {
+    "en": "colour",
+    "gender": "en",
+    "pos": "noun"
+  },
+  "lyd": {
+    "en": "sound",
+    "gender": "en",
+    "pos": "noun"
+  }
+}
