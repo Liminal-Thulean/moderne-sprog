@@ -504,6 +504,26 @@
       "content": "Danes typically greet each other with 'hej' in almost all situations — with friends, teachers, shopkeepers, and even doctors. Unlike many other cultures, the formal 'De' (capital D) is rarely used in modern Denmark and may even sound strange to younger Danes. Your teacher will almost certainly ask you to call them by their first name. This reflects a core Danish value: lighed (equality). Everyone, regardless of age or position, is approachable. Don't be surprised if your Danish classmates seem very informal — it is not rudeness, it is culture."
     },
     {
+      "id": "free_writing_0",
+      "type": "free_writing",
+      "title": "Hvorfra kommer du? — Where are you from?",
+      "prompt": "In Danish, tell us where you come from. Which country? Which city? What is it like there?",
+      "guidance": "Use: Jeg kommer fra... / Jeg er fra... / Jeg bor i... / Det er en stor/lille by.",
+      "level": "A1 Danish — first unit, greetings and introductions",
+      "min_words": 15,
+      "max_score": 3
+    },
+    {
+      "id": "free_writing_1",
+      "type": "free_writing",
+      "title": "Skriv om dig selv — Write About Yourself",
+      "prompt": "Introduce yourself in Danish. Tell us your name, where you are from, how old you are, and something about your family. Use as many of the words and phrases from this unit as you can.",
+      "guidance": "Try to write at least 5-6 sentences. Use: Jeg hedder..., Jeg er fra..., Jeg er ... år gammel, Jeg har...",
+      "level": "A1 Danish — first unit, greetings and introductions",
+      "min_words": 20,
+      "max_score": 3
+    },
+    {
       "id": "unit_assessment_1",
       "type": "unit_assessment",
       "title": "Enhedsprøve — Unit Assessment",
@@ -672,6 +692,8 @@
       "grammar_1",
       "translation_1",
       "reading_1",
+      "free_writing_0",
+      "free_writing_1",
       "unit_assessment_1"
     ]
   }
