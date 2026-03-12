@@ -1,0 +1,270 @@
+{
+  "id": "m1_w4",
+  "module": 1,
+  "week": 4,
+  "title": "I klassen",
+  "theme": "Classroom vocabulary, school items, and indefinite/definite articles",
+  "description": "Learn the vocabulary of the classroom and school. Master Danish articles — the difference between 'en bog' and 'bogen', 'et bord' and 'bordet' — and practise asking what things are called.",
+  "module_n": false,
+  "completion": {
+    "threshold": 75,
+    "counted_sections": [
+      "grammar_articles",
+      "matching_classroom",
+      "mc_classroom",
+      "fill_articles",
+      "sentence_classroom",
+      "reading_classroom",
+      "translation_classroom"
+    ]
+  },
+  "sections": [
+    {
+      "id": "vocab_classroom",
+      "type": "vocab_intro",
+      "title": "I klassen — In the Classroom",
+      "words": [
+        { "da": "klasse", "en": "class / classroom", "example": "Jeg er i klasse 8B." },
+        { "da": "klasselokale", "en": "classroom", "example": "Klasselokalet er stort." },
+        { "da": "skole", "en": "school", "example": "Jeg går på Østre Skole." },
+        { "da": "lærer", "en": "teacher (male/neutral)", "example": "Min lærer hedder hr. Nielsen." },
+        { "da": "lærerinde", "en": "teacher (female, older usage)", "example": "Lærerinden er venlig." },
+        { "da": "elev", "en": "pupil / student", "example": "Der er tyve elever i klassen." },
+        { "da": "tavle", "en": "blackboard / whiteboard", "example": "Læreren skriver på tavlen." },
+        { "da": "bord", "en": "table / desk", "example": "Sæt dig ved bordet." },
+        { "da": "stol", "en": "chair", "example": "Min stol er grøn." },
+        { "da": "bog", "en": "book", "example": "Åbn bogen på side ti." },
+        { "da": "hæfte", "en": "exercise book / notebook", "example": "Skriv svaret i hæftet." },
+        { "da": "blyant", "en": "pencil", "example": "Må jeg låne en blyant?" },
+        { "da": "kuglepen", "en": "ballpoint pen", "example": "Jeg har mistet min kuglepen." },
+        { "da": "lineal", "en": "ruler", "example": "Har du en lineal?" },
+        { "da": "viskelæder", "en": "eraser / rubber", "example": "Jeg har brug for et viskelæder." },
+        { "da": "lommeregner", "en": "calculator", "example": "Brug ikke lommeregneren til denne opgave." },
+        { "da": "computer", "en": "computer", "example": "Åbn computeren." },
+        { "da": "taske", "en": "bag / schoolbag", "example": "Min taske er tung i dag." },
+        { "da": "vindue", "en": "window", "example": "Må jeg åbne vinduet?" },
+        { "da": "dør", "en": "door", "example": "Luk døren, tak." }
+      ]
+    },
+    {
+      "id": "vocab_school_verbs",
+      "type": "vocab_intro",
+      "title": "Skoleverber — School Verbs",
+      "words": [
+        { "da": "at skrive", "en": "to write", "example": "Skriv dit navn øverst." },
+        { "da": "at læse", "en": "to read", "example": "Læs teksten på side fem." },
+        { "da": "at lytte", "en": "to listen", "example": "Lyt godt efter." },
+        { "da": "at spørge", "en": "to ask", "example": "Du må gerne spørge læreren." },
+        { "da": "at svare", "en": "to answer", "example": "Svar på spørgsmålet." },
+        { "da": "at åbne", "en": "to open", "example": "Åbn bogen på side tolv." },
+        { "da": "at lukke", "en": "to close / shut", "example": "Luk hæftet." },
+        { "da": "at sidde", "en": "to sit", "example": "Sid ned, tak." },
+        { "da": "at stå", "en": "to stand", "example": "Stå op når læreren kommer." },
+        { "da": "at forstå", "en": "to understand", "example": "Forstår du opgaven?" }
+      ]
+    },
+    {
+      "id": "grammar_articles",
+      "type": "grammar_table",
+      "title": "Grammatik: Artikler — Articles",
+      "explanation": "Danish nouns have two genders: common (en-words) and neuter (et-words). The indefinite article is 'en' or 'et'. The definite article is not a separate word — it is a suffix added to the end of the noun. En-words add '-en', et-words add '-et'. Plurals add '-ene' (most words) or '-erne'. This is one of the most important patterns in Danish.",
+      "headers": ["", "Indefinite (a/an)", "Definite (the)", "Plural indefinite", "Plural definite"],
+      "rows": [
+        { "label": "en-word", "answers": ["en bog", "bogen", "bøger", "bøgerne"] },
+        { "label": "et-word", "answers": ["et bord", "bordet", "borde", "bordene"] },
+        { "label": "en-word", "answers": ["en stol", "stolen", "stole", "stolene"] },
+        { "label": "et-word", "answers": ["et vindue", "vinduet", "vinduer", "vinduerne"] },
+        { "label": "en-word", "answers": ["en taske", "tasken", "tasker", "taskerne"] },
+        { "label": "et-word", "answers": ["et hæfte", "hæftet", "hæfter", "hæfterne"] }
+      ]
+    },
+    {
+      "id": "matching_classroom",
+      "type": "matching",
+      "title": "Match ordene — Match the Words",
+      "pairs": [
+        { "da": "tavle", "en": "whiteboard" },
+        { "da": "blyant", "en": "pencil" },
+        { "da": "hæfte", "en": "exercise book" },
+        { "da": "viskelæder", "en": "eraser" },
+        { "da": "taske", "en": "schoolbag" },
+        { "da": "vindue", "en": "window" },
+        { "da": "kuglepen", "en": "pen" },
+        { "da": "lommeregner", "en": "calculator" }
+      ]
+    },
+    {
+      "id": "mc_classroom",
+      "type": "multiple_choice",
+      "title": "Hvad er det? — What is it?",
+      "instruction": "Choose the correct Danish word or article form.",
+      "questions": [
+        {
+          "prompt": "Which is correct? 'I need a book.'",
+          "options": ["Jeg har brug for en bog.", "Jeg har brug for et bog.", "Jeg har brug for en bogen.", "Jeg har brug for bogen."],
+          "answer": "Jeg har brug for en bog."
+        },
+        {
+          "prompt": "How do you say 'the table' in Danish?",
+          "options": ["et bord", "en bord", "bordet", "borden"],
+          "answer": "bordet"
+        },
+        {
+          "prompt": "Which word means 'to listen'?",
+          "options": ["at skrive", "at lytte", "at læse", "at svare"],
+          "answer": "at lytte"
+        },
+        {
+          "prompt": "How do you say 'the door' in Danish?",
+          "options": ["en dør", "døren", "døret", "et dør"],
+          "answer": "døren"
+        },
+        {
+          "prompt": "Which sentence means 'Open the book'?",
+          "options": ["Luk bogen.", "Skriv i bogen.", "Åbn bogen.", "Læs bogen."],
+          "answer": "Åbn bogen."
+        },
+        {
+          "prompt": "How do you say 'a window' in Danish?",
+          "options": ["en vindue", "et vinduen", "et vindue", "en vinduen"],
+          "answer": "et vindue"
+        },
+        {
+          "prompt": "What does 'der er tyve elever' mean?",
+          "options": ["There are twelve pupils.", "There are twenty pupils.", "There are two pupils.", "There are twenty teachers."],
+          "answer": "There are twenty pupils."
+        },
+        {
+          "prompt": "Which word means 'to understand'?",
+          "options": ["at spørge", "at sidde", "at forstå", "at stå"],
+          "answer": "at forstå"
+        }
+      ]
+    },
+    {
+      "id": "fill_articles",
+      "type": "fill_blank",
+      "title": "Udfyld artiklen — Fill in the Article",
+      "instruction": "Fill in the correct definite or indefinite form.",
+      "items": [
+        { "before": "Jeg har ", "after": " blyant. (a pencil — en-word)", "answer": "en" },
+        { "before": "Åbn ", "after": ", tak. (the book — en-word definite)", "answer": "bogen" },
+        { "before": "Sæt dig ved ", "after": ". (the table — et-word definite)", "answer": "bordet" },
+        { "before": "Læreren skriver på ", "after": ". (the whiteboard — en-word definite)", "answer": "tavlen" },
+        { "before": "Har du ", "after": " viskelæder? (an eraser — et-word)", "answer": "et" },
+        { "before": "Luk ", "after": ", tak. (the door — en-word definite)", "answer": "døren" },
+        { "before": "Jeg glemte ", "after": " derhjemme. (my exercise book — et-word definite)", "answer": "hæftet" },
+        { "before": "Må jeg åbne ", "after": "? (the window — et-word definite)", "answer": "vinduet" }
+      ]
+    },
+    {
+      "id": "sentence_classroom",
+      "type": "sentence_construction",
+      "title": "Byg sætningen — Build the Sentence",
+      "instruction": "Drag the word tiles into the correct order.",
+      "mode": "drag",
+      "items": [
+        {
+          "words": ["bogen", "Åbn", "side", "på", "ti", "."],
+          "answer": ["Åbn", "bogen", "på", "side", "ti", "."]
+        },
+        {
+          "words": ["klassen", "elever", "tyve", "i", "Der", "er", "."],
+          "answer": ["Der", "er", "tyve", "elever", "i", "klassen", "."]
+        },
+        {
+          "words": ["blyant", "Må", "låne", "jeg", "en", "?"],
+          "answer": ["Må", "jeg", "låne", "en", "blyant", "?"]
+        },
+        {
+          "words": ["tavlen", "skriver", "på", "Læreren", "."],
+          "answer": ["Læreren", "skriver", "på", "tavlen", "."]
+        },
+        {
+          "words": ["opgaven", "du", "Forstår", "?"],
+          "answer": ["Forstår", "du", "opgaven", "?"]
+        },
+        {
+          "words": ["taske", "tung", "Min", "er", "."],
+          "answer": ["Min", "taske", "er", "tung", "."]
+        }
+      ]
+    },
+    {
+      "id": "reading_classroom",
+      "type": "reading",
+      "title": "Læs om den første dag — Read About the First Day",
+      "text": "Mia er ny elev på Søndergaard Skole. Det er hendes første dag i klasse 7A. Hun er lidt nervøs.\n\nKlasselokalet er stort og lyst. Der er femogtyve elever i klassen. Læreren hedder hr. Andersen. Han er venlig og taler langsomt, så Mia kan forstå det meste.\n\nHr. Andersen siger: 'Åbn jeres bøger på side tre.' Mia åbner sin bog. Hun har også et nyt hæfte og to blyanter i sin taske. Hun har ikke en kuglepen, men hendes sidemakker låner hende en.\n\nEfter timen siger hr. Andersen: 'Luk jeres bøger og lyt.' Han skriver lektien på tavlen. Mia skriver lektien ned i sit hæfte. Det er en god begyndelse.",
+      "glossary": [
+        { "da": "ny", "en": "new" },
+        { "da": "nervøs", "en": "nervous" },
+        { "da": "lys", "en": "bright / light" },
+        { "da": "langsomt", "en": "slowly" },
+        { "da": "det meste", "en": "most of it" },
+        { "da": "sidemakker", "en": "classmate sitting next to you" },
+        { "da": "lektie", "en": "homework" },
+        { "da": "begyndelse", "en": "beginning" }
+      ],
+      "questions": [
+        {
+          "prompt": "Hvilken klasse er Mia i?",
+          "options": ["6A", "7A", "7B", "8A"],
+          "answer": "7A"
+        },
+        {
+          "prompt": "Hvad hedder læreren?",
+          "options": ["Hr. Nielsen", "Hr. Hansen", "Hr. Andersen", "Hr. Madsen"],
+          "answer": "Hr. Andersen"
+        },
+        {
+          "prompt": "Hvad låner sidemakkeren Mia?",
+          "options": ["En blyant", "En kuglepen", "Et viskelæder", "En lineal"],
+          "answer": "En kuglepen"
+        },
+        {
+          "prompt": "Hvad skriver hr. Andersen på tavlen?",
+          "options": ["Sit navn", "Dagens dato", "Lektien", "Elevernes navne"],
+          "answer": "Lektien"
+        },
+        {
+          "prompt": "Hvor mange elever er der i klassen?",
+          "options": ["Tyve", "Femogtyve", "Tredive", "Femten"],
+          "answer": "Femogtyve"
+        }
+      ]
+    },
+    {
+      "id": "translation_classroom",
+      "type": "translation",
+      "title": "Oversæt — Translate",
+      "instruction": "Translate each sentence into Danish.",
+      "direction": "en_to_da",
+      "items": [
+        { "prompt": "Open the book, please.", "answer": "Åbn bogen, tak." },
+        { "prompt": "There are twenty pupils in the class.", "answer": "Der er tyve elever i klassen." },
+        { "prompt": "May I borrow a pencil?", "answer": "Må jeg låne en blyant?", "alternatives": ["Må jeg låne en blyant?"] },
+        { "prompt": "The teacher writes on the whiteboard.", "answer": "Læreren skriver på tavlen." },
+        { "prompt": "Do you understand the task?", "answer": "Forstår du opgaven?" },
+        { "prompt": "Close the door, please.", "answer": "Luk døren, tak." }
+      ]
+    },
+    {
+      "id": "listening_w4",
+      "type": "listening_placeholder",
+      "title": "Lyt og forstå — Listen and Understand",
+      "description": "A teacher gives instructions at the start of a lesson. Listen and follow along.",
+      "transcript": "Godmorgen alle sammen. Sæt jer ned og tag jeres bøger frem. Åbn bogen på side sytten. Find også jeres hæfter frem — vi skal skrive i dag. Har alle en blyant eller kuglepen? Godt. Lyt nu godt efter. Jeg læser teksten højt, og så svarer I på spørgsmålene. Forstår I det? Spørgsmål? Nej? Godt, så begynder vi.",
+      "questions": [
+        "Hvilken side skal eleverne åbne bogen på?",
+        "Hvad skal eleverne bruge udover bogen?",
+        "Hvad gør læreren først?"
+      ]
+    },
+    {
+      "id": "cultural_w4",
+      "type": "cultural_note",
+      "title": "Kulturelt hjørne — Danish School Culture",
+      "content": "Danish schools have a distinctly informal atmosphere compared to many other countries. Students typically address teachers by their first name — calling a teacher 'hr. Andersen' as in today's reading would be quite unusual in a modern Danish school, where 'Lars' or 'Mette' is the norm. This reflects a broader Danish cultural value called 'lighed' (equality) — hierarchies are deliberately flattened. Students are expected to participate actively, ask questions, and disagree with the teacher. Sitting quietly and waiting to be called on is not the expected behaviour — in fact, silence from a student can be interpreted as disengagement. Group work ('gruppearbejde') is central to Danish pedagogy, and independent critical thinking is valued from an early age."
+    }
+  ]
+}
