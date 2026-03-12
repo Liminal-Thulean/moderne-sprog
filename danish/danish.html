@@ -397,8 +397,98 @@ function buildDict(base) {
 const DANISH_DICT = buildDict(DANISH_WORDLIST);
 
 const PRONOUNS = new Set(["jeg","du","han","hun","den","det","vi","i","de","man"]);
-const EN_NOUNS = new Set(["far","mor","bror","søster","lærer","elev","ven","veninde","hund","kat","bog","stol","dør","taske","skole","klasse","dag","uge","by","gade","bil","cykel","familie","mand","kvinde","dreng","pige","kæreste","onkel","tante","nabo","chef","sang","ting","blomst","skov","strand","gade","vej","uge","ferie","lejlighed"]);
-const ET_NOUNS = new Set(["barn","hus","bord","vindue","hæfte","viskelæder","værelse","køkken","badeværelse","fag","år","land","hotel","fly","tog","museum","bibliotek","supermarked","hospital","problem","spørgsmål","svar","sprog","ord","navn","billede","brev","nummer","brev"]);
+
+// ── Noun dictionary with gender ──────────────────────────────────────────────
+// Format: "lemma": "en"|"et"|"pl"
+// "pl" = inherently plural (no article), e.g. forældre, søskende, briller
+const NOUN_DICT = {
+  // People
+  "mand":"en","kvinde":"en","dreng":"en","pige":"en","person":"en","baby":"en",
+  "far":"en","mor":"en","forældre":"pl","søn":"en","datter":"en",
+  "bror":"en","søster":"en","søskende":"pl",
+  "bedstefar":"en","bedstemor":"en","bedsteforældre":"pl",
+  "farmor":"en","farfar":"en","morfar":"en","mormor":"en",
+  "onkel":"en","tante":"en","fætter":"en","kusine":"en",
+  "kæreste":"en","ven":"en","veninde":"en","nabo":"en",
+  "kollega":"en","chef":"en","elev":"en","lærer":"en","studerende":"en",
+  "barn":"et","menneske":"et","folk":"pl",
+  // School
+  "skole":"en","klasse":"en","klasselokale":"et","fag":"et","lektie":"en",
+  "opgave":"en","eksamen":"en","prøve":"en","karakter":"en",
+  "tavle":"en","bord":"et","stol":"en","vindue":"et","dør":"en",
+  "væg":"en","gulv":"et","loft":"et","trappe":"en",
+  "bog":"en","hæfte":"et","blyant":"en","kuglepen":"en","lineal":"en",
+  "viskelæder":"et","lommeregner":"en","computer":"en","skærm":"en",
+  "taske":"en","rygsæk":"en","pung":"en","nøgle":"en",
+  "telefon":"en","mobil":"en","ur":"et","briller":"pl",
+  // Food & drink
+  "morgenmad":"en","frokost":"en","aftensmad":"en","mad":"en","drikke":"en",
+  "brød":"et","rugbrød":"et","smørrebrød":"et","bolle":"en","kage":"en",
+  "ost":"en","smør":"et","æg":"et","kød":"et","fisk":"en",
+  "frugt":"en","grøntsager":"pl","kartoffel":"en","ris":"et","pasta":"en",
+  "suppe":"en","salat":"en","sandwich":"en",
+  "vand":"et","mælk":"en","juice":"en","kaffe":"en","te":"en",
+  "øl":"et","vin":"en","sodavand":"en",
+  // Home
+  "hus":"et","lejlighed":"en","værelse":"et","køkken":"et",
+  "stue":"en","soveværelse":"et","badeværelse":"et","have":"en",
+  // Places
+  "by":"en","gade":"en","vej":"en","plads":"en","park":"en",
+  "skov":"en","strand":"en","sø":"en","bjerg","mark":"en",
+  "land":"et","landsby":"en","hovedstad":"en","verden":"en",
+  "restaurant":"en","café":"en","kantine":"en","bageri":"et",
+  "butik":"en","supermarked":"et","bibliotek":"et","posthus":"et","bank":"en",
+  "skole":"en","hospital":"et","museum":"et","biograf":"en","teater":"et",
+  // Time
+  "dag":"en","uge":"en","måned":"en","år":"et","time":"en",
+  "minut":"et","sekund":"et","weekend":"en","ferie":"en",
+  "morgen":"en","middag":"en","aften":"en","nat":"en",
+  // Transport
+  "bil":"en","cykel":"en","bus":"en","tog":"et","fly":"et",
+  "metro":"en","båd":"en","rejse":"en","ferie":"en",
+  "hotel":"et","billet":"en","pas":"et","kuffert":"en","bagage":"en",
+  // Body
+  "krop":"en","hoved":"et","øje":"et","øre":"et","næse":"en",
+  "mund":"en","hånd":"en","arm":"en","ben":"et","fod":"en","hjerte":"et",
+  // Clothes
+  "tøj":"et","skjorte":"en","bukser":"pl","kjole":"en","jakke":"en",
+  "frakke":"en","sweater":"en","sko":"en","hat":"en","tørklæde":"et",
+  // Animals
+  "hund":"en","kat":"en","fugl":"en","hest":"en","ko":"en","gris":"en","får":"et",
+  // Abstract / misc
+  "sprog":"et","ord":"et","navn":"et","nummer":"et","adresse":"en",
+  "spørgsmål":"et","svar":"et","problem":"et","ide":"en","idé":"en",
+  "musik":"en","sang":"en","melodi":"en","koncert":"en","festival":"en",
+  "sport":"en","fodbold":"en","film":"en","billede":"et","foto":"et",
+  "penge":"pl","krone":"en","pris":"en","tilbud":"et",
+  "sundhed":"en","sygdom":"en","medicin":"en","smerte":"en",
+  "arbejde":"et","job":"et","karriere":"en","uddannelse":"en",
+  "farve":"en","lyd":"en","lys":"et","mørke":"et",
+  "gave":"en","fest":"en","hygge":"en","stemning":"en",
+};
+
+// Derive EN_NOUNS and ET_NOUNS sets from NOUN_DICT for backward compat
+const EN_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "en"));
+const ET_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "et"));
+const PL_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "pl"));
+
+// Definite/plural suffixes to strip when looking up a word in NOUN_DICT
+function getNounLemma(word) {
+  const w = word.toLowerCase().replace(/[,.!?;:]/g, "");
+  // Try exact first
+  if (NOUN_DICT[w]) return w;
+  // Strip common suffixes longest-first
+  const suffixes = ["erne","ene","ene","ens","ets","ers","en","et","er","e","s"];
+  for (const sfx of suffixes) {
+    if (w.endsWith(sfx)) {
+      const stem = w.slice(0, -sfx.length);
+      if (NOUN_DICT[stem]) return stem;
+      // Handle double-consonant stems: "borde" → "bord"
+      if (stem.length > 2 && NOUN_DICT[stem.slice(0,-1)]) return stem.slice(0,-1);
+    }
+  }
+  return null;
+}
 
 function tokeniseText(text) {
   const tokens = [];
@@ -415,7 +505,7 @@ function checkSpelling(tokens) {
     if (!t.isWord) return false;
     const w = t.word.toLowerCase();
     if (/^\d+$/.test(w)) return false;
-    if (t.word[0] === t.word[0].toUpperCase() && t.start > 0) return false; // skip proper nouns
+    if (t.word[0] === t.word[0].toUpperCase() && t.start > 0) return false;
     return !DANISH_DICT.has(w);
   }).map(t => ({...t, type:"spelling"}));
 }
@@ -424,78 +514,167 @@ function getSentences(text) {
   return text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
 }
 
+// ── V2 checker ───────────────────────────────────────────────────────────────
+// Strategy: if the first constituent of a sentence is NOT a subject pronoun
+// or subject noun, the second constituent must be a verb (not a pronoun/noun).
+// We detect the violation: fronted-element + PRONOUN + non-verb = likely V2 error.
+
+const FRONTED_ADVERBS = new Set([
+  "i dag","i morgen","i går","i aftes","i nat","i år","i sommer",
+  "her","der","nu","så","derfor","alligevel","desuden","faktisk","normalt",
+  "altid","aldrig","sommetider","indimellem","ofte","sjældent",
+  "om morgenen","om aftenen","om natten","om lørdagen","om søndagen",
+  "til sidst","til slut","først","derefter","bagefter",
+  "heldigvis","desværre","forhåbentlig","selvfølgelig",
+  "egentlig","ellers","næsten","pludselig",
+]);
+
+// Verbs that commonly appear as V2 position (present tense)
+const COMMON_VERBS = new Set([
+  "er","var","har","havde","bliver","blev","gør","gjorde","siger","sagde",
+  "ser","så","kommer","kom","går","gik","tager","tog","vide","ved","vidste",
+  "giver","gav","får","fik","hedder","hed","arbejder","arbejdede","bor","boede",
+  "spiser","spiste","drikker","drak","lærer","lærte","taler","talte",
+  "skriver","skrev","læser","læste","lytter","lyttede","spørger","spurgte",
+  "svarer","svarede","forstår","forstod","elsker","elskede","bruger","brugte",
+  "husker","huskede","glemmer","glemte","prøver","prøvede","laver","lavede",
+  "hjælper","hjalp","tænker","tænkte","fortæller","fortalte","møder","mødte",
+  "kører","kørte","rejser","rejste","sover","sov","vågner","vågnede",
+  "kan","vil","skal","må","bør","burde","tør",
+  "starter","begynder","slutter","stopper","venter","ringer","smager",
+  "cykler","svømmer","danser","spiller","synger","løber","tegner","maler","bager",
+  "handler","sparer","låner","inviterer","studerer","forklarer","beskriver",
+]);
+
 function checkV2(sentence) {
-  const words = sentence.trim().split(/\s+/).map(w => w.toLowerCase().replace(/[,.!?;:]/g,""));
+  const raw   = sentence.trim();
+  const lower = raw.toLowerCase();
+  const words = lower.replace(/[,.!?;:]/g, " ").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
   if (words.length < 3) return null;
-  const ADVERB_STARTERS = ["i dag","i morgen","i går","her","der","nu","så","derfor","normalt","altid","aldrig","sommetider","om morgenen","om aftenen","om natten","til sidst","først","derefter","bagefter","alligevel","desuden","faktisk"];
-  const lower = sentence.toLowerCase();
-  const startsWithAdverb = ADVERB_STARTERS.some(a => lower.startsWith(a));
-  if (!startsWithAdverb) return null;
-  // Find where the adverb ends and check if next word is a subject pronoun (V2 violation)
-  const firstWord = words[0];
-  const firstTwo  = words.slice(0,2).join(" ");
-  const adverbEnd = ADVERB_STARTERS.find(a => lower.startsWith(a));
-  if (!adverbEnd) return null;
-  const afterAdverb = lower.slice(adverbEnd.length).trim().split(/\s+/);
-  if (afterAdverb.length > 0 && PRONOUNS.has(afterAdverb[0].replace(/[,.!?]/g,""))) {
-    return { type:"v2", message:`Word order (V2): After "${adverbEnd}", the verb should come before the subject. E.g. "I dag spiser jeg..." not "I dag jeg spiser..."` };
+
+  // Check if sentence starts with a known fronted adverb (1 or 2 word)
+  let frontedEnd = 0;
+  let frontedText = "";
+  // Try two-word adverbs first
+  const firstTwo = words.slice(0, 2).join(" ");
+  const firstOne = words[0];
+  if (FRONTED_ADVERBS.has(firstTwo)) { frontedEnd = 2; frontedText = firstTwo; }
+  else if (FRONTED_ADVERBS.has(firstOne)) { frontedEnd = 1; frontedText = firstOne; }
+
+  if (!frontedEnd) return null;
+
+  // What comes after the fronted adverb?
+  const afterFront = words.slice(frontedEnd);
+  if (afterFront.length < 2) return null;
+
+  const w1 = afterFront[0]; // should be verb in correct V2
+  const w2 = afterFront[1]; // should be subject in correct V2
+
+  // Violation: subject pronoun comes BEFORE the verb
+  // i.e. after the fronted element we see: PRONOUN then VERB (or anything)
+  if (PRONOUNS.has(w1) && (COMMON_VERBS.has(w2) || w2.endsWith("er") || w2.endsWith("ede"))) {
+    return {
+      type: "v2",
+      message: `Word order (V2 rule): After "${frontedText}", the verb must come before the subject. ` +
+        `Write: "${frontedText} ${w2} ${w1}..." not "${frontedText} ${w1} ${w2}..."`
+    };
   }
   return null;
 }
 
+// ── Article checker ──────────────────────────────────────────────────────────
+// Now uses NOUN_DICT for accurate gender lookup.
+// Also checks: bare noun (no article) after verb — flags missing article.
+
+const DETERMINERS = new Set(["en","et","den","det","de","min","mit","mine","din","dit","dine",
+  "hans","hendes","vores","jeres","deres","en","et","ingen","nogen","alle","begge"]);
+
 function checkArticles(sentence) {
   const warnings = [];
   const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
+
   words.forEach((w, i) => {
-    if (w !== "en" && w !== "et") return;
-    const next = words[i+1];
-    if (!next) return;
-    const base = next.replace(/(en|et|erne|ene|er|e)$/,"");
-    if (w === "en" && ET_NOUNS.has(base)) warnings.push({ type:"article", message:`"${next}" is an et-word — use "et ${next}" not "en ${next}"` });
-    if (w === "et" && EN_NOUNS.has(base)) warnings.push({ type:"article", message:`"${next}" is an en-word — use "en ${next}" not "et ${next}"` });
+    // 1. Article used — check it matches the noun's gender
+    if (w === "en" || w === "et") {
+      const next = words[i+1];
+      if (!next) return;
+      const lemma = getNounLemma(next);
+      if (!lemma) return; // unknown noun, skip
+      const gender = NOUN_DICT[lemma];
+      if (gender === "pl") {
+        warnings.push({ type:"article", message:`"${next}" is always plural — no article needed. Remove "en/et" before "${next}".` });
+      } else if (w === "en" && gender === "et") {
+        warnings.push({ type:"article", message:`"${next}" is an et-word — use "et ${next}", not "en ${next}".` });
+      } else if (w === "et" && gender === "en") {
+        warnings.push({ type:"article", message:`"${next}" is an en-word — use "en ${next}", not "et ${next}".` });
+      }
+    }
+
+    // 2. Noun appears directly after a verb or preposition without any determiner
+    // Heuristic: if current word is a known verb/prep and next word is a known noun (no det before it)
+    const lemma = getNounLemma(w);
+    if (lemma && NOUN_DICT[lemma] !== "pl") {
+      const prev = words[i-1];
+      if (prev && !DETERMINERS.has(prev) && !COMMON_VERBS.has(prev)) {
+        // two consecutive content words — second might be bare noun after noun (e.g. noun phrase)
+        // only flag if prev is also a noun (two nouns in a row without connector = likely missing article)
+        const prevLemma = getNounLemma(prev);
+        if (prevLemma && NOUN_DICT[prevLemma]) {
+          const expectedArt = NOUN_DICT[lemma] === "et" ? "et" : "en";
+          warnings.push({ type:"article", message:`Missing article before "${w}"? Expected "${expectedArt} ${lemma}" — unless this is a compound noun.` });
+        }
+      }
+    }
   });
   return warnings;
 }
 
+// ── Possessive checker ───────────────────────────────────────────────────────
 function checkPossessives(sentence) {
   const warnings = [];
   const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
-  const POSS = { "min":"en","mit":"et","mine":"plural","din":"en","dit":"et","dine":"plural" };
+  const POSS = { "min":"en","mit":"et","mine":"pl","din":"en","dit":"et","dine":"pl" };
   words.forEach((w, i) => {
     const gender = POSS[w];
     if (!gender) return;
     const next = words[i+1];
     if (!next) return;
-    const base = next.replace(/(en|et|erne|ene|er|e)$/,"");
-    if (gender === "en" && ET_NOUNS.has(base)) {
-      const fix = (w==="min")?"mit":"dit";
-      warnings.push({ type:"possessive", message:`"${next}" is an et-word — use "${fix} ${next}" not "${w} ${next}"` });
+    const lemma = getNounLemma(next);
+    if (!lemma) return;
+    const nounGender = NOUN_DICT[lemma];
+    if (!nounGender) return;
+    if (gender === "en" && nounGender === "et") {
+      const fix = (w==="min") ? "mit" : "dit";
+      warnings.push({ type:"possessive", message:`"${next}" is an et-word — use "${fix} ${next}", not "${w} ${next}".` });
     }
-    if (gender === "et" && EN_NOUNS.has(base)) {
-      const fix = (w==="mit")?"min":"din";
-      warnings.push({ type:"possessive", message:`"${next}" is an en-word — use "${fix} ${next}" not "${w} ${next}"` });
+    if (gender === "et" && nounGender === "en") {
+      const fix = (w==="mit") ? "min" : "din";
+      warnings.push({ type:"possessive", message:`"${next}" is an en-word — use "${fix} ${next}", not "${w} ${next}".` });
+    }
+    if ((gender === "pl" || gender === "en" || gender === "et") && nounGender === "pl") {
+      const fix = (w==="min"||w==="mit") ? "mine" : "dine";
+      if (w !== fix) warnings.push({ type:"possessive", message:`"${next}" is plural — use "${fix} ${next}", not "${w} ${next}".` });
     }
   });
   return warnings;
 }
 
 function runDanishChecks(text) {
-  const tokens   = tokeniseText(text);
-  const spelling = checkSpelling(tokens);
-  const sentences = getSentences(text);
-  const grammar  = [];
+  const tokens      = tokeniseText(text);
+  const spelling    = checkSpelling(tokens);
+  const sentences   = getSentences(text);
+  const grammar     = [];
   sentences.forEach(s => {
     const v2 = checkV2(s);
     if (v2) grammar.push(v2);
-    checkArticles(s).forEach(e   => grammar.push(e));
+    checkArticles(s).forEach(e    => grammar.push(e));
     checkPossessives(s).forEach(e => grammar.push(e));
   });
-  const wordCount = tokens.filter(t => t.isWord).length;
+  const wordCount     = tokens.filter(t => t.isWord).length;
   const sentenceCount = sentences.length;
-  // Score: start at 100, deduct per error
-  const totalErrors = spelling.length + grammar.length;
-  const errorRate   = wordCount > 0 ? totalErrors / wordCount : 0;
-  const score       = Math.max(0, Math.round((1 - errorRate * 3) * 100));
+  const totalErrors   = spelling.length + grammar.length;
+  const errorRate     = wordCount > 0 ? totalErrors / wordCount : 0;
+  const score         = Math.max(0, Math.round((1 - errorRate * 3) * 100));
   return { spelling, grammar, tokens, wordCount, sentenceCount, score };
 }
 
