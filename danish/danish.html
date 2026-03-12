@@ -919,14 +919,21 @@ function SectionRenderer({section, onScore, scores}) {
   const score = scores[section.id];
   const label = TYPE_LABELS[section.type] || section.type;
   const isScored = ["matching","multiple_choice","fill_blank","sentence_construction","grammar_table","translation","reading","unit_assessment"].includes(section.type);
+  const isSaved = isScored && score;
 
   return (
     <div className="section-card fade-up">
       <div className="section-header">
         <span className="section-type-badge">{label}</span>
         <span className="section-title">{section.title}</span>
-        {isScored && score && <ScoreBadge score={score.correct} total={score.total} submitted={true}/>}
+        {isSaved && <ScoreBadge score={score.correct} total={score.total} submitted={true}/>}
       </div>
+      {isSaved && section.type!=="unit_assessment" && (
+        <div style={{margin:"0 0 12px 0",padding:"7px 14px",background:"rgba(45,122,80,0.07)",border:"1px solid rgba(45,122,80,0.2)",borderRadius:"6px",fontSize:"12px",color:"var(--green)",display:"flex",alignItems:"center",gap:"8px"}}>
+          <span>✓</span>
+          <span>Saved — {score.correct}/{score.total} correct. You can redo this exercise or move on.</span>
+        </div>
+      )}
       <div className="section-body">
         {section.type==="vocab_intro"           && <VocabIntro section={section}/>}
         {section.type==="matching"              && <Matching section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
@@ -946,9 +953,9 @@ function SectionRenderer({section, onScore, scores}) {
 
 // ─── UNIT VIEW ────────────────────────────────────────────────────────────────
 
-function UnitView({unit, courseUnit, onBack, onComplete}) {
+function UnitView({unit, courseUnit, savedScores, onBack, onComplete, onSectionScore, userId}) {
   const [activeSection, setActiveSection] = React.useState(unit.sections[0].id);
-  const [scores, setScores] = React.useState({});
+  const [scores, setScores] = React.useState(savedScores||{});
   const [showComplete, setShowComplete] = React.useState(false);
 
   const scoredSections = unit.sections.filter(s=>unit.completion.counted_sections.includes(s.id));
@@ -970,6 +977,10 @@ function UnitView({unit, courseUnit, onBack, onComplete}) {
 
   const handleScore = (sectionId, correct, total) => {
     setScores(s=>({...s,[sectionId]:{correct,total}}));
+    // Persist immediately in background
+    if (onSectionScore && unit.id) {
+      onSectionScore(unit.id, sectionId, correct, total);
+    }
   };
 
   const activeSec = unit.sections.find(s=>s.id===activeSection);
@@ -1234,12 +1245,31 @@ function App() {
     });
   },[]);
 
-  const selectUnit = (unitId) => {
+  const selectUnit = async (unitId) => {
     setLoading(true);
-    fetch(`${unitId}.json`)
-      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(u=>{ setUnitData(u); setActiveUnit(unitId); setLoading(false); })
-      .catch(e=>{ setError(`Could not load unit: ${e.message}`); setLoading(false); });
+    try {
+      // Load unit JSON and any saved section scores in parallel
+      const [unitJson, scoresRes] = await Promise.all([
+        fetch(`${unitId}.json`).then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }),
+        user
+          ? _supabase.from("section_scores")
+              .select("section_id, correct, total")
+              .eq("user_id", user.id)
+              .eq("unit_id", unitId)
+          : Promise.resolve({data:[]})
+      ]);
+      // Rebuild scores map from saved rows
+      const savedScores = {};
+      (scoresRes.data||[]).forEach(row=>{
+        savedScores[row.section_id] = {correct:row.correct, total:row.total};
+      });
+      setUnitData({...unitJson, _savedScores: savedScores});
+      setActiveUnit(unitId);
+      setLoading(false);
+    } catch(e) {
+      setError(`Could not load unit: ${e.message}`);
+      setLoading(false);
+    }
   };
 
   const completeUnit = async (unitId, scores) => {
@@ -1300,6 +1330,18 @@ function App() {
     }
   };
 
+  const saveSection = async (unitId, sectionId, correct, total) => {
+    if (!user) return;
+    await _supabase.from("section_scores").upsert({
+      user_id: user.id,
+      unit_id: unitId,
+      section_id: sectionId,
+      correct,
+      total,
+      attempted_at: new Date().toISOString(),
+    }, {onConflict:"user_id,unit_id,section_id"});
+  };
+
   const getCourseUnit = (unitId) => {
     if (!course) return null;
     for (const mod of course.modules) {
@@ -1354,7 +1396,7 @@ function App() {
       )}
 
       {!loading && !error && activeUnit && unitData && (
-        <UnitView unit={unitData} courseUnit={getCourseUnit(activeUnit)} onBack={()=>{setActiveUnit(null);setUnitData(null);}} onComplete={completeUnit}/>
+        <UnitView unit={unitData} courseUnit={getCourseUnit(activeUnit)} savedScores={unitData._savedScores||{}} onBack={()=>{setActiveUnit(null);setUnitData(null);}} onComplete={completeUnit} onSectionScore={saveSection} userId={user?.id}/>
       )}
     </div>
   );
