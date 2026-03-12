@@ -258,6 +258,247 @@ input:focus{outline:none}
 
 // ─── UTILITIES ────────────────────────────────────────────────────────────────
 
+// ─── DANISH LANGUAGE CHECKER ──────────────────────────────────────────────────
+
+const DANISH_WORDLIST = new Set([
+  "jeg","du","han","hun","det","den","vi","i","de","man",
+  "mig","dig","ham","hende","os","dem","sig",
+  "min","mit","mine","din","dit","dine","hans","hendes","vores","jeres","deres",
+  "en","et","og","eller","men","for","som","at","af","med","til","fra",
+  "på","om","under","over","ved","hos","efter","før","mellem","uden","mod",
+  "da","når","hvis","fordi","selvom","mens","indtil","siden",
+  "der","her","nu","så","meget","lidt","godt","også","bare","jo","nok",
+  "hvad","hvem","hvor","hvorfor","hvordan","hvornår","hvilken","hvilket","hvilke",
+  "denne","dette","disse","alle","ingen","nogen","noget","mange","få",
+  "mere","mest","mindre","mindst","alt","intet","ja","nej","tak","selvfølgelig","måske",
+  "være","er","var","været","have","har","havde","haft","blive","bliver","blev","blevet",
+  "gøre","gør","gjorde","gjort","sige","siger","sagde","sagt","se","ser","sat",
+  "komme","kommer","kom","kommet","gå","går","gik","gået","tage","tager","tog","taget",
+  "vide","ved","vidste","vidst","give","giver","gav","givet","få","får","fik","fået",
+  "stå","står","stod","stået","sætte","sætter","satte",
+  "hedde","hedder","hed","arbejde","arbejder","arbejdede","arbejdet",
+  "bo","bor","boede","boet","spise","spiser","spiste","spist",
+  "drikke","drikker","drak","drukket","lære","lærer","lærte","lært",
+  "tale","taler","talte","talt","skrive","skriver","skrev","skrevet",
+  "læse","læser","læste","læst","lytte","lytter","lyttede","lyttet",
+  "spørge","spørger","spurgte","spurgt","svare","svarer","svarede","svaret",
+  "åbne","åbner","åbnede","åbnet","lukke","lukker","lukkede","lukket",
+  "sidde","sidder","sad","siddet","forstå","forstår","forstod","forstået",
+  "elske","elsker","elskede","elsket","bruge","bruger","brugte","brugt",
+  "huske","husker","huskede","husket","glemme","glemmer","glemte","glemt",
+  "prøve","prøver","prøvede","prøvet","lave","laver","lavede","lavet",
+  "hjælpe","hjælper","hjalp","hjulpet","tænke","tænker","tænkte","tænkt",
+  "fortælle","fortæller","fortalte","fortalt","møde","møder","mødte","mødt",
+  "køre","kører","kørte","kørt","rejse","rejser","rejste","rejst",
+  "flytte","flytter","flyttede","flyttet","betale","betaler","betalte","betalt",
+  "sove","sover","sov","sovet","vågne","vågner","vågnede","vågnet",
+  "lide","lider","led","kende","kender","kendte","kendt",
+  "kunne","kan","ville","vil","skulle","skal","måtte","må","burde","bør",
+  "begynde","begynder","begyndte","begyndt","slutte","slutter","sluttede","sluttet",
+  "smage","smager","smagte","smagt","ringe","ringer","ringede","ringet",
+  "cykle","cykler","cyklede","cyklet","svømme","svømmer","svømmede","svømmet",
+  "danse","danser","dansede","danset","spille","spiller","spillede","spillet",
+  "synge","synger","sang","sunget","løbe","løber","løb","løbet",
+  "tegne","tegner","tegnede","tegnet","male","maler","malede","malet",
+  "bage","bager","bagte","bagt","vaske","vasker","vaskede","vasket",
+  "handle","handler","handlede","handlet","spare","sparer","sparede","sparet",
+  "låne","låner","lånte","lånt","invitere","inviterer","inviterede","inviteret",
+  "studere","studerer","studerede","studeret","undervise","underviser","underviste","undervist",
+  "forklare","forklarer","forklarede","forklaret","beskrive","beskriver","beskrev","beskrevet",
+  "mand","kvinde","dreng","pige","barn","baby","person","folk","menneske","mennesker",
+  "familie","far","mor","forældre","søn","datter","bror","søster","søskende",
+  "bedstefar","bedstemor","bedsteforældre","farmor","farfar","morfar","mormor",
+  "onkel","tante","fætter","kusine","kæreste","ven","veninde","nabo","kollega","chef",
+  "elev","lærer","lærerinde","rektor","studerende",
+  "skole","klasse","klasselokale","fag","lektie","opgave","eksamen","prøve","karakter",
+  "bord","stol","tavle","vindue","dør","væg","gulv","loft","trappe",
+  "bog","hæfte","blyant","kuglepen","lineal","viskelæder","lommeregner","computer","skærm",
+  "taske","rygsæk","pung","nøgle","telefon","mobil","ur","briller",
+  "mad","drikke","morgenmad","frokost","aftensmad",
+  "brød","rugbrød","smørrebrød","bolle","kage","ost","smør","æg","kød","fisk",
+  "frugt","grøntsager","kartofler","ris","pasta","suppe","salat",
+  "vand","mælk","juice","kaffe","te","øl","vin","sodavand",
+  "hus","lejlighed","værelse","køkken","stue","soveværelse","badeværelse","have",
+  "by","gade","vej","plads","park","skov","strand","sø","bjerg","mark",
+  "land","landsby","hovedstad","verden",
+  "dag","uge","måned","år","time","minut","sekund","weekend","ferie","helligdag",
+  "mandag","tirsdag","onsdag","torsdag","fredag","lørdag","søndag",
+  "januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december",
+  "forår","sommer","efterår","vinter","vejr","sol","regn","sne","vind","sky",
+  "rød","blå","grøn","gul","hvid","sort","grå","brun","orange","lilla","pink",
+  "sport","fodbold","basketball","tennis","svømning","dans","yoga",
+  "film","biograf","teater","museum","koncert","festival",
+  "penge","krone","øre","pris","rabat","tilbud","gratis",
+  "sundhed","sygdom","læge","hospital","medicin","smerte","feber","hoste",
+  "krop","hoved","øje","øre","næse","mund","hånd","arm","ben","fod","hjerte",
+  "tøj","skjorte","bukser","kjole","jakke","frakke","sweater","sko","støvler","hat","tørklæde",
+  "hygge","stemning","fest","gave","tillykke",
+  "hund","kat","fugl","hest","ko","gris","får",
+  "hotel","fly","tog","bus","metro","cykel","bil","båd","kort","billet","pas","bagage","kuffert",
+  "restaurant","café","kantine","bageri","butik","supermarked","bibliotek","posthus","bank",
+  "musik","sang","melodi","guitar","klaver",
+  "adresse","postnummer","email","internet","app",
+  "verden","europa","asien","afrika","danmark","norge","sverige","england","tyskland","frankrig",
+  "københavn","aarhus","odense","aalborg","horsens","herning",
+  "nul","en","et","to","tre","fire","fem","seks","syv","otte","ni","ti",
+  "elleve","tolv","tretten","fjorten","femten","seksten","sytten","atten","nitten","tyve",
+  "enogtyve","toogtyve","tredive","fyrre","halvtreds","tres","halvfjerds","firs","halvfems","hundrede","tusinde",
+  "første","anden","tredje","fjerde","femte","sjette","syvende","ottende","niende","tiende",
+  "god","godt","gode","dårlig","dårligt","dårlige",
+  "stor","stort","store","lille","små",
+  "lang","langt","lange","kort","korte",
+  "høj","højt","høje","lav","lavt","lave",
+  "gammel","gammelt","gamle","ung","ungt","unge","ny","nyt","nye",
+  "smuk","smukt","smukke","glad","glade","ked","kede","sur","sure",
+  "træt","trætte","frisk","friske","syg","sygt","syge","rask","raske",
+  "varm","varmt","varme","kold","koldt","kolde",
+  "lys","lyst","lyse","mørk","mørkt","mørke","stille",
+  "hurtig","hurtigt","hurtige","langsom","langsomt","langsomme",
+  "let","lette","svær","svært","svære","nem","nemt","nemme",
+  "sjov","sjovt","sjove","kedelig","kedeligt","kedelige",
+  "interessant","interessante","vigtig","vigtigt","vigtige",
+  "venlig","venligt","venlige","rolig","roligt","rolige",
+  "nervøs","nervøst","nervøse","sulten","sultent","sultne","mæt","mætte",
+  "tørstig","tørstige","billig","billigt","billige","dyr","dyrt","dyre",
+  "ren","rent","rene","beskidt","beskidte","hel","helt","hele",
+  "dansk","norsk","svensk","engelsk","tysk","fransk","spansk","arabisk","tyrkisk","polsk",
+  "europæisk","asiatisk","afrikansk","amerikansk",
+  "gift","skilt","ugift","enlig","aktiv","aktivt","aktive",
+  "klog","klogt","kloge","modig","modigt","modige","bange","trist","triste","lykkelig","lykkelige",
+  "meget","lidt","ganske","ret","temmelig","særlig","især",
+  "altid","aldrig","ofte","sjældent","normalt","sommetider","indimellem",
+  "allerede","endnu","stadig","igen","endelig","pludselig","straks","snart",
+  "her","der","overalt","hjemme","ude","inde","oppe","nede","frem","tilbage","videre","væk",
+  "selvfølgelig","naturligvis","heldigvis","desværre","forhåbentlig",
+  "næsten","præcis","netop","kun","også","derefter","bagefter",
+  "hej","goddag","farvel","godmorgen","godaften","godnat",
+  "undskyld","velbekomme","hyggeligt","velkommen",
+  "tak","mange","ingen","årsag","nummer","side","klokken","gang","gange",
+  "noget","nogen","ingen","hver","begge","hinanden","selv","os","jer",
+  "tung","tungt","tunge","nem","nemt","nemme","anderledes","forskellig","fælles",
+  "lidt","meget","hurtigt","langsomt","stille","højt","pænt","dejligt","godt",
+  "sikkert","næsten","egentlig","faktisk","nemlig","alligevel","desuden","ellers",
+]);
+
+function buildDict(base) {
+  const d = new Set(base);
+  base.forEach(w => {
+    ["en","et","ene","erne","er","e","r","ede","te","de","t","ere","est","este","s","es","ne","nde"].forEach(sfx => {
+      d.add(w + sfx);
+    });
+    if (w.length > 4 && w[w.length-1] === w[w.length-2]) {
+      const stem = w.slice(0,-1);
+      ["er","ede","et","ende","e"].forEach(sfx => d.add(stem + sfx));
+    }
+  });
+  return d;
+}
+
+const DANISH_DICT = buildDict(DANISH_WORDLIST);
+
+const PRONOUNS = new Set(["jeg","du","han","hun","den","det","vi","i","de","man"]);
+const EN_NOUNS = new Set(["far","mor","bror","søster","lærer","elev","ven","veninde","hund","kat","bog","stol","dør","taske","skole","klasse","dag","uge","by","gade","bil","cykel","familie","mand","kvinde","dreng","pige","kæreste","onkel","tante","nabo","chef","sang","ting","blomst","skov","strand","gade","vej","uge","ferie","lejlighed"]);
+const ET_NOUNS = new Set(["barn","hus","bord","vindue","hæfte","viskelæder","værelse","køkken","badeværelse","fag","år","land","hotel","fly","tog","museum","bibliotek","supermarked","hospital","problem","spørgsmål","svar","sprog","ord","navn","billede","brev","nummer","brev"]);
+
+function tokeniseText(text) {
+  const tokens = [];
+  const re = /([\wæøåÆØÅ]+)|([^\wæøåÆØÅ\s]+)/giu;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    tokens.push({ word: m[0], start: m.index, end: m.index + m[0].length, isWord: !!m[1] });
+  }
+  return tokens;
+}
+
+function checkSpelling(tokens) {
+  return tokens.filter(t => {
+    if (!t.isWord) return false;
+    const w = t.word.toLowerCase();
+    if (/^\d+$/.test(w)) return false;
+    if (t.word[0] === t.word[0].toUpperCase() && t.start > 0) return false; // skip proper nouns
+    return !DANISH_DICT.has(w);
+  }).map(t => ({...t, type:"spelling"}));
+}
+
+function getSentences(text) {
+  return text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+}
+
+function checkV2(sentence) {
+  const words = sentence.trim().split(/\s+/).map(w => w.toLowerCase().replace(/[,.!?;:]/g,""));
+  if (words.length < 3) return null;
+  const ADVERB_STARTERS = ["i dag","i morgen","i går","her","der","nu","så","derfor","normalt","altid","aldrig","sommetider","om morgenen","om aftenen","om natten","til sidst","først","derefter","bagefter","alligevel","desuden","faktisk"];
+  const lower = sentence.toLowerCase();
+  const startsWithAdverb = ADVERB_STARTERS.some(a => lower.startsWith(a));
+  if (!startsWithAdverb) return null;
+  // Find where the adverb ends and check if next word is a subject pronoun (V2 violation)
+  const firstWord = words[0];
+  const firstTwo  = words.slice(0,2).join(" ");
+  const adverbEnd = ADVERB_STARTERS.find(a => lower.startsWith(a));
+  if (!adverbEnd) return null;
+  const afterAdverb = lower.slice(adverbEnd.length).trim().split(/\s+/);
+  if (afterAdverb.length > 0 && PRONOUNS.has(afterAdverb[0].replace(/[,.!?]/g,""))) {
+    return { type:"v2", message:`Word order (V2): After "${adverbEnd}", the verb should come before the subject. E.g. "I dag spiser jeg..." not "I dag jeg spiser..."` };
+  }
+  return null;
+}
+
+function checkArticles(sentence) {
+  const warnings = [];
+  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
+  words.forEach((w, i) => {
+    if (w !== "en" && w !== "et") return;
+    const next = words[i+1];
+    if (!next) return;
+    const base = next.replace(/(en|et|erne|ene|er|e)$/,"");
+    if (w === "en" && ET_NOUNS.has(base)) warnings.push({ type:"article", message:`"${next}" is an et-word — use "et ${next}" not "en ${next}"` });
+    if (w === "et" && EN_NOUNS.has(base)) warnings.push({ type:"article", message:`"${next}" is an en-word — use "en ${next}" not "et ${next}"` });
+  });
+  return warnings;
+}
+
+function checkPossessives(sentence) {
+  const warnings = [];
+  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
+  const POSS = { "min":"en","mit":"et","mine":"plural","din":"en","dit":"et","dine":"plural" };
+  words.forEach((w, i) => {
+    const gender = POSS[w];
+    if (!gender) return;
+    const next = words[i+1];
+    if (!next) return;
+    const base = next.replace(/(en|et|erne|ene|er|e)$/,"");
+    if (gender === "en" && ET_NOUNS.has(base)) {
+      const fix = (w==="min")?"mit":"dit";
+      warnings.push({ type:"possessive", message:`"${next}" is an et-word — use "${fix} ${next}" not "${w} ${next}"` });
+    }
+    if (gender === "et" && EN_NOUNS.has(base)) {
+      const fix = (w==="mit")?"min":"din";
+      warnings.push({ type:"possessive", message:`"${next}" is an en-word — use "${fix} ${next}" not "${w} ${next}"` });
+    }
+  });
+  return warnings;
+}
+
+function runDanishChecks(text) {
+  const tokens   = tokeniseText(text);
+  const spelling = checkSpelling(tokens);
+  const sentences = getSentences(text);
+  const grammar  = [];
+  sentences.forEach(s => {
+    const v2 = checkV2(s);
+    if (v2) grammar.push(v2);
+    checkArticles(s).forEach(e   => grammar.push(e));
+    checkPossessives(s).forEach(e => grammar.push(e));
+  });
+  const wordCount = tokens.filter(t => t.isWord).length;
+  const sentenceCount = sentences.length;
+  // Score: start at 100, deduct per error
+  const totalErrors = spelling.length + grammar.length;
+  const errorRate   = wordCount > 0 ? totalErrors / wordCount : 0;
+  const score       = Math.max(0, Math.round((1 - errorRate * 3) * 100));
+  return { spelling, grammar, tokens, wordCount, sentenceCount, score };
+}
+
 function normalise(s) {
   return (s||"").trim().toLowerCase()
     .replace(/æ/g,"ae").replace(/ø/g,"oe").replace(/å/g,"aa")
@@ -798,6 +1039,151 @@ function ListeningPlaceholder({section}) {
   );
 }
 
+// ─── FREE WRITING ────────────────────────────────────────────────────────────
+
+function FreeWriting({section, onScore}) {
+  const [text, setText]     = React.useState("");
+  const [result, setResult] = React.useState(null);
+  const MIN_WORDS            = section.min_words || 20;
+  const PASS_PCT             = 85;
+
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const canSubmit = wordCount >= MIN_WORDS && !result;
+
+  const check = () => {
+    const r = runDanishChecks(text);
+    const passed = r.score >= PASS_PCT;
+    onScore(passed ? 1 : 0, 1);
+    setResult({...r, passed});
+  };
+
+  const reset = () => { setText(""); setResult(null); };
+
+  // Render annotated text with spelling errors highlighted
+  const renderHighlighted = () => {
+    if (!result) return null;
+    const errMap = new Map(result.spelling.map(e => [e.start, e]));
+    return result.tokens.map((t, i) => {
+      if (!t.isWord) return <span key={i}>{t.word}</span>;
+      const err = errMap.get(t.start);
+      if (err) {
+        return (
+          <mark key={i} title="Unknown word — check spelling"
+            style={{background:"rgba(200,64,58,0.15)",borderBottom:"2px solid #c8403a",
+                    borderRadius:"2px",cursor:"help",padding:"0 1px"}}>
+            {t.word}
+          </mark>
+        );
+      }
+      return <span key={i}>{t.word}</span>;
+    }).reduce((acc, el, i) => {
+      if (i === 0) return [el];
+      return [...acc, <span key={"sp"+i}> </span>, el];
+    }, []);
+  };
+
+  return (
+    <div>
+      {/* Prompt */}
+      <div style={{fontSize:"15px",fontWeight:"500",color:"var(--text)",lineHeight:"1.6",marginBottom:"10px"}}>
+        {section.prompt}
+      </div>
+      {section.guidance && (
+        <div style={{fontSize:"12px",color:"var(--text3)",fontStyle:"italic",marginBottom:"12px",
+                     padding:"8px 12px",background:"var(--surface2)",borderRadius:"4px",
+                     borderLeft:"2px solid var(--border2)"}}>
+          {section.guidance}
+        </div>
+      )}
+
+      {/* Input or annotated result */}
+      {!result ? (
+        <textarea value={text} onChange={e=>setText(e.target.value)}
+          placeholder={`Write your answer in Danish. Aim for at least ${MIN_WORDS} words.`}
+          style={{width:"100%",minHeight:"180px",padding:"12px 14px",fontSize:"15px",
+                  lineHeight:"1.8",fontFamily:"inherit",border:"1px solid var(--border)",
+                  borderRadius:"6px",background:"var(--surface)",color:"var(--text)",
+                  resize:"vertical",outline:"none"}}/>
+      ) : (
+        <div style={{minHeight:"180px",padding:"12px 14px",fontSize:"15px",lineHeight:"1.8",
+                     border:"1px solid var(--border)",borderRadius:"6px",background:"var(--surface2)",
+                     color:"var(--text)",whiteSpace:"pre-wrap",wordBreak:"break-word"}}>
+          {renderHighlighted()}
+        </div>
+      )}
+
+      {/* Word count + action bar */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",
+                   marginTop:"8px",flexWrap:"wrap",gap:"8px"}}>
+        <span style={{fontSize:"11px",fontFamily:"'DM Mono',monospace",
+                      color:wordCount>=MIN_WORDS?"var(--green)":"var(--text3)"}}>
+          {wordCount} / {MIN_WORDS} words minimum
+        </span>
+        {!result ? (
+          <button className="btn btn-primary" disabled={!canSubmit} onClick={check}
+            style={{fontSize:"13px",padding:"7px 20px",opacity:canSubmit?1:0.5}}>
+            Check My Writing
+          </button>
+        ) : (
+          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+            <div style={{fontFamily:"'DM Mono',monospace",fontSize:"13px",padding:"5px 16px",
+                         borderRadius:"20px",
+                         background:result.passed?"rgba(45,122,80,0.1)":"rgba(200,64,58,0.08)",
+                         color:result.passed?"var(--green)":"#c8403a",
+                         border:`1px solid ${result.passed?"var(--green)":"#c8403a"}`}}>
+              {result.passed ? "✓ Pass" : "✗ Not yet"} · {result.score}%
+            </div>
+            <button className="btn btn-secondary" onClick={reset}
+              style={{fontSize:"12px",padding:"5px 12px"}}>Edit & Retry</button>
+          </div>
+        )}
+      </div>
+
+      {/* Feedback panel */}
+      {result && (
+        <div style={{marginTop:"16px",display:"flex",flexDirection:"column",gap:"8px"}}>
+          <div style={{fontFamily:"'DM Mono',monospace",fontSize:"10px",letterSpacing:"1px",color:"var(--text3)"}}>
+            {result.wordCount} words · {result.sentenceCount} sentences · {result.spelling.length} unknown word{result.spelling.length!==1?"s":""} · {result.grammar.length} grammar note{result.grammar.length!==1?"s":""}
+          </div>
+
+          {result.spelling.length > 0 && (
+            <div style={{padding:"10px 14px",background:"rgba(200,64,58,0.04)",
+                         border:"1px solid rgba(200,64,58,0.2)",borderRadius:"6px"}}>
+              <div style={{fontFamily:"'DM Mono',monospace",fontSize:"9px",letterSpacing:"1px",
+                           color:"#c8403a",marginBottom:"6px"}}>UNKNOWN WORDS</div>
+              {result.spelling.map((e,i) => (
+                <div key={i} style={{fontSize:"12px",color:"var(--text2)",marginBottom:"2px"}}>
+                  · <span style={{fontStyle:"italic",color:"#c8403a"}}>{e.word}</span> — not in dictionary (check spelling)
+                </div>
+              ))}
+            </div>
+          )}
+
+          {result.grammar.length > 0 && (
+            <div style={{padding:"10px 14px",background:"rgba(180,120,10,0.05)",
+                         border:"1px solid rgba(180,120,10,0.25)",borderRadius:"6px"}}>
+              <div style={{fontFamily:"'DM Mono',monospace",fontSize:"9px",letterSpacing:"1px",
+                           color:"var(--gold)",marginBottom:"6px"}}>GRAMMAR NOTES</div>
+              {result.grammar.map((e,i) => (
+                <div key={i} style={{fontSize:"12px",color:"var(--text2)",marginBottom:"4px",lineHeight:"1.5"}}>
+                  · {e.message}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {result.passed && result.spelling.length===0 && result.grammar.length===0 && (
+            <div style={{fontSize:"13px",color:"var(--green)",fontStyle:"italic"}}>
+              No errors detected — excellent work!
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── UNIT ASSESSMENT ─────────────────────────────────────────────────────────
 
 function UnitAssessment({section, onPass}) {
@@ -912,13 +1298,14 @@ const TYPE_LABELS = {
   reading: "Reading",
   listening_placeholder: "Listening",
   cultural_note: "Culture",
-  unit_assessment: "Unit Assessment"
+  unit_assessment: "Unit Assessment",
+  free_writing: "Free Writing"
 };
 
 function SectionRenderer({section, onScore, scores}) {
   const score = scores[section.id];
   const label = TYPE_LABELS[section.type] || section.type;
-  const isScored = ["matching","multiple_choice","fill_blank","sentence_construction","grammar_table","translation","reading","unit_assessment"].includes(section.type);
+  const isScored = ["matching","multiple_choice","fill_blank","sentence_construction","grammar_table","translation","reading","unit_assessment","free_writing"].includes(section.type);
   const isSaved = isScored && score;
 
   return (
@@ -946,6 +1333,7 @@ function SectionRenderer({section, onScore, scores}) {
         {section.type==="cultural_note"         && <CulturalNote section={section}/>}
         {section.type==="listening_placeholder" && <ListeningPlaceholder section={section}/>}
         {section.type==="unit_assessment"        && <UnitAssessment section={section} onPass={(c,t)=>onScore(section.id,c,t)}/>}
+        {section.type==="free_writing"            && <FreeWriting section={section} onScore={(c,t)=>onScore(section.id,c,t)}/>}
       </div>
     </div>
   );
