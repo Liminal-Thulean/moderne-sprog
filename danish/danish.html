@@ -270,25 +270,55 @@ let EN_NOUNS     = new Set();
 let ET_NOUNS     = new Set();
 let PL_NOUNS     = new Set();
 
+// Derive verb forms from infinitive + class
+function deriveVerbForms(inf, cls) {
+  const addAll = (forms) => Object.values(forms).filter(Boolean).forEach(f => DANISH_DICT.add(f));
+  if (cls === "regular_ede") {
+    const stem = inf.endsWith("e") ? inf.slice(0,-1) : inf;
+    addAll({ present: stem+"er", past: stem+"ede", participle: stem+"et",
+              gerund: stem+"ende", passive: stem+"es" });
+  } else if (cls === "regular_te") {
+    const stem = inf.endsWith("e") ? inf.slice(0,-1) : inf;
+    addAll({ present: stem+"er", past: stem+"te", participle: stem+"t",
+              gerund: stem+"ende", passive: stem+"es" });
+  } else if (cls === "regular_short") {
+    addAll({ present: inf+"r", past: inf+"ede", participle: inf+"et",
+              gerund: inf+"ende", passive: inf+"s" });
+  }
+  // irregular: forms stored explicitly in entry.forms — added when iterating entries
+}
+
 function buildDictFromEntries(entries) {
   DICT_ENTRIES = entries;
   NOUN_DICT    = {};
-  const base   = new Set();
+  DANISH_DICT  = new Set();
 
   Object.entries(entries).forEach(([lemma, data]) => {
-    base.add(lemma);
+    DANISH_DICT.add(lemma);
+
+    // Nouns
     if (data.pos === "noun" && data.gender) {
       NOUN_DICT[lemma] = data.gender;
     }
+
+    // Verbs — add all paradigm forms
+    if (data.pos === "verb") {
+      if (data.class === "irregular" && data.forms) {
+        Object.values(data.forms).filter(Boolean).forEach(f => DANISH_DICT.add(f));
+      } else {
+        deriveVerbForms(lemma, data.class);
+      }
+    }
   });
 
-  // Expand with common inflection suffixes
-  const suffixes = ["en","et","ene","erne","er","e","r","ede","te","de","t","ere","est","este","s","es","ne","nde"];
-  base.forEach(w => {
-    DANISH_DICT.add(w);
-    suffixes.forEach(sfx => DANISH_DICT.add(w + sfx));
-    if (w.length > 4 && w[w.length-1] === w[w.length-2]) {
-      const stem = w.slice(0, -1);
+  // Expand non-verb entries with common noun/adj suffixes
+  const nounAdjSuffixes = ["en","et","ene","erne","er","e","r","t","ere","est","este","s"];
+  Object.entries(entries).forEach(([lemma, data]) => {
+    if (data.pos === "verb") return; // already handled
+    nounAdjSuffixes.forEach(sfx => DANISH_DICT.add(lemma + sfx));
+    // double-consonant stems: e.g. "stor" → "større"
+    if (lemma.length > 3 && lemma[lemma.length-1] === lemma[lemma.length-2]) {
+      const stem = lemma.slice(0,-1);
       ["er","ede","et","ende","e"].forEach(sfx => DANISH_DICT.add(stem + sfx));
     }
   });
@@ -296,6 +326,8 @@ function buildDictFromEntries(entries) {
   EN_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "en"));
   ET_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "et"));
   PL_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "pl"));
+
+  console.log(`Danish dict loaded: ${Object.keys(entries).length} lemmas → ${DANISH_DICT.size} word forms`);
 }
 
 async function loadDanishDict() {

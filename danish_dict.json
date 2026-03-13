@@ -139,385 +139,40 @@
     "gender": null,
     "pos": "pron"
   },
-  "være": {
-    "en": "to be",
-    "gender": null,
-    "pos": "verb"
-  },
   "have": {
-    "en": "garden",
-    "gender": "en",
-    "pos": "noun"
-  },
-  "blive": {
-    "en": "to become / to stay",
+    "en": "to have",
+    "pos": "verb",
     "gender": null,
-    "pos": "verb"
-  },
-  "gøre": {
-    "en": "to do / to make",
-    "gender": null,
-    "pos": "verb"
-  },
-  "sige": {
-    "en": "to say",
-    "gender": null,
-    "pos": "verb"
-  },
-  "se": {
-    "en": "to see",
-    "gender": null,
-    "pos": "verb"
-  },
-  "komme": {
-    "en": "to come",
-    "gender": null,
-    "pos": "verb"
-  },
-  "gå": {
-    "en": "to go / to walk",
-    "gender": null,
-    "pos": "verb"
-  },
-  "tage": {
-    "en": "to take",
-    "gender": null,
-    "pos": "verb"
-  },
-  "vide": {
-    "en": "to know (fact)",
-    "gender": null,
-    "pos": "verb"
-  },
-  "give": {
-    "en": "to give",
-    "gender": null,
-    "pos": "verb"
-  },
-  "få": {
-    "en": "to get / to have",
-    "gender": null,
-    "pos": "verb"
-  },
-  "stå": {
-    "en": "to stand",
-    "gender": null,
-    "pos": "verb"
-  },
-  "sætte": {
-    "en": "to put / to set",
-    "gender": null,
-    "pos": "verb"
-  },
-  "hedde": {
-    "en": "to be called",
-    "gender": null,
-    "pos": "verb"
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "har",
+      "past": "havde",
+      "participle": "haft",
+      "gerund": "havende",
+      "passive": ""
+    }
   },
   "arbejde": {
-    "en": "work / job",
-    "gender": "et",
-    "pos": "noun"
-  },
-  "bo": {
-    "en": "to live / to reside",
+    "en": "to work",
+    "pos": "verb",
     "gender": null,
-    "pos": "verb"
-  },
-  "spise": {
-    "en": "to eat",
-    "gender": null,
-    "pos": "verb"
-  },
-  "drikke": {
-    "en": "to drink",
-    "gender": null,
-    "pos": "verb"
-  },
-  "lære": {
-    "en": "to learn / to teach",
-    "gender": null,
-    "pos": "verb"
-  },
-  "tale": {
-    "en": "to speak / to talk",
-    "gender": null,
-    "pos": "verb"
-  },
-  "skrive": {
-    "en": "to write",
-    "gender": null,
-    "pos": "verb"
-  },
-  "læse": {
-    "en": "to read",
-    "gender": null,
-    "pos": "verb"
-  },
-  "lytte": {
-    "en": "to listen",
-    "gender": null,
-    "pos": "verb"
-  },
-  "spørge": {
-    "en": "to ask",
-    "gender": null,
-    "pos": "verb"
-  },
-  "svare": {
-    "en": "to answer",
-    "gender": null,
-    "pos": "verb"
-  },
-  "åbne": {
-    "en": "to open",
-    "gender": null,
-    "pos": "verb"
-  },
-  "lukke": {
-    "en": "to close",
-    "gender": null,
-    "pos": "verb"
-  },
-  "sidde": {
-    "en": "to sit",
-    "gender": null,
-    "pos": "verb"
-  },
-  "forstå": {
-    "en": "to understand",
-    "gender": null,
-    "pos": "verb"
-  },
-  "elske": {
-    "en": "to love",
-    "gender": null,
-    "pos": "verb"
-  },
-  "bruge": {
-    "en": "to use",
-    "gender": null,
-    "pos": "verb"
-  },
-  "huske": {
-    "en": "to remember",
-    "gender": null,
-    "pos": "verb"
-  },
-  "glemme": {
-    "en": "to forget",
-    "gender": null,
-    "pos": "verb"
+    "auxiliary": "har",
+    "class": "regular_ede"
   },
   "prøve": {
-    "en": "test",
-    "gender": "en",
-    "pos": "noun"
-  },
-  "lave": {
-    "en": "to make / to do",
+    "en": "to try",
+    "pos": "verb",
     "gender": null,
-    "pos": "verb"
-  },
-  "hjælpe": {
-    "en": "to help",
-    "gender": null,
-    "pos": "verb"
-  },
-  "tænke": {
-    "en": "to think",
-    "gender": null,
-    "pos": "verb"
-  },
-  "fortælle": {
-    "en": "to tell",
-    "gender": null,
-    "pos": "verb"
-  },
-  "møde": {
-    "en": "to meet",
-    "gender": null,
-    "pos": "verb"
-  },
-  "køre": {
-    "en": "to drive / to ride",
-    "gender": null,
-    "pos": "verb"
-  },
-  "rejse": {
-    "en": "to travel",
-    "gender": null,
-    "pos": "verb"
-  },
-  "flytte": {
-    "en": "to move (residence)",
-    "gender": null,
-    "pos": "verb"
-  },
-  "betale": {
-    "en": "to pay",
-    "gender": null,
-    "pos": "verb"
-  },
-  "sove": {
-    "en": "to sleep",
-    "gender": null,
-    "pos": "verb"
-  },
-  "vågne": {
-    "en": "to wake up",
-    "gender": null,
-    "pos": "verb"
-  },
-  "lide": {
-    "en": "to like / to suffer",
-    "gender": null,
-    "pos": "verb"
-  },
-  "kende": {
-    "en": "to know (person/place)",
-    "gender": null,
-    "pos": "verb"
-  },
-  "kunne": {
-    "en": "can / to be able to",
-    "gender": null,
-    "pos": "verb"
-  },
-  "ville": {
-    "en": "will / to want to",
-    "gender": null,
-    "pos": "verb"
-  },
-  "skulle": {
-    "en": "shall / to have to",
-    "gender": null,
-    "pos": "verb"
-  },
-  "måtte": {
-    "en": "may / must",
-    "gender": null,
-    "pos": "verb"
-  },
-  "burde": {
-    "en": "ought to / should",
-    "gender": null,
-    "pos": "verb"
-  },
-  "begynde": {
-    "en": "to begin",
-    "gender": null,
-    "pos": "verb"
-  },
-  "slutte": {
-    "en": "to finish / to end",
-    "gender": null,
-    "pos": "verb"
-  },
-  "cykle": {
-    "en": "to cycle",
-    "gender": null,
-    "pos": "verb"
-  },
-  "svømme": {
-    "en": "to swim",
-    "gender": null,
-    "pos": "verb"
-  },
-  "danse": {
-    "en": "to dance",
-    "gender": null,
-    "pos": "verb"
-  },
-  "spille": {
-    "en": "to play (game/instrument)",
-    "gender": null,
-    "pos": "verb"
-  },
-  "synge": {
-    "en": "to sing",
-    "gender": null,
-    "pos": "verb"
-  },
-  "løbe": {
-    "en": "to run",
-    "gender": null,
-    "pos": "verb"
-  },
-  "tegne": {
-    "en": "to draw",
-    "gender": null,
-    "pos": "verb"
-  },
-  "male": {
-    "en": "to paint",
-    "gender": null,
-    "pos": "verb"
-  },
-  "bage": {
-    "en": "to bake",
-    "gender": null,
-    "pos": "verb"
-  },
-  "vaske": {
-    "en": "to wash",
-    "gender": null,
-    "pos": "verb"
-  },
-  "handle": {
-    "en": "to shop",
-    "gender": null,
-    "pos": "verb"
-  },
-  "spare": {
-    "en": "to save (money)",
-    "gender": null,
-    "pos": "verb"
-  },
-  "låne": {
-    "en": "to borrow / to lend",
-    "gender": null,
-    "pos": "verb"
-  },
-  "invitere": {
-    "en": "to invite",
-    "gender": null,
-    "pos": "verb"
-  },
-  "studere": {
-    "en": "to study",
-    "gender": null,
-    "pos": "verb"
-  },
-  "undervise": {
-    "en": "to teach",
-    "gender": null,
-    "pos": "verb"
-  },
-  "forklare": {
-    "en": "to explain",
-    "gender": null,
-    "pos": "verb"
-  },
-  "beskrive": {
-    "en": "to describe",
-    "gender": null,
-    "pos": "verb"
-  },
-  "ringe": {
-    "en": "to call / to ring",
-    "gender": null,
-    "pos": "verb"
-  },
-  "smage": {
-    "en": "to taste",
-    "gender": null,
-    "pos": "verb"
+    "auxiliary": "har",
+    "class": "regular_ede"
   },
   "hygge": {
-    "en": "cosiness / conviviality",
-    "gender": "en",
-    "pos": "noun"
+    "en": "to cosy up / enjoy company",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
   },
   "mand": {
     "en": "man / husband",
@@ -2578,5 +2233,1097 @@
     "en": "sound",
     "gender": "en",
     "pos": "noun"
+  },
+  "være": {
+    "en": "to be",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "er",
+      "past": "var",
+      "participle": "været",
+      "gerund": "værende",
+      "passive": ""
+    }
+  },
+  "blive": {
+    "en": "to become / to stay",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "irregular",
+    "forms": {
+      "present": "bliver",
+      "past": "blev",
+      "participle": "blevet",
+      "gerund": "blivende",
+      "passive": "blivedes"
+    }
+  },
+  "gøre": {
+    "en": "to do / to make",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "gør",
+      "past": "gjorde",
+      "participle": "gjort",
+      "gerund": "gørende",
+      "passive": "gøres"
+    }
+  },
+  "sige": {
+    "en": "to say",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "siger",
+      "past": "sagde",
+      "participle": "sagt",
+      "gerund": "sigende",
+      "passive": "siges"
+    }
+  },
+  "se": {
+    "en": "to see",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "ser",
+      "past": "så",
+      "participle": "set",
+      "gerund": "seende",
+      "passive": "ses"
+    }
+  },
+  "komme": {
+    "en": "to come",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "irregular",
+    "forms": {
+      "present": "kommer",
+      "past": "kom",
+      "participle": "kommet",
+      "gerund": "kommende",
+      "passive": "kommes"
+    }
+  },
+  "gå": {
+    "en": "to go / to walk",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "irregular",
+    "forms": {
+      "present": "går",
+      "past": "gik",
+      "participle": "gået",
+      "gerund": "gående",
+      "passive": "gås"
+    }
+  },
+  "tage": {
+    "en": "to take",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "tager",
+      "past": "tog",
+      "participle": "taget",
+      "gerund": "tagende",
+      "passive": "tages"
+    }
+  },
+  "vide": {
+    "en": "to know (a fact)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "ved",
+      "past": "vidste",
+      "participle": "vidst",
+      "gerund": "vidende",
+      "passive": "vides"
+    }
+  },
+  "give": {
+    "en": "to give",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "giver",
+      "past": "gav",
+      "participle": "givet",
+      "gerund": "givende",
+      "passive": "gives"
+    }
+  },
+  "få": {
+    "en": "to get / to receive",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "får",
+      "past": "fik",
+      "participle": "fået",
+      "gerund": "fående",
+      "passive": "fås"
+    }
+  },
+  "stå": {
+    "en": "to stand",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "står",
+      "past": "stod",
+      "participle": "stået",
+      "gerund": "stående",
+      "passive": "stås"
+    }
+  },
+  "sætte": {
+    "en": "to put / to set",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "sætter",
+      "past": "satte",
+      "participle": "sat",
+      "gerund": "sættende",
+      "passive": "sættes"
+    }
+  },
+  "hedde": {
+    "en": "to be called",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "hedder",
+      "past": "hed",
+      "participle": "heddet",
+      "gerund": "heddende",
+      "passive": ""
+    }
+  },
+  "forstå": {
+    "en": "to understand",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "forstår",
+      "past": "forstod",
+      "participle": "forstået",
+      "gerund": "forstående",
+      "passive": "forståes"
+    }
+  },
+  "lide": {
+    "en": "to like / to suffer",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "lider",
+      "past": "led",
+      "participle": "lidt",
+      "gerund": "lidende",
+      "passive": "lides"
+    }
+  },
+  "kende": {
+    "en": "to know (person/place)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "kender",
+      "past": "kendte",
+      "participle": "kendt",
+      "gerund": "kendende",
+      "passive": "kendes"
+    }
+  },
+  "kunne": {
+    "en": "can / to be able to",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "kan",
+      "past": "kunne",
+      "participle": "kunnet",
+      "gerund": "",
+      "passive": ""
+    }
+  },
+  "ville": {
+    "en": "will / to want to",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "vil",
+      "past": "ville",
+      "participle": "villet",
+      "gerund": "",
+      "passive": ""
+    }
+  },
+  "skulle": {
+    "en": "shall / to have to",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "skal",
+      "past": "skulle",
+      "participle": "skullet",
+      "gerund": "",
+      "passive": ""
+    }
+  },
+  "måtte": {
+    "en": "may / must",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "må",
+      "past": "måtte",
+      "participle": "måttet",
+      "gerund": "",
+      "passive": ""
+    }
+  },
+  "burde": {
+    "en": "ought to / should",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "bør",
+      "past": "burde",
+      "participle": "burdet",
+      "gerund": "",
+      "passive": ""
+    }
+  },
+  "sidde": {
+    "en": "to sit",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "sidder",
+      "past": "sad",
+      "participle": "siddet",
+      "gerund": "siddende",
+      "passive": "siddes"
+    }
+  },
+  "skrive": {
+    "en": "to write",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "skriver",
+      "past": "skrev",
+      "participle": "skrevet",
+      "gerund": "skrivende",
+      "passive": "skrives"
+    }
+  },
+  "drikke": {
+    "en": "to drink",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "drikker",
+      "past": "drak",
+      "participle": "drukket",
+      "gerund": "drikkende",
+      "passive": "drikkes"
+    }
+  },
+  "spørge": {
+    "en": "to ask",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "spørger",
+      "past": "spurgte",
+      "participle": "spurgt",
+      "gerund": "spørgende",
+      "passive": "spørges"
+    }
+  },
+  "hjælpe": {
+    "en": "to help",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "hjælper",
+      "past": "hjalp",
+      "participle": "hjulpet",
+      "gerund": "hjælpende",
+      "passive": "hjælpes"
+    }
+  },
+  "fortælle": {
+    "en": "to tell",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "fortæller",
+      "past": "fortalte",
+      "participle": "fortalt",
+      "gerund": "fortællende",
+      "passive": "fortælles"
+    }
+  },
+  "begynde": {
+    "en": "to begin",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "begynder",
+      "past": "begyndte",
+      "participle": "begyndt",
+      "gerund": "begyndende",
+      "passive": "begyndes"
+    }
+  },
+  "synge": {
+    "en": "to sing",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "synger",
+      "past": "sang",
+      "participle": "sunget",
+      "gerund": "syngende",
+      "passive": "synges"
+    }
+  },
+  "løbe": {
+    "en": "to run",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "irregular",
+    "forms": {
+      "present": "løber",
+      "past": "løb",
+      "participle": "løbet",
+      "gerund": "løbende",
+      "passive": "løbes"
+    }
+  },
+  "sove": {
+    "en": "to sleep",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "sover",
+      "past": "sov",
+      "participle": "sovet",
+      "gerund": "sovende",
+      "passive": ""
+    }
+  },
+  "nyde": {
+    "en": "to enjoy",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "nyder",
+      "past": "nød",
+      "participle": "nydt",
+      "gerund": "nydende",
+      "passive": "nydes"
+    }
+  },
+  "nå": {
+    "en": "to reach / to manage (in time)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "når",
+      "past": "nåede",
+      "participle": "nået",
+      "gerund": "nående",
+      "passive": "nås"
+    }
+  },
+  "beskrive": {
+    "en": "to describe",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "beskriver",
+      "past": "beskrev",
+      "participle": "beskrevet",
+      "gerund": "beskrivende",
+      "passive": "beskrives"
+    }
+  },
+  "bære": {
+    "en": "to carry / to wear",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "bærer",
+      "past": "bar",
+      "participle": "båret",
+      "gerund": "bærende",
+      "passive": "bæres"
+    }
+  },
+  "falde": {
+    "en": "to fall",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "irregular",
+    "forms": {
+      "present": "falder",
+      "past": "faldt",
+      "participle": "faldet",
+      "gerund": "faldende",
+      "passive": "faldes"
+    }
+  },
+  "holde": {
+    "en": "to hold / to keep",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "holder",
+      "past": "holdt",
+      "participle": "holdt",
+      "gerund": "holdende",
+      "passive": "holdes"
+    }
+  },
+  "slå": {
+    "en": "to hit / to beat",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "slår",
+      "past": "slog",
+      "participle": "slået",
+      "gerund": "slående",
+      "passive": "slås"
+    }
+  },
+  "trække": {
+    "en": "to pull / to draw",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "trækker",
+      "past": "trak",
+      "participle": "trukket",
+      "gerund": "trækkende",
+      "passive": "trækkes"
+    }
+  },
+  "vælge": {
+    "en": "to choose",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "vælger",
+      "past": "valgte",
+      "participle": "valgt",
+      "gerund": "vælgende",
+      "passive": "vælges"
+    }
+  },
+  "sælge": {
+    "en": "to sell",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "sælger",
+      "past": "solgte",
+      "participle": "solgt",
+      "gerund": "sælgende",
+      "passive": "sælges"
+    }
+  },
+  "købe": {
+    "en": "to buy",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "køber",
+      "past": "købte",
+      "participle": "købt",
+      "gerund": "købende",
+      "passive": "købes"
+    }
+  },
+  "lægge": {
+    "en": "to lay / to put",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "lægger",
+      "past": "lagde",
+      "participle": "lagt",
+      "gerund": "læggende",
+      "passive": "lægges"
+    }
+  },
+  "læse": {
+    "en": "to read",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "læser",
+      "past": "læste",
+      "participle": "læst",
+      "gerund": "læsende",
+      "passive": "læses"
+    }
+  },
+  "svømme": {
+    "en": "to swim",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "svømmer",
+      "past": "svømmede",
+      "participle": "svømmet",
+      "gerund": "svømmende",
+      "passive": "svømmes"
+    }
+  },
+  "leve": {
+    "en": "to live (be alive)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "lever",
+      "past": "levede",
+      "participle": "levet",
+      "gerund": "levende",
+      "passive": ""
+    }
+  },
+  "føle": {
+    "en": "to feel",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "føler",
+      "past": "følte",
+      "participle": "følt",
+      "gerund": "følende",
+      "passive": "føles"
+    }
+  },
+  "møde": {
+    "en": "to meet",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "møder",
+      "past": "mødte",
+      "participle": "mødt",
+      "gerund": "mødende",
+      "passive": "mødes"
+    }
+  },
+  "betyde": {
+    "en": "to mean / to signify",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "irregular",
+    "forms": {
+      "present": "betyder",
+      "past": "betød",
+      "participle": "betydet",
+      "gerund": "betydende",
+      "passive": "betydes"
+    }
+  },
+  "spise": {
+    "en": "to eat",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "lære": {
+    "en": "to learn / to teach",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "tale": {
+    "en": "to speak / to talk",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "høre": {
+    "en": "to hear / to listen",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "køre": {
+    "en": "to drive / to ride",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "flyve": {
+    "en": "to fly",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "regular_te"
+  },
+  "rejse": {
+    "en": "to travel",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "regular_te"
+  },
+  "smage": {
+    "en": "to taste",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "miste": {
+    "en": "to lose (something)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "vente": {
+    "en": "to wait",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_te"
+  },
+  "bo": {
+    "en": "to live / to reside",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_short"
+  },
+  "elske": {
+    "en": "to love",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "huske": {
+    "en": "to remember",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "glemme": {
+    "en": "to forget",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "lave": {
+    "en": "to make / to do",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "bruge": {
+    "en": "to use",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "lytte": {
+    "en": "to listen",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "svare": {
+    "en": "to answer",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "åbne": {
+    "en": "to open",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "lukke": {
+    "en": "to close",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "vaske": {
+    "en": "to wash",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "handle": {
+    "en": "to shop",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "spare": {
+    "en": "to save (money)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "invitere": {
+    "en": "to invite",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "studere": {
+    "en": "to study",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "forklare": {
+    "en": "to explain",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "danse": {
+    "en": "to dance",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "tegne": {
+    "en": "to draw",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "male": {
+    "en": "to paint",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "bage": {
+    "en": "to bake",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "cykle": {
+    "en": "to cycle",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "spille": {
+    "en": "to play (game/instrument)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "tænke": {
+    "en": "to think",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "ringe": {
+    "en": "to call / to ring",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "savne": {
+    "en": "to miss (someone)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "smile": {
+    "en": "to smile",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "lege": {
+    "en": "to play (children)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "betale": {
+    "en": "to pay",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "låne": {
+    "en": "to borrow / to lend",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "undervise": {
+    "en": "to teach",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "interessere": {
+    "en": "to interest",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "fejre": {
+    "en": "to celebrate",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "vågne": {
+    "en": "to wake up",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "regular_ede"
+  },
+  "flytte": {
+    "en": "to move (residence)",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "er",
+    "class": "regular_ede"
+  },
+  "hente": {
+    "en": "to fetch / to pick up",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "slutte": {
+    "en": "to finish / to end",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "starte": {
+    "en": "to start",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "stoppe": {
+    "en": "to stop",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "pakke": {
+    "en": "to pack",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "rydde": {
+    "en": "to tidy / to clear",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "nikke": {
+    "en": "to nod",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "pege": {
+    "en": "to point",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "skynde": {
+    "en": "to hurry",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "besøge": {
+    "en": "to visit",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_ede"
+  },
+  "tro": {
+    "en": "to believe / to think",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_short"
+  },
+  "sy": {
+    "en": "to sew",
+    "pos": "verb",
+    "gender": null,
+    "auxiliary": "har",
+    "class": "regular_short"
   }
 }
