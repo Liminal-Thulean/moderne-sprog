@@ -527,17 +527,148 @@ function checkPossessives(sentence) {
   return warnings;
 }
 
+// ── SOV word order check ─────────────────────────────────────────────────────
+// Catches: "Jeg fra Indiana kommer" — verb displaced to end of clause
+// Pattern: PRONOUN ... VERB where verb is last and non-verb content comes between
+function checkSOV(sentence) {
+  const words = sentence.trim().toLowerCase()
+    .replace(/[,.!?;:]/g," ").replace(/\s+/g," ").trim().split(" ").filter(Boolean);
+  if (words.length < 3) return null;
+
+  // Only check sentences starting with a subject pronoun
+  if (!PRONOUNS.has(words[0])) return null;
+
+  const lastWord = words[words.length - 1];
+
+  // Is the last word a known verb form?
+  const isVerbForm = DANISH_DICT.has(lastWord) && (() => {
+    // Check if any verb entry has this as a form
+    for (const [lemma, data] of Object.entries(DICT_ENTRIES)) {
+      if (data.pos !== "verb") continue;
+      if (lemma === lastWord) return true;
+      if (data.forms && Object.values(data.forms).includes(lastWord)) return true;
+      // Check derived forms
+      if (data.class === "regular_ede" || data.class === "regular_te") {
+        const stem = lemma.endsWith("e") ? lemma.slice(0,-1) : lemma;
+        if ([stem+"er",stem+"ede",stem+"te",stem+"t",stem+"et"].includes(lastWord)) return true;
+      }
+      if (data.class === "regular_short") {
+        if ([lemma+"r",lemma+"ede",lemma+"et"].includes(lastWord)) return true;
+      }
+    }
+    return false;
+  })();
+
+  if (!isVerbForm) return null;
+
+  // Is there at least one non-verb, non-pronoun, non-preposition word between subject and verb?
+  const middle = words.slice(1, -1);
+  const hasContent = middle.some(w =>
+    !PRONOUNS.has(w) &&
+    !["fra","til","på","af","med","om","i","ved","hos","efter","før","over","under","mod","uden","for"].includes(w)
+  );
+
+  if (hasContent) {
+    return {
+      type: "sov",
+      message: `Word order: In Danish, the verb must be the second element, not the last. ` +
+        `Try: "${words[0]} ${lastWord} ${middle.join(" ")}" — verb comes right after the subject.`
+    };
+  }
+  return null;
+}
+
+// ── Definite double-marking check ────────────────────────────────────────────
+// Catches: "en byen", "et huset", "en manden" — article before definite noun
+// In Danish you use EITHER en/et OR the definite suffix, never both (unless adjective intervenes)
+function checkDefiniteDoubleMarking(sentence) {
+  const warnings = [];
+  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
+  words.forEach((w, i) => {
+    if (w !== "en" && w !== "et") return;
+    const next = words[i+1];
+    if (!next) return;
+    // Check if next word already has a definite suffix (ends in -en, -et, -ene, -erne)
+    const isDefinite =
+      (next.endsWith("en") && next.length > 3) ||
+      (next.endsWith("et") && next.length > 3) ||
+      next.endsWith("ene") ||
+      next.endsWith("erne");
+    // Confirm it's a noun we know, not e.g. "meget" or "andet"
+    const lemma = getNounLemma(next);
+    if (isDefinite && lemma) {
+      const bare = lemma;
+      warnings.push({
+        type: "definite",
+        message: `"${w} ${next}" — you can't use an article AND the definite suffix together. ` +
+          `Use either "en/et ${bare}" (indefinite) or "${next}" (definite), not both.`
+      });
+    }
+  });
+  return warnings;
+}
+
+// ── Bad verb form check ───────────────────────────────────────────────────────
+// Catches: "værer", "gåde", "havede" — wrong inflection applied to a known verb
+// When a word is flagged as unknown, check if it looks like a mangled verb form
+function checkBadVerbForms(tokens) {
+  const warnings = [];
+  tokens.forEach(t => {
+    if (!t.isWord) return;
+    const w = t.word.toLowerCase();
+    if (DANISH_DICT.has(w)) return; // known word, skip
+    if (/^\d+$/.test(w)) return;
+
+    // Try stripping common verb suffixes to find the stem, then match a known infinitive
+    const candidateSuffixes = ["er","ede","te","et","t","ende","es","ede","r"];
+    for (const sfx of candidateSuffixes) {
+      if (!w.endsWith(sfx) || w.length <= sfx.length + 1) continue;
+      const stem = w.slice(0, -sfx.length);
+      // Try stem as infinitive, stem+"e" as infinitive
+      for (const inf of [stem, stem+"e"]) {
+        if (DICT_ENTRIES[inf] && DICT_ENTRIES[inf].pos === "verb") {
+          const data = DICT_ENTRIES[inf];
+          // Get the correct present tense form for comparison
+          let correctPresent = "";
+          if (data.forms?.present) correctPresent = data.forms.present;
+          else if (data.class === "regular_ede" || data.class === "regular_te") {
+            const s = inf.endsWith("e") ? inf.slice(0,-1) : inf;
+            correctPresent = s + "er";
+          } else if (data.class === "regular_short") {
+            correctPresent = inf + "r";
+          }
+          warnings.push({
+            type: "verb_form",
+            message: `"${t.word}" — this doesn't look like a valid form of "${inf}". ` +
+              `Present tense: "${correctPresent || inf}".`
+          });
+          return; // only report once per token
+        }
+      }
+    }
+  });
+  return warnings;
+}
+
 function runDanishChecks(text) {
   const tokens      = tokeniseText(text);
   const spelling    = checkSpelling(tokens);
   const sentences   = getSentences(text);
   const grammar     = [];
+
   sentences.forEach(s => {
-    const v2 = checkV2(s);
+    const v2  = checkV2(s);
     if (v2) grammar.push(v2);
-    checkArticles(s).forEach(e    => grammar.push(e));
-    checkPossessives(s).forEach(e => grammar.push(e));
+    const sov = checkSOV(s);
+    if (sov) grammar.push(sov);
+    checkArticles(s).forEach(e           => grammar.push(e));
+    checkDefiniteDoubleMarking(s).forEach(e => grammar.push(e));
+    checkPossessives(s).forEach(e        => grammar.push(e));
   });
+
+  // Bad verb forms — run on all tokens across the whole text
+  checkBadVerbForms(tokens).forEach(e => grammar.push(e));
+
   const wordCount     = tokens.filter(t => t.isWord).length;
   const sentenceCount = sentences.length;
   const totalErrors   = spelling.length + grammar.length;
@@ -1212,11 +1343,28 @@ function FreeWriting({section, onScore}) {
                          border:"1px solid rgba(180,120,10,0.25)",borderRadius:"6px"}}>
               <div style={{fontFamily:"'DM Mono',monospace",fontSize:"9px",letterSpacing:"1px",
                            color:"var(--gold)",marginBottom:"6px"}}>GRAMMAR NOTES</div>
-              {result.grammar.map((e,i) => (
-                <div key={i} style={{fontSize:"12px",color:"var(--text2)",marginBottom:"4px",lineHeight:"1.5"}}>
-                  · {e.message}
-                </div>
-              ))}
+              {result.grammar.map((e,i) => {
+                const TYPE_TAG = {
+                  v2:        "Word Order (V2)",
+                  sov:       "Word Order (SOV)",
+                  article:   "Article",
+                  definite:  "Definite Form",
+                  possessive:"Possessive",
+                  verb_form: "Verb Form",
+                };
+                const tag = TYPE_TAG[e.type] || "Grammar";
+                return (
+                  <div key={i} style={{fontSize:"12px",color:"var(--text2)",marginBottom:"7px",lineHeight:"1.5"}}>
+                    <span style={{fontFamily:"'DM Mono',monospace",fontSize:"9px",letterSpacing:"0.5px",
+                                  color:"var(--gold)",marginRight:"7px",padding:"1px 6px",
+                                  border:"1px solid rgba(180,120,10,0.35)",borderRadius:"3px",
+                                  verticalAlign:"middle"}}>
+                      {tag}
+                    </span>
+                    {e.message}
+                  </div>
+                );
+              })}
             </div>
           )}
 
