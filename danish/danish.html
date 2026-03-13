@@ -266,6 +266,22 @@ input:focus{outline:none}
 let DICT_ENTRIES = {};
 let DANISH_DICT  = new Set();  // all known word forms (lemma + inflections)
 let NOUN_DICT    = {};         // lemma → "en"|"et"|"pl"
+
+const PRONOUNS = new Set(["jeg","du","han","hun","den","det","vi","i","de","man"]);
+const COMMON_VERBS = new Set([
+  "er","var","har","havde","bliver","blev","gør","gjorde","siger","sagde",
+  "ser","kommer","kom","går","gik","tager","tog","ved","vidste",
+  "giver","gav","får","fik","hedder","hed","arbejder","arbejdede","bor","boede",
+  "spiser","spiste","drikker","drak","lærer","lærte","taler","talte",
+  "skriver","skrev","læser","læste","lytter","lyttede","spørger","spurgte",
+  "svarer","svarede","forstår","forstod","elsker","elskede","bruger","brugte",
+  "husker","huskede","glemmer","glemte","prøver","prøvede","laver","lavede",
+  "hjælper","hjalp","tænker","tænkte","fortæller","fortalte","møder","mødte",
+  "kører","kørte","rejser","rejste","sover","sov","vågner","vågnede",
+  "kan","vil","skal","må","bør","burde",
+  "starter","begynder","slutter","stopper","venter","ringer",
+  "cykler","svømmer","danser","spiller","synger","løber","tegner","maler",
+]);
 let EN_NOUNS     = new Set();
 let ET_NOUNS     = new Set();
 let PL_NOUNS     = new Set();
@@ -398,23 +414,7 @@ const FRONTED_ADVERBS = new Set([
   "egentlig","ellers","næsten","pludselig",
 ]);
 
-// Verbs that commonly appear as V2 position (present tense)
-const COMMON_VERBS = new Set([
-  "er","var","har","havde","bliver","blev","gør","gjorde","siger","sagde",
-  "ser","så","kommer","kom","går","gik","tager","tog","vide","ved","vidste",
-  "giver","gav","får","fik","hedder","hed","arbejder","arbejdede","bor","boede",
-  "spiser","spiste","drikker","drak","lærer","lærte","taler","talte",
-  "skriver","skrev","læser","læste","lytter","lyttede","spørger","spurgte",
-  "svarer","svarede","forstår","forstod","elsker","elskede","bruger","brugte",
-  "husker","huskede","glemmer","glemte","prøver","prøvede","laver","lavede",
-  "hjælper","hjalp","tænker","tænkte","fortæller","fortalte","møder","mødte",
-  "kører","kørte","rejser","rejste","sover","sov","vågner","vågnede",
-  "kan","vil","skal","må","bør","burde","tør",
-  "starter","begynder","slutter","stopper","venter","ringer","smager",
-  "cykler","svømmer","danser","spiller","synger","løber","tegner","maler","bager",
-  "handler","sparer","låner","inviterer","studerer","forklarer","beskriver",
-]);
-
+// Verbs that commonly appear as V2 position (present tense) — declared above
 function checkV2(sentence) {
   const raw   = sentence.trim();
   const lower = raw.toLowerCase();
