@@ -194,6 +194,14 @@
 
   function _indexAdj(lemma, data) {
     var base = { lemma: lemma, pos: 'adj' };
+
+    // Invariant adjectives (mange, alle, samme, lille, næste etc.) —
+    // already in their final form, do not add inflectional suffixes
+    if (data.adjClass === 'invariant') {
+      _addForm(lemma, _merge(base, { adjForm: 'invariant' }));
+      return;
+    }
+
     _addForm(lemma,          _merge(base, { adjForm: 'base' }));
     _addForm(lemma + 't',    _merge(base, { adjForm: 'neuter' }));
     _addForm(lemma + 'e',    _merge(base, { adjForm: 'weak' }));
@@ -627,6 +635,8 @@
     words.forEach(function (t, i) {
       var ab = _best(t);
       if (!ab || ab.pos !== 'adj') return;
+      // Skip invariant adjectives — they never change form
+      if (ab.adjForm === 'invariant') return;
       var next = words[i + 1];
       if (!next) return;
       var nb = _best(next);
@@ -642,13 +652,17 @@
       var afterArticle = (prevW === 'en' || prevW === 'et' ||
                           prevW === 'den' || prevW === 'det' || prevW === 'de');
 
+      // Only suggest a form if it is actually in the index (avoids mangee, allée etc.)
+      var weakForm = FORM_INDEX[ab.lemma + 'e'] ? ab.lemma + 'e' : null;
+      var neutForm = FORM_INDEX[ab.lemma + 't'] ? ab.lemma + 't' : null;
+
       // Indefinite singular: neuter noun needs -t form, en-noun needs base form
       if (def === 'indef' && number === 'singular' && !afterArticle) {
-        if (gender === 'et' && adjf === 'base') {
+        if (gender === 'et' && adjf === 'base' && neutForm) {
           errors.push({
             type: 'adj_agreement',
             message: 'Adjective agreement: "' + t.word + '" before an et-noun needs ' +
-              'the neuter form "' + ab.lemma + 't"'
+              'the neuter form "' + neutForm + '"'
           });
         }
         if (gender === 'en' && adjf === 'neuter') {
@@ -662,11 +676,11 @@
 
       // Plural or definite: always weak (-e) form
       if ((number === 'plural' || def === 'def') &&
-          (adjf === 'base' || adjf === 'neuter')) {
+          (adjf === 'base' || adjf === 'neuter') && weakForm) {
         errors.push({
           type: 'adj_agreement',
           message: 'Adjective agreement: "' + t.word + '" should use the weak form "' +
-            ab.lemma + 'e" (definite or plural context)'
+            weakForm + '" (definite or plural context)'
         });
       }
     });

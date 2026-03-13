@@ -1267,7 +1267,8 @@
   "lille": {
     "en": "small / little",
     "gender": null,
-    "pos": "adj"
+    "pos": "adj",
+    "adjClass": "invariant"
   },
   "lang": {
     "en": "long / tall",
@@ -3329,27 +3330,32 @@
   "mange": {
     "en": "many",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "nogle": {
     "en": "some / a few",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "alle": {
     "en": "all",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "ingen": {
     "en": "no / none",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "anden": {
     "en": "second",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "andet": {
     "en": "other (et)",
@@ -3359,42 +3365,50 @@
   "begge": {
     "en": "both",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "hver": {
     "en": "each / every",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "hvert": {
     "en": "each / every (et)",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "samme": {
     "en": "same",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "næste": {
     "en": "next",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "sidste": {
     "en": "last",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "første": {
     "en": "first",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "tredje": {
     "en": "third",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "dog": {
     "en": "however / though",
@@ -3569,7 +3583,8 @@
   "anderledes": {
     "en": "different",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "særlig": {
     "en": "special / particularly",
@@ -3614,12 +3629,14 @@
   "alene": {
     "en": "alone",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "færdig": {
     "en": "finished / done",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "klar": {
     "en": "ready / clear",
@@ -3629,7 +3646,8 @@
   "fælles": {
     "en": "common / shared",
     "pos": "adj",
-    "gender": null
+    "gender": null,
+    "adjClass": "invariant"
   },
   "privat": {
     "en": "private",
