@@ -258,424 +258,602 @@ input:focus{outline:none}
 
 // ─── UTILITIES ────────────────────────────────────────────────────────────────
 
-// ─── DANISH LANGUAGE CHECKER ──────────────────────────────────────────────────
+// ─── DANISH MORPHOLOGICAL ANALYSER & GRAMMAR CHECKER ───────────────────────────
 
-// ── Dictionary — loaded from danish_dict.json at runtime ────────────────────
-// DICT_ENTRIES: { lemma: { en, gender, pos } }
-// Populated by loadDanishDict() called from App on mount.
-let DICT_ENTRIES = {};
-let DANISH_DICT  = new Set();  // all known word forms (lemma + inflections)
-let NOUN_DICT    = {};         // lemma → "en"|"et"|"pl"
+// ── Runtime dictionary state ──────────────────────────────────────────────────
+let DICT_ENTRIES = {};   // { lemma: { en, pos, gender, class, forms, auxiliary } }
+let NOUN_DICT    = {};   // lemma → "en"|"et"|"pl"
+let VERB_DICT    = {};   // all verb entries keyed by lemma
+let FORM_INDEX   = {};   // wordform → [{ lemma, pos, ...features }]  (the core of the analyser)
 
-const PRONOUNS = new Set(["jeg","du","han","hun","den","det","vi","i","de","man"]);
-const COMMON_VERBS = new Set([
-  "er","var","har","havde","bliver","blev","gør","gjorde","siger","sagde",
-  "ser","kommer","kom","går","gik","tager","tog","ved","vidste",
-  "giver","gav","får","fik","hedder","hed","arbejder","arbejdede","bor","boede",
-  "spiser","spiste","drikker","drak","lærer","lærte","taler","talte",
-  "skriver","skrev","læser","læste","lytter","lyttede","spørger","spurgte",
-  "svarer","svarede","forstår","forstod","elsker","elskede","bruger","brugte",
-  "husker","huskede","glemmer","glemte","prøver","prøvede","laver","lavede",
-  "hjælper","hjalp","tænker","tænkte","fortæller","fortalte","møder","mødte",
-  "kører","kørte","rejser","rejste","sover","sov","vågner","vågnede",
-  "kan","vil","skal","må","bør","burde",
-  "starter","begynder","slutter","stopper","venter","ringer",
-  "cykler","svømmer","danser","spiller","synger","løber","tegner","maler",
-]);
-let EN_NOUNS     = new Set();
-let ET_NOUNS     = new Set();
-let PL_NOUNS     = new Set();
+const PRONOUNS   = new Set(["jeg","du","han","hun","den","det","vi","i","de","man"]);
+const OBJ_PRONOUNS = new Set(["mig","dig","ham","hende","os","jer","dem"]);
+const REFL_PRONOUNS = new Set(["sig"]);
+const PREPOSITIONS = new Set(["fra","til","på","af","med","om","i","ved","hos",
+  "efter","for","over","under","mod","uden","ad","langs","siden","frem","bag","mellem"]);
+const AUXILIARIES  = new Set(["er","var","har","havde","bliver","blev","vil","skal","kan","må","bør","burde"]);
+const HAR_VERBS    = new Set(); // verbs that take "har" in perfect — populated at load
+const ER_VERBS     = new Set(); // verbs that take "er" in perfect — populated at load
 
-// Derive verb forms from infinitive + class
-function deriveVerbForms(inf, cls) {
-  const addAll = (forms) => Object.values(forms).filter(Boolean).forEach(f => DANISH_DICT.add(f));
-  if (cls === "regular_ede") {
-    const stem = inf.endsWith("e") ? inf.slice(0,-1) : inf;
-    addAll({ present: stem+"er", past: stem+"ede", participle: stem+"et",
-              gerund: stem+"ende", passive: stem+"es" });
-  } else if (cls === "regular_te") {
-    const stem = inf.endsWith("e") ? inf.slice(0,-1) : inf;
-    addAll({ present: stem+"er", past: stem+"te", participle: stem+"t",
-              gerund: stem+"ende", passive: stem+"es" });
-  } else if (cls === "regular_short") {
-    addAll({ present: inf+"r", past: inf+"ede", participle: inf+"et",
-              gerund: inf+"ende", passive: inf+"s" });
+// Irregular noun plurals — umlaut and suppletive forms
+const IRREG_PLURALS = {
+  "maend":"mand","manden":"mand","maendene":"mand",
+  "mænd":"mand","mændene":"mand",
+  "boern":"barn","boernene":"barn",
+  "børn":"barn","børnene":"barn",
+  "boeger":"bog","boegerne":"bog",
+  "bøger":"bog","bøgerne":"bog",
+  "foedder":"fod","foedderne":"fod",
+  "fødder":"fod","fødderne":"fod",
+  "taender":"tand","taenderne":"tand",
+  "tænder":"tand","tænderne":"tand",
+  "naetter":"nat","naetterne":"nat",
+  "nætter":"nat","nætterne":"nat",
+  "faedre":"far","faedrene":"far",
+  "fædre":"far","fædrene":"far",
+  "moedre":"mor","moedrene":"mor",
+  "mødre":"mor","mødrene":"mor",
+  "broedre":"bror","broedrene":"bror",
+  "brødre":"bror","sødrene":"bror",
+  "doetre":"datter","doetrene":"datter",
+  "døtre":"datter","døtrene":"datter",
+  "foraeldres":"forældre","foraeldres":"forældre",
+  "forældre":"forældre",
+};
+
+// ── Build the form index from DICT_ENTRIES ────────────────────────────────────
+function addForm(form, analysis) {
+  if (!form) return;
+  const f = form.toLowerCase();
+  if (!FORM_INDEX[f]) FORM_INDEX[f] = [];
+  FORM_INDEX[f].push(analysis);
+}
+
+function indexNoun(lemma, data) {
+  const g = data.gender;
+  if (!g) return;
+  NOUN_DICT[lemma] = g;
+
+  // Check irregular plural first
+  const base = { lemma, pos:"noun", gender:g };
+
+  addForm(lemma, {...base, number:"singular", definiteness:"indef"});
+
+  if (IRREG_PLURALS[lemma]) {
+    // handled when we encounter the plural form
   }
-  // irregular: forms stored explicitly in entry.forms — added when iterating entries
+
+  // Regular noun paradigm
+  // Singular definite
+  const defSg = g === "en" ? lemma+"en" : lemma+"et";
+  addForm(defSg, {...base, number:"singular", definiteness:"def"});
+
+  // Plural indefinite — most nouns: stem+er or stem+e or stem (et-neuter)
+  // We add all common plural patterns and let disambiguation sort it out
+  addForm(lemma+"er",  {...base, number:"plural", definiteness:"indef"});
+  addForm(lemma+"e",   {...base, number:"plural", definiteness:"indef"});
+  addForm(lemma+"r",   {...base, number:"plural", definiteness:"indef"});
+
+  // Plural definite
+  addForm(lemma+"erne", {...base, number:"plural", definiteness:"def"});
+  addForm(lemma+"ene",  {...base, number:"plural", definiteness:"def"});
+  addForm(lemma+"ne",   {...base, number:"plural", definiteness:"def"});
+
+  // Genitive (add -s to any form above — simplified: just indefinite sg + pl)
+  addForm(lemma+"s",    {...base, number:"singular", definiteness:"indef", case_:"genitive"});
+  addForm(defSg+"s",    {...base, number:"singular", definiteness:"def",   case_:"genitive"});
+  addForm(lemma+"ens",  {...base, number:"singular", definiteness:"def",   case_:"genitive"});
+
+  // Irregular plurals
+  Object.entries(IRREG_PLURALS).forEach(function(pair) {
+    if (pair[1] === lemma) {
+      const pl = pair[0];
+      const isDef = pl.endsWith("ene") || pl.endsWith("erne") || pl.endsWith("ne");
+      addForm(pl, {...base, number:"plural", definiteness: isDef ? "def" : "indef"});
+    }
+  });
+}
+
+function indexVerb(lemma, data) {
+  const base = { lemma, pos:"verb", auxiliary: data.auxiliary || "har" };
+  if (data.auxiliary === "er") ER_VERBS.add(lemma);
+  else HAR_VERBS.add(lemma);
+
+  addForm(lemma, {...base, tense:"infinitive"});
+
+  if (data.class === "irregular" && data.forms) {
+    const f = data.forms;
+    if (f.present)     addForm(f.present,     {...base, tense:"present"});
+    if (f.past)        addForm(f.past,         {...base, tense:"past"});
+    if (f.participle)  addForm(f.participle,   {...base, tense:"participle"});
+    if (f.gerund)      addForm(f.gerund,       {...base, tense:"gerund"});
+    if (f.passive)     addForm(f.passive,      {...base, tense:"passive"});
+  } else {
+    const stem = lemma.endsWith("e") ? lemma.slice(0,-1) : lemma;
+    if (data.class === "regular_short") {
+      addForm(lemma+"r",   {...base, tense:"present"});
+      addForm(lemma+"ede", {...base, tense:"past"});
+      addForm(lemma+"et",  {...base, tense:"participle"});
+      addForm(lemma+"ende",{...base, tense:"gerund"});
+      addForm(lemma+"s",   {...base, tense:"passive"});
+    } else if (data.class === "regular_te") {
+      addForm(stem+"er",   {...base, tense:"present"});
+      addForm(stem+"te",   {...base, tense:"past"});
+      addForm(stem+"t",    {...base, tense:"participle"});
+      addForm(stem+"ende", {...base, tense:"gerund"});
+      addForm(stem+"es",   {...base, tense:"passive"});
+    } else { // regular_ede
+      addForm(stem+"er",   {...base, tense:"present"});
+      addForm(stem+"ede",  {...base, tense:"past"});
+      addForm(stem+"et",   {...base, tense:"participle"});
+      addForm(stem+"ende", {...base, tense:"gerund"});
+      addForm(stem+"es",   {...base, tense:"passive"});
+    }
+  }
+}
+
+function indexAdj(lemma, data) {
+  const base = { lemma, pos:"adj" };
+  addForm(lemma,         {...base, adjForm:"base"});
+  addForm(lemma+"t",     {...base, adjForm:"neuter"});
+  addForm(lemma+"e",     {...base, adjForm:"weak"});  // definite/plural
+  addForm(lemma+"ere",   {...base, adjForm:"comparative"});
+  addForm(lemma+"est",   {...base, adjForm:"superlative"});
+  addForm(lemma+"este",  {...base, adjForm:"sup_attr"});
+  // Double consonant neuter e.g. stor → stort not storrt — already handled by lemma+t
 }
 
 function buildDictFromEntries(entries) {
-  DICT_ENTRIES = entries;
-  NOUN_DICT    = {};
-  DANISH_DICT  = new Set();
+  DICT_ENTRIES  = entries;
+  NOUN_DICT     = {};
+  VERB_DICT     = {};
+  FORM_INDEX    = {};
 
-  Object.entries(entries).forEach(([lemma, data]) => {
-    DANISH_DICT.add(lemma);
+  Object.entries(entries).forEach(function(pair) {
+    var lemma = pair[0]; var data = pair[1];
 
-    // Nouns
-    if (data.pos === "noun" && data.gender) {
-      NOUN_DICT[lemma] = data.gender;
-    }
+    // Always index the lemma itself
+    addForm(lemma, { lemma, pos: data.pos });
 
-    // Verbs — add all paradigm forms
-    if (data.pos === "verb") {
-      if (data.class === "irregular" && data.forms) {
-        Object.values(data.forms).filter(Boolean).forEach(f => DANISH_DICT.add(f));
-      } else {
-        deriveVerbForms(lemma, data.class);
-      }
+    if (data.pos === "noun")  { indexNoun(lemma, data); }
+    if (data.pos === "verb")  { indexVerb(lemma, data); VERB_DICT[lemma] = data; }
+    if (data.pos === "adj")   { indexAdj(lemma, data); }
+    if (data.pos === "adv" || data.pos === "prep" || data.pos === "conj" ||
+        data.pos === "pron" || data.pos === "num"  || data.pos === "phrase") {
+      addForm(lemma, { lemma, pos: data.pos });
     }
   });
 
-  // Expand non-verb entries with common noun/adj suffixes
-  const nounAdjSuffixes = ["en","et","ene","erne","er","e","r","t","ere","est","este","s"];
-  Object.entries(entries).forEach(([lemma, data]) => {
-    if (data.pos === "verb") return; // already handled
-    nounAdjSuffixes.forEach(sfx => DANISH_DICT.add(lemma + sfx));
-    // double-consonant stems: e.g. "stor" → "større"
-    if (lemma.length > 3 && lemma[lemma.length-1] === lemma[lemma.length-2]) {
-      const stem = lemma.slice(0,-1);
-      ["er","ede","et","ende","e"].forEach(sfx => DANISH_DICT.add(stem + sfx));
-    }
+  // Index pronoun forms not in dict
+  [["jeg","mig"],["du","dig"],["han","ham"],["hun","hende"],
+   ["vi","os"],["i","jer"],["de","dem"],["den","den"],["det","det"]].forEach(function(pair) {
+    addForm(pair[1], { lemma: pair[0], pos:"pron", case_:"object" });
   });
+  addForm("sig", { lemma:"sig", pos:"pron", case_:"reflexive" });
+  addForm("man", { lemma:"man", pos:"pron" });
 
-  EN_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "en"));
-  ET_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "et"));
-  PL_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "pl"));
+  const en_nouns = new Set(Object.keys(NOUN_DICT).filter(function(k){ return NOUN_DICT[k]==="en"; }));
+  const et_nouns = new Set(Object.keys(NOUN_DICT).filter(function(k){ return NOUN_DICT[k]==="et"; }));
+  const pl_nouns = new Set(Object.keys(NOUN_DICT).filter(function(k){ return NOUN_DICT[k]==="pl"; }));
 
-  rebuildVerbForms();
-  console.log("Danish dict loaded: " + Object.keys(entries).length + " lemmas, " + DANISH_DICT.size + " word forms, " + VERB_FORMS.size + " verb forms");
+  // Make globally accessible
+  window._DA_EN = en_nouns;
+  window._DA_ET = et_nouns;
+  window._DA_PL = pl_nouns;
+
+  console.log("Danish analyser ready: " + Object.keys(entries).length + " lemmas, " +
+    Object.keys(FORM_INDEX).length + " indexed forms");
 }
 
 async function loadDanishDict() {
   try {
-    const data = await fetch("../danish_dict.json").then(r => r.json());
+    const data = await fetch("../danish_dict.json").then(function(r){ return r.json(); });
     buildDictFromEntries(data);
   } catch(e) {
-    console.warn("danish_dict.json not found — checker will have limited vocabulary", e);
+    console.warn("danish_dict.json not loaded:", e);
   }
 }
 
+// ── Core analyser ─────────────────────────────────────────────────────────────
+function analyse(wordform) {
+  const w = wordform.toLowerCase().replace(/[,.!?;:!]/g,"");
+  if (!w) return [];
 
-// Definite/plural suffixes to strip when looking up a word in NOUN_DICT
-function getNounLemma(word) {
-  const w = word.toLowerCase().replace(/[,.!?;:]/g, "");
-  // Try exact first
-  if (NOUN_DICT[w]) return w;
-  // Strip common suffixes longest-first
-  const suffixes = ["erne","ene","ene","ens","ets","ers","en","et","er","e","s"];
-  for (const sfx of suffixes) {
-    if (w.endsWith(sfx)) {
-      const stem = w.slice(0, -sfx.length);
-      if (NOUN_DICT[stem]) return stem;
-      // Handle double-consonant stems: "borde" → "bord"
-      if (stem.length > 2 && NOUN_DICT[stem.slice(0,-1)]) return stem.slice(0,-1);
+  // 1. Direct index lookup
+  if (FORM_INDEX[w]) return FORM_INDEX[w];
+
+  // 2. Unknown — try to analyse by suffix stripping
+  const guesses = [];
+
+  // Try as noun — strip suffixes longest first
+  const nounSuffixes = [
+    ["erne", {number:"plural",  definiteness:"def"}],
+    ["ene",  {number:"plural",  definiteness:"def"}],
+    ["ens",  {number:"singular",definiteness:"def",  case_:"genitive"}],
+    ["ets",  {number:"singular",definiteness:"def",  case_:"genitive"}],
+    ["ers",  {number:"plural",  definiteness:"indef", case_:"genitive"}],
+    ["en",   {number:"singular",definiteness:"def"}],
+    ["et",   {number:"singular",definiteness:"def"}],
+    ["er",   {number:"plural",  definiteness:"indef"}],
+    ["e",    {number:"plural",  definiteness:"indef"}],
+    ["s",    {number:"singular",definiteness:"indef", case_:"genitive"}],
+  ];
+  for (var i=0; i<nounSuffixes.length; i++) {
+    var sfx = nounSuffixes[i][0]; var feats = nounSuffixes[i][1];
+    if (w.endsWith(sfx) && w.length > sfx.length+1) {
+      var stem = w.slice(0, -sfx.length);
+      var gender = NOUN_DICT[stem] ||
+        (NOUN_DICT[stem.slice(0,-1)] && stem[stem.length-1]===stem[stem.length-2] ? NOUN_DICT[stem.slice(0,-1)] : null);
+      var lemma = gender ? (NOUN_DICT[stem] ? stem : stem.slice(0,-1)) : null;
+      if (lemma) { guesses.push({lemma, pos:"noun", gender, ...feats}); break; }
     }
   }
-  return null;
+
+  // Try as verb — strip suffixes
+  const verbSuffixes = [
+    ["ende", "gerund"],
+    ["edes", "passive"],
+    ["ede",  "past"],
+    ["tes",  "passive"],
+    ["tes",  "past"],
+    ["te",   "past"],
+    ["es",   "passive"],
+    ["er",   "present"],
+    ["et",   "participle"],
+    ["t",    "participle"],
+    ["r",    "present"],
+    ["s",    "passive"],
+  ];
+  for (var j=0; j<verbSuffixes.length; j++) {
+    var vsfx = verbSuffixes[j][0]; var vtense = verbSuffixes[j][1];
+    if (w.endsWith(vsfx) && w.length > vsfx.length) {
+      var vstem = w.slice(0, -vsfx.length);
+      // Try stem+"e" as infinitive
+      for (var k=0; k<2; k++) {
+        var vinf = k===0 ? vstem : vstem+"e";
+        if (VERB_DICT[vinf]) {
+          guesses.push({lemma:vinf, pos:"verb",
+            tense:vtense, auxiliary: VERB_DICT[vinf].auxiliary||"har"});
+          break;
+        }
+      }
+      if (guesses.length > 0) break;
+    }
+  }
+
+  return guesses;
 }
 
+// ── Tokeniser ─────────────────────────────────────────────────────────────────
 function tokeniseText(text) {
   const tokens = [];
   const re = /([\wæøåÆØÅ]+)|([^\wæøåÆØÅ\s]+)/giu;
-  let m;
+  var m;
   while ((m = re.exec(text)) !== null) {
-    tokens.push({ word: m[0], start: m.index, end: m.index + m[0].length, isWord: !!m[1] });
+    tokens.push({ word: m[0], start: m.index, end: m.index+m[0].length, isWord: !!m[1] });
   }
   return tokens;
 }
 
-function checkSpelling(tokens) {
-  return tokens.filter(t => {
-    if (!t.isWord) return false;
-    const w = t.word.toLowerCase();
-    if (/^\d+$/.test(w)) return false;
-    if (t.word[0] === t.word[0].toUpperCase() && t.start > 0) return false;
-    return !DANISH_DICT.has(w);
-  }).map(t => ({...t, type:"spelling"}));
+// Annotate every word token with its analysis
+function annotateTokens(tokens) {
+  return tokens.map(function(t) {
+    if (!t.isWord) return {...t, analyses:[], known:true};
+    const w = t.word;
+    const isCapMid = w[0] === w[0].toUpperCase() && /[A-ZÆØÅ]/.test(w[0]) && t.start > 0;
+    if (isCapMid || /^\d+$/.test(w)) return {...t, analyses:[], known:true, properNoun:true};
+    const analyses = analyse(w);
+    return {...t, analyses, known: analyses.length > 0};
+  });
+}
+
+// Simple disambiguator — pick first/best analysis
+function best(token) {
+  if (!token.analyses || token.analyses.length === 0) return null;
+  return token.analyses[0];
 }
 
 function getSentences(text) {
-  return text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+  return text.split(/(?<=[.!?])\s+/).filter(function(s){ return s.trim().length > 0; });
 }
 
-// ── V2 checker ───────────────────────────────────────────────────────────────
-// Strategy: if the first constituent of a sentence is NOT a subject pronoun
-// or subject noun, the second constituent must be a verb (not a pronoun/noun).
-// We detect the violation: fronted-element + PRONOUN + non-verb = likely V2 error.
+// ── Grammar checks (operating on annotated token sequences) ──────────────────
 
-const FRONTED_ADVERBS = new Set([
-  "i dag","i morgen","i går","i aftes","i nat","i år","i sommer",
-  "her","der","nu","så","derfor","alligevel","desuden","faktisk","normalt",
-  "altid","aldrig","sommetider","indimellem","ofte","sjældent",
-  "om morgenen","om aftenen","om natten","om lørdagen","om søndagen",
-  "til sidst","til slut","først","derefter","bagefter",
-  "heldigvis","desværre","forhåbentlig","selvfølgelig",
-  "egentlig","ellers","næsten","pludselig",
-]);
-
-// Verbs that commonly appear as V2 position (present tense) — declared above
-function checkV2(sentence) {
-  const raw   = sentence.trim();
-  const lower = raw.toLowerCase();
-  const words = lower.replace(/[,.!?;:]/g, " ").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
-  if (words.length < 3) return null;
-
-  // Check if sentence starts with a known fronted adverb (1 or 2 word)
-  let frontedEnd = 0;
-  let frontedText = "";
-  // Try two-word adverbs first
-  const firstTwo = words.slice(0, 2).join(" ");
-  const firstOne = words[0];
-  if (FRONTED_ADVERBS.has(firstTwo)) { frontedEnd = 2; frontedText = firstTwo; }
-  else if (FRONTED_ADVERBS.has(firstOne)) { frontedEnd = 1; frontedText = firstOne; }
-
-  if (!frontedEnd) return null;
-
-  // What comes after the fronted adverb?
-  const afterFront = words.slice(frontedEnd);
-  if (afterFront.length < 2) return null;
-
-  const w1 = afterFront[0]; // should be verb in correct V2
-  const w2 = afterFront[1]; // should be subject in correct V2
-
-  // Violation: subject pronoun comes BEFORE the verb
-  // i.e. after the fronted element we see: PRONOUN then VERB (or anything)
-  if (PRONOUNS.has(w1) && (COMMON_VERBS.has(w2) || w2.endsWith("er") || w2.endsWith("ede"))) {
-    return {
-      type: "v2",
-      message: `Word order (V2 rule): After "${frontedText}", the verb must come before the subject. ` +
-        `Write: "${frontedText} ${w2} ${w1}..." not "${frontedText} ${w1} ${w2}..."`
-    };
-  }
-  return null;
-}
-
-// ── Article checker ──────────────────────────────────────────────────────────
-// Now uses NOUN_DICT for accurate gender lookup.
-// Also checks: bare noun (no article) after verb — flags missing article.
-
-const DETERMINERS = new Set(["en","et","den","det","de","min","mit","mine","din","dit","dine",
-  "hans","hendes","vores","jeres","deres","en","et","ingen","nogen","alle","begge"]);
-
-function checkArticles(sentence) {
-  const warnings = [];
-  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
-
-  words.forEach((w, i) => {
-    // 1. Article used — check it matches the noun's gender
-    if (w === "en" || w === "et") {
-      const next = words[i+1];
-      if (!next) return;
-      const lemma = getNounLemma(next);
-      if (!lemma) return; // unknown noun, skip
-      const gender = NOUN_DICT[lemma];
-      if (gender === "pl") {
-        warnings.push({ type:"article", message:`"${next}" is always plural — no article needed. Remove "en/et" before "${next}".` });
-      } else if (w === "en" && gender === "et") {
-        warnings.push({ type:"article", message:`"${next}" is an et-word — use "et ${next}", not "en ${next}".` });
-      } else if (w === "et" && gender === "en") {
-        warnings.push({ type:"article", message:`"${next}" is an en-word — use "en ${next}", not "et ${next}".` });
-      }
-    }
-
-    // 2. Noun appears directly after a verb or preposition without any determiner
-    // Heuristic: if current word is a known verb/prep and next word is a known noun (no det before it)
-    const lemma = getNounLemma(w);
-    if (lemma && NOUN_DICT[lemma] !== "pl") {
-      const prev = words[i-1];
-      if (prev && !DETERMINERS.has(prev) && !COMMON_VERBS.has(prev)) {
-        // two consecutive content words — second might be bare noun after noun (e.g. noun phrase)
-        // only flag if prev is also a noun (two nouns in a row without connector = likely missing article)
-        const prevLemma = getNounLemma(prev);
-        if (prevLemma && NOUN_DICT[prevLemma]) {
-          const expectedArt = NOUN_DICT[lemma] === "et" ? "et" : "en";
-          warnings.push({ type:"article", message:`Missing article before "${w}"? Expected "${expectedArt} ${lemma}" — unless this is a compound noun.` });
+function checkSpelling(annotated) {
+  return annotated.filter(function(t) {
+    return t.isWord && !t.known && !t.properNoun;
+  }).map(function(t) {
+    // Try to identify it as a bad inflection of a known verb
+    const w = t.word.toLowerCase();
+    var verbHint = "";
+    var verbSfxs = ["er","ede","te","et","t","ende","es","r"];
+    for (var i=0; i<verbSfxs.length; i++) {
+      var sfx = verbSfxs[i];
+      if (w.endsWith(sfx)) {
+        var stem = w.slice(0,-sfx.length);
+        var inf1 = stem; var inf2 = stem+"e";
+        if (VERB_DICT[inf1] || VERB_DICT[inf2]) {
+          var inf = VERB_DICT[inf1] ? inf1 : inf2;
+          var data = VERB_DICT[inf];
+          var pres = data.forms ? data.forms.present : (inf.slice(0,-1)+"er");
+          verbHint = " (looks like a form of \"" + inf + "\" — present: \"" + pres + "\")";
+          break;
         }
       }
     }
-  });
-  return warnings;
-}
-
-// ── Possessive checker ───────────────────────────────────────────────────────
-function checkPossessives(sentence) {
-  const warnings = [];
-  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
-  const POSS = { "min":"en","mit":"et","mine":"pl","din":"en","dit":"et","dine":"pl" };
-  words.forEach((w, i) => {
-    const gender = POSS[w];
-    if (!gender) return;
-    const next = words[i+1];
-    if (!next) return;
-    const lemma = getNounLemma(next);
-    if (!lemma) return;
-    const nounGender = NOUN_DICT[lemma];
-    if (!nounGender) return;
-    if (gender === "en" && nounGender === "et") {
-      const fix = (w==="min") ? "mit" : "dit";
-      warnings.push({ type:"possessive", message:`"${next}" is an et-word — use "${fix} ${next}", not "${w} ${next}".` });
-    }
-    if (gender === "et" && nounGender === "en") {
-      const fix = (w==="mit") ? "min" : "din";
-      warnings.push({ type:"possessive", message:`"${next}" is an en-word — use "${fix} ${next}", not "${w} ${next}".` });
-    }
-    if ((gender === "pl" || gender === "en" || gender === "et") && nounGender === "pl") {
-      const fix = (w==="min"||w==="mit") ? "mine" : "dine";
-      if (w !== fix) warnings.push({ type:"possessive", message:`"${next}" is plural — use "${fix} ${next}", not "${w} ${next}".` });
-    }
-  });
-  return warnings;
-}
-
-// ── SOV word order check ─────────────────────────────────────────────────────
-// Catches: "Jeg fra Indiana kommer" — verb displaced to end of clause
-
-// Build a flat set of all known verb forms at dict-load time for fast lookup
-let VERB_FORMS = new Set();
-function rebuildVerbForms() {
-  VERB_FORMS = new Set();
-  Object.entries(DICT_ENTRIES).forEach(function(pair) {
-    var lemma = pair[0]; var data = pair[1];
-    if (data.pos !== "verb") return;
-    VERB_FORMS.add(lemma);
-    if (data.forms) {
-      Object.values(data.forms).forEach(function(f) { if (f) VERB_FORMS.add(f); });
-    }
-    if (data.class === "regular_ede" || data.class === "regular_te") {
-      var stem = lemma.endsWith("e") ? lemma.slice(0,-1) : lemma;
-      ["er","ede","te","t","et","ende","es"].forEach(function(sfx) { VERB_FORMS.add(stem+sfx); });
-    }
-    if (data.class === "regular_short") {
-      ["r","ede","et","ende","s"].forEach(function(sfx) { VERB_FORMS.add(lemma+sfx); });
-    }
+    return { type:"spelling", word:t.word, start:t.start, end:t.end,
+      message: "\"" + t.word + "\" — not in dictionary" + verbHint };
   });
 }
 
-const PREPOSITIONS = new Set(["fra","til","på","af","med","om","i","ved","hos","efter","før","over","under","mod","uden","for","ad","langs","siden"]);
+// Sentence-level checks — takes array of annotated tokens for one sentence
+function checkSentence(sentTokens) {
+  const errors = [];
+  const words = sentTokens.filter(function(t){ return t.isWord; });
+  if (words.length < 2) return errors;
 
-function checkSOV(sentence) {
-  var words = sentence.trim().toLowerCase()
-    .replace(/[,.!?;:]/g," ").replace(/\s+/g," ").trim().split(" ").filter(Boolean);
-  if (words.length < 3) return null;
-  if (!PRONOUNS.has(words[0])) return null;
+  // ── V2 word order ─────────────────────────────────────────────────────────
+  // Fronted non-subject + verb should come before subject pronoun
+  const FRONTED_ADVS = new Set(["i dag","i morgen","i gar","i gar","i aftes","i nat","i ar","i sommer",
+    "her","der","nu","sa","derfor","alligevel","desuden","faktisk","normalt",
+    "altid","aldrig","sommetider","indimellem","ofte","sjaeldent",
+    "til sidst","til slut","forst","derefter","bagefter",
+    "heldigvis","desvaerre","forhåbentlig","selvfolgeligt","egentlig","ellers","pludselig"]);
+  const w0 = words[0] ? words[0].word.toLowerCase() : "";
+  const w1 = words[1] ? words[1].word.toLowerCase() : "";
+  const w2 = words[2] ? words[2].word.toLowerCase() : "";
+  const firstTwo = w0 + " " + w1;
 
-  var lastWord = words[words.length - 1];
-  if (!VERB_FORMS.has(lastWord)) return null;
+  var frontedLen = 0;
+  if (FRONTED_ADVS.has(firstTwo)) frontedLen = 2;
+  else if (FRONTED_ADVS.has(w0))  frontedLen = 1;
 
-  // There must be at least one content word (not pronoun/prep) between subject and final verb
-  var middle = words.slice(1, -1);
-  var hasContent = middle.some(function(w) {
-    return !PRONOUNS.has(w) && !PREPOSITIONS.has(w);
-  });
-  if (!hasContent) return null;
+  if (frontedLen > 0 && words.length > frontedLen + 1) {
+    var afterFront0 = words[frontedLen]   ? words[frontedLen].word.toLowerCase()   : "";
+    var afterFront1 = words[frontedLen+1] ? words[frontedLen+1].word.toLowerCase() : "";
+    // Violation: subject pronoun before verb
+    if (PRONOUNS.has(afterFront0)) {
+      var b1 = best(words[frontedLen+1]);
+      if (b1 && b1.pos === "verb") {
+        errors.push({ type:"v2",
+          message: "Word order (V2): after \"" + words.slice(0,frontedLen).map(function(t){return t.word;}).join(" ") +
+            "\", the verb must come before the subject: \"..." + afterFront1 + " " + afterFront0 + "...\""
+        });
+      }
+    }
+  }
 
-  return {
-    type: "sov",
-    message: "Word order: In Danish the verb must be the second element, not the last. " +
-      "Try: " + words[0] + " " + lastWord + " " + middle.join(" ") + " (verb comes second)"
-  };
-}
+  // ── SOV order ─────────────────────────────────────────────────────────────
+  // Subject pronoun ... [content] ... verb-final
+  if (PRONOUNS.has(w0) && words.length >= 3) {
+    var lastW = words[words.length-1];
+    var lastB = best(lastW);
+    if (lastB && lastB.pos === "verb" && lastB.tense !== "infinitive") {
+      var middle = words.slice(1, -1);
+      var hasContent = middle.some(function(t) {
+        return !PRONOUNS.has(t.word.toLowerCase()) && !PREPOSITIONS.has(t.word.toLowerCase());
+      });
+      if (hasContent) {
+        errors.push({ type:"sov",
+          message: "Word order: the verb should come right after the subject, not at the end. " +
+            "Try: " + w0 + " " + lastW.word + " " + middle.map(function(t){return t.word;}).join(" ")
+        });
+      }
+    }
+  }
 
-// ── Definite double-marking check ────────────────────────────────────────────
-// Catches: "en byen", "et huset", "en manden" — article before definite noun
-// In Danish you use EITHER en/et OR the definite suffix, never both (unless adjective intervenes)
-function checkDefiniteDoubleMarking(sentence) {
-  const warnings = [];
-  const words = sentence.toLowerCase().split(/\s+/).map(w => w.replace(/[,.!?;:]/g,""));
-  words.forEach((w, i) => {
+  // ── Article + noun agreement ───────────────────────────────────────────────
+  words.forEach(function(t, i) {
+    var w = t.word.toLowerCase();
     if (w !== "en" && w !== "et") return;
-    const next = words[i+1];
+    var next = words[i+1];
     if (!next) return;
-    // Check if next word already has a definite suffix (ends in -en, -et, -ene, -erne)
-    const isDefinite =
-      (next.endsWith("en") && next.length > 3) ||
-      (next.endsWith("et") && next.length > 3) ||
-      next.endsWith("ene") ||
-      next.endsWith("erne");
-    // Confirm it's a noun we know, not e.g. "meget" or "andet"
-    const lemma = getNounLemma(next);
-    if (isDefinite && lemma) {
-      const bare = lemma;
-      warnings.push({
-        type: "definite",
-        message: `"${w} ${next}" — you can't use an article AND the definite suffix together. ` +
-          `Use either "en/et ${bare}" (indefinite) or "${next}" (definite), not both.`
+    var nb = best(next);
+    if (!nb || nb.pos !== "noun") return;
+    var gender = nb.gender || NOUN_DICT[nb.lemma];
+    if (!gender) return;
+    if (w === "en" && gender === "et") {
+      errors.push({ type:"article",
+        message: "\"" + next.word + "\" is an et-word — use \"et " + (nb.lemma||next.word) + "\", not \"en " + (nb.lemma||next.word) + "\""
+      });
+    }
+    if (w === "et" && gender === "en") {
+      errors.push({ type:"article",
+        message: "\"" + next.word + "\" is an en-word — use \"en " + (nb.lemma||next.word) + "\", not \"et " + (nb.lemma||next.word) + "\""
+      });
+    }
+    if (gender === "pl") {
+      errors.push({ type:"article",
+        message: "\"" + (nb.lemma||next.word) + "\" is always plural — no article needed"
+      });
+    }
+    // Definite double-marking: en/et + definite noun form
+    var nb2 = next.analyses.find(function(a){ return a.definiteness === "def"; });
+    if (nb2) {
+      errors.push({ type:"definite",
+        message: "\"" + w + " " + next.word + "\" — cannot use article AND definite suffix together. " +
+          "Use \"" + w + " " + (nb.lemma||next.word) + "\" or just \"" + next.word + "\""
       });
     }
   });
-  return warnings;
-}
 
-// ── Bad verb form check ───────────────────────────────────────────────────────
-// Catches: "værer", "gåde", "havede" — wrong inflection applied to a known verb
-// When a word is flagged as unknown, check if it looks like a mangled verb form
-function checkBadVerbForms(tokens) {
-  const warnings = [];
-  tokens.forEach(t => {
-    if (!t.isWord) return;
-    const w = t.word.toLowerCase();
-    if (DANISH_DICT.has(w)) return; // known word, skip
-    if (/^\d+$/.test(w)) return;
+  // ── Adjective-noun agreement ───────────────────────────────────────────────
+  words.forEach(function(t, i) {
+    var ab = best(t);
+    if (!ab || ab.pos !== "adj") return;
+    var next = words[i+1];
+    if (!next) return;
+    var nb = best(next);
+    if (!nb || nb.pos !== "noun") return;
+    var gender   = nb.gender || NOUN_DICT[nb.lemma];
+    var number   = nb.number;
+    var defin    = nb.definiteness;
+    var adjf     = ab.adjForm;
+    if (!gender || !adjf) return;
 
-    // Try stripping common verb suffixes to find the stem, then match a known infinitive
-    const candidateSuffixes = ["er","ede","te","et","t","ende","es","ede","r"];
-    for (const sfx of candidateSuffixes) {
-      if (!w.endsWith(sfx) || w.length <= sfx.length + 1) continue;
-      const stem = w.slice(0, -sfx.length);
-      // Try stem as infinitive, stem+"e" as infinitive
-      for (const inf of [stem, stem+"e"]) {
-        if (DICT_ENTRIES[inf] && DICT_ENTRIES[inf].pos === "verb") {
-          const data = DICT_ENTRIES[inf];
-          // Get the correct present tense form for comparison
-          let correctPresent = "";
-          if (data.forms?.present) correctPresent = data.forms.present;
-          else if (data.class === "regular_ede" || data.class === "regular_te") {
-            const s = inf.endsWith("e") ? inf.slice(0,-1) : inf;
-            correctPresent = s + "er";
-          } else if (data.class === "regular_short") {
-            correctPresent = inf + "r";
-          }
-          warnings.push({
-            type: "verb_form",
-            message: `"${t.word}" — this doesn't look like a valid form of "${inf}". ` +
-              `Present tense: "${correctPresent || inf}".`
-          });
-          return; // only report once per token
-        }
+    // After en/et article: adjective should match gender
+    var prev = words[i-1];
+    var prevW = prev ? prev.word.toLowerCase() : "";
+    var hasArticle = prevW === "en" || prevW === "et";
+
+    // Indefinite singular: en-noun → base form, et-noun → neuter form
+    if (defin === "indef" && number === "singular" && !hasArticle) {
+      if (gender === "et" && adjf === "base") {
+        errors.push({ type:"adj_agreement",
+          message: "Adjective agreement: \"" + t.word + "\" before an et-noun should use the neuter form \"" + ab.lemma + "t\""
+        });
+      }
+      if (gender === "en" && adjf === "neuter") {
+        errors.push({ type:"adj_agreement",
+          message: "Adjective agreement: \"" + t.word + "\" before an en-noun should use the base form \"" + ab.lemma + "\""
+        });
       }
     }
+    // Plural or definite: always weak (-e) form
+    if ((number === "plural" || defin === "def") && adjf === "base") {
+      errors.push({ type:"adj_agreement",
+        message: "Adjective agreement: \"" + t.word + "\" should use the weak form \"" + ab.lemma + "e\" (definite/plural context)"
+      });
+    }
+    if ((number === "plural" || defin === "def") && adjf === "neuter") {
+      errors.push({ type:"adj_agreement",
+        message: "Adjective agreement: \"" + t.word + "\" should be \"" + ab.lemma + "e\" (definite/plural context)"
+      });
+    }
   });
-  return warnings;
+
+  // ── Auxiliary selection (har vs er) ───────────────────────────────────────
+  words.forEach(function(t, i) {
+    var w = t.word.toLowerCase();
+    if (w !== "har" && w !== "er" && w !== "havde" && w !== "var") return;
+    var isHar = (w === "har" || w === "havde");
+    var next = words[i+1];
+    if (!next) return;
+    var nb = best(next);
+    if (!nb || nb.pos !== "verb" || nb.tense !== "participle") return;
+    var verbLemma = nb.lemma;
+    if (!verbLemma) return;
+    var needsEr  = ER_VERBS.has(verbLemma);
+    var needsHar = HAR_VERBS.has(verbLemma);
+    if (isHar && needsEr) {
+      errors.push({ type:"auxiliary",
+        message: "\"" + verbLemma + "\" takes \"er\" in the perfect tense, not \"har\": \"er " + next.word + "\""
+      });
+    }
+    if (!isHar && needsHar) {
+      errors.push({ type:"auxiliary",
+        message: "\"" + verbLemma + "\" takes \"har\" in the perfect tense, not \"er\": \"har " + next.word + "\""
+      });
+    }
+  });
+
+  // ── Participle used as finite verb ─────────────────────────────────────────
+  words.forEach(function(t, i) {
+    var ab = best(t);
+    if (!ab || ab.pos !== "verb" || ab.tense !== "participle") return;
+    // Is this the main verb? — i.e. no auxiliary before it
+    var prev = words[i-1];
+    var prevW = prev ? prev.word.toLowerCase() : "";
+    var hasAux = AUXILIARIES.has(prevW);
+    if (!hasAux && i === 1 && PRONOUNS.has(words[0].word.toLowerCase())) {
+      // Subject + participle — likely finite verb intended
+      var pres = "";
+      var vdata = VERB_DICT[ab.lemma];
+      if (vdata && vdata.forms && vdata.forms.present) pres = vdata.forms.present;
+      else if (vdata) {
+        var stem = ab.lemma.endsWith("e") ? ab.lemma.slice(0,-1) : ab.lemma;
+        pres = stem + "er";
+      }
+      errors.push({ type:"participle_as_finite",
+        message: "\"" + t.word + "\" is a past participle — did you mean the present \"" + pres +
+          "\" or past \"" + (vdata && vdata.forms ? vdata.forms.past : ab.lemma+"ede") + "\"?"
+      });
+    }
+  });
+
+  // ── Possessive agreement ───────────────────────────────────────────────────
+  const POSS = { "min":"en","mit":"et","mine":"pl","din":"en","dit":"et","dine":"pl" };
+  words.forEach(function(t, i) {
+    var w = t.word.toLowerCase();
+    var pGender = POSS[w];
+    if (!pGender) return;
+    var next = words[i+1];
+    if (!next) return;
+    var nb = best(next);
+    var gender = (nb && nb.gender) || NOUN_DICT[nb && nb.lemma] || NOUN_DICT[next.word.toLowerCase()];
+    if (!gender) return;
+    if (pGender !== gender) {
+      var fix = gender === "et" ? (w[0]==="m"?"mit":"dit") :
+                gender === "en" ? (w[0]==="m"?"min":"din") :
+                (w[0]==="m"?"mine":"dine");
+      errors.push({ type:"possessive",
+        message: "\"" + next.word + "\" is " + (gender==="pl"?"plural":("an "+gender+"-word")) +
+          " — use \"" + fix + " " + (nb&&nb.lemma?nb.lemma:next.word) + "\", not \"" + w + " " + next.word + "\""
+      });
+    }
+  });
+
+  // ── Reflexive pronoun ──────────────────────────────────────────────────────
+  // "han vasker ham" — should be "sig" when subject and object are same
+  // Heuristic: 3rd person subject + object pronoun matching same person
+  const THIRD_SUBJ = new Set(["han","hun","den","det","de"]);
+  const THIRD_OBJ  = { "han":"ham","hun":"hende","de":"dem" };
+  if (words.length >= 3 && THIRD_SUBJ.has(w0)) {
+    words.forEach(function(t, i) {
+      if (i === 0) return;
+      var w = t.word.toLowerCase();
+      // Is this an object pronoun that matches the subject?
+      if (w === "ham"   && w0 === "han" ||
+          w === "hende" && w0 === "hun" ||
+          w === "dem"   && w0 === "de") {
+        // Check there's a verb between subject and this pronoun
+        var hasVerb = words.slice(1, i).some(function(tok) {
+          var b = best(tok); return b && b.pos === "verb";
+        });
+        if (hasVerb) {
+          errors.push({ type:"reflexive",
+            message: "When the subject and object refer to the same person, use \"sig\" instead of \"" + w + "\""
+          });
+        }
+      }
+    });
+  }
+
+  // ── Genitive -s ───────────────────────────────────────────────────────────
+  // Flag: "af + noun" where genitive -s would be more natural
+  // Also flag: apostrophe-s (Peters' hund) — apostrophe shouldn't be used
+  words.forEach(function(t, i) {
+    if (t.word.includes("'") && t.word.toLowerCase().endsWith("s")) {
+      errors.push({ type:"genitive",
+        message: "Danish genitive: no apostrophe needed — write \"" + t.word.replace("'","") + "\" not \"" + t.word + "\""
+      });
+    }
+  });
+
+  return errors;
 }
 
+// ── Main entry point ──────────────────────────────────────────────────────────
 function runDanishChecks(text) {
-  const tokens      = tokeniseText(text);
-  const spelling    = checkSpelling(tokens);
-  const sentences   = getSentences(text);
-  const grammar     = [];
+  const tokens     = tokeniseText(text);
+  const annotated  = annotateTokens(tokens);
+  const spelling   = checkSpelling(annotated);
+  const grammar    = [];
 
-  sentences.forEach(s => {
-    const v2  = checkV2(s);
-    if (v2) grammar.push(v2);
-    const sov = checkSOV(s);
-    if (sov) grammar.push(sov);
-    checkArticles(s).forEach(e           => grammar.push(e));
-    checkDefiniteDoubleMarking(s).forEach(e => grammar.push(e));
-    checkPossessives(s).forEach(e        => grammar.push(e));
+  // Split into sentences and check each
+  const sentences  = getSentences(text);
+  sentences.forEach(function(s) {
+    var sToks = annotateTokens(tokeniseText(s)).filter(function(t){ return t.isWord; });
+    checkSentence(sToks).forEach(function(e){ grammar.push(e); });
   });
 
-  // Bad verb forms — run on all tokens across the whole text
-  checkBadVerbForms(tokens).forEach(e => grammar.push(e));
-
-  const wordCount     = tokens.filter(t => t.isWord).length;
+  const wordCount     = tokens.filter(function(t){ return t.isWord; }).length;
   const sentenceCount = sentences.length;
   const totalErrors   = spelling.length + grammar.length;
   const errorRate     = wordCount > 0 ? totalErrors / wordCount : 0;
   const score         = Math.max(0, Math.round((1 - errorRate * 3) * 100));
-  return { spelling, grammar, tokens, wordCount, sentenceCount, score };
+  return { spelling, grammar, tokens: annotated, wordCount, sentenceCount, score };
 }
-
 function normalise(s) {
   return (s||"").trim().toLowerCase()
     .replace(/æ/g,"ae").replace(/ø/g,"oe").replace(/å/g,"aa")
@@ -1240,11 +1418,10 @@ function FreeWriting({section, onScore}) {
   // Render annotated text with spelling errors highlighted
   const renderHighlighted = () => {
     if (!result) return null;
-    const errMap = new Map(result.spelling.map(e => [e.start, e]));
+    const errStarts = new Set(result.spelling.map(e => e.start));
     return result.tokens.map((t, i) => {
       if (!t.isWord) return <span key={i}>{t.word}</span>;
-      const err = errMap.get(t.start);
-      if (err) {
+      if (errStarts.has(t.start)) {
         return (
           <mark key={i} title="Unknown word — check spelling"
             style={{background:"rgba(200,64,58,0.15)",borderBottom:"2px solid #c8403a",
@@ -1344,12 +1521,17 @@ function FreeWriting({section, onScore}) {
                            color:"var(--gold)",marginBottom:"6px"}}>GRAMMAR NOTES</div>
               {result.grammar.map((e,i) => {
                 const TYPE_TAG = {
-                  v2:        "Word Order (V2)",
-                  sov:       "Word Order (SOV)",
-                  article:   "Article",
-                  definite:  "Definite Form",
-                  possessive:"Possessive",
-                  verb_form: "Verb Form",
+                  v2:                "Word Order (V2)",
+                  sov:               "Word Order (SOV)",
+                  article:           "Article",
+                  definite:          "Definite Form",
+                  possessive:        "Possessive",
+                  verb_form:         "Verb Form",
+                  adj_agreement:     "Adjective Agreement",
+                  auxiliary:         "Auxiliary (har/er)",
+                  participle_as_finite: "Verb Form",
+                  reflexive:         "Reflexive (sig)",
+                  genitive:          "Genitive",
                 };
                 const tag = TYPE_TAG[e.type] || "Grammar";
                 return (
