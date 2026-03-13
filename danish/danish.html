@@ -327,7 +327,8 @@ function buildDictFromEntries(entries) {
   ET_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "et"));
   PL_NOUNS = new Set(Object.keys(NOUN_DICT).filter(k => NOUN_DICT[k] === "pl"));
 
-  console.log(`Danish dict loaded: ${Object.keys(entries).length} lemmas → ${DANISH_DICT.size} word forms`);
+  rebuildVerbForms();
+  console.log("Danish dict loaded: " + Object.keys(entries).length + " lemmas, " + DANISH_DICT.size + " word forms, " + VERB_FORMS.size + " verb forms");
 }
 
 async function loadDanishDict() {
@@ -529,53 +530,51 @@ function checkPossessives(sentence) {
 
 // ── SOV word order check ─────────────────────────────────────────────────────
 // Catches: "Jeg fra Indiana kommer" — verb displaced to end of clause
-// Pattern: PRONOUN ... VERB where verb is last and non-verb content comes between
+
+// Build a flat set of all known verb forms at dict-load time for fast lookup
+let VERB_FORMS = new Set();
+function rebuildVerbForms() {
+  VERB_FORMS = new Set();
+  Object.entries(DICT_ENTRIES).forEach(function(pair) {
+    var lemma = pair[0]; var data = pair[1];
+    if (data.pos !== "verb") return;
+    VERB_FORMS.add(lemma);
+    if (data.forms) {
+      Object.values(data.forms).forEach(function(f) { if (f) VERB_FORMS.add(f); });
+    }
+    if (data.class === "regular_ede" || data.class === "regular_te") {
+      var stem = lemma.endsWith("e") ? lemma.slice(0,-1) : lemma;
+      ["er","ede","te","t","et","ende","es"].forEach(function(sfx) { VERB_FORMS.add(stem+sfx); });
+    }
+    if (data.class === "regular_short") {
+      ["r","ede","et","ende","s"].forEach(function(sfx) { VERB_FORMS.add(lemma+sfx); });
+    }
+  });
+}
+
+const PREPOSITIONS = new Set(["fra","til","på","af","med","om","i","ved","hos","efter","før","over","under","mod","uden","for","ad","langs","siden"]);
+
 function checkSOV(sentence) {
-  const words = sentence.trim().toLowerCase()
+  var words = sentence.trim().toLowerCase()
     .replace(/[,.!?;:]/g," ").replace(/\s+/g," ").trim().split(" ").filter(Boolean);
   if (words.length < 3) return null;
-
-  // Only check sentences starting with a subject pronoun
   if (!PRONOUNS.has(words[0])) return null;
 
-  const lastWord = words[words.length - 1];
+  var lastWord = words[words.length - 1];
+  if (!VERB_FORMS.has(lastWord)) return null;
 
-  // Is the last word a known verb form?
-  const isVerbForm = DANISH_DICT.has(lastWord) && (() => {
-    // Check if any verb entry has this as a form
-    for (const [lemma, data] of Object.entries(DICT_ENTRIES)) {
-      if (data.pos !== "verb") continue;
-      if (lemma === lastWord) return true;
-      if (data.forms && Object.values(data.forms).includes(lastWord)) return true;
-      // Check derived forms
-      if (data.class === "regular_ede" || data.class === "regular_te") {
-        const stem = lemma.endsWith("e") ? lemma.slice(0,-1) : lemma;
-        if ([stem+"er",stem+"ede",stem+"te",stem+"t",stem+"et"].includes(lastWord)) return true;
-      }
-      if (data.class === "regular_short") {
-        if ([lemma+"r",lemma+"ede",lemma+"et"].includes(lastWord)) return true;
-      }
-    }
-    return false;
-  })();
+  // There must be at least one content word (not pronoun/prep) between subject and final verb
+  var middle = words.slice(1, -1);
+  var hasContent = middle.some(function(w) {
+    return !PRONOUNS.has(w) && !PREPOSITIONS.has(w);
+  });
+  if (!hasContent) return null;
 
-  if (!isVerbForm) return null;
-
-  // Is there at least one non-verb, non-pronoun, non-preposition word between subject and verb?
-  const middle = words.slice(1, -1);
-  const hasContent = middle.some(w =>
-    !PRONOUNS.has(w) &&
-    !["fra","til","på","af","med","om","i","ved","hos","efter","før","over","under","mod","uden","for"].includes(w)
-  );
-
-  if (hasContent) {
-    return {
-      type: "sov",
-      message: `Word order: In Danish, the verb must be the second element, not the last. ` +
-        `Try: "${words[0]} ${lastWord} ${middle.join(" ")}" — verb comes right after the subject.`
-    };
-  }
-  return null;
+  return {
+    type: "sov",
+    message: "Word order: In Danish the verb must be the second element, not the last. " +
+      "Try: "" + words[0] + " " + lastWord + " " + middle.join(" ") + "" — verb right after the subject."
+  };
 }
 
 // ── Definite double-marking check ────────────────────────────────────────────
