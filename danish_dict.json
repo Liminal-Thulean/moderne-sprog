@@ -3325,5 +3325,375 @@
     "gender": null,
     "auxiliary": "har",
     "class": "regular_short"
+  },
+  "mange": {
+    "en": "many",
+    "pos": "adj",
+    "gender": null
+  },
+  "nogle": {
+    "en": "some / a few",
+    "pos": "adj",
+    "gender": null
+  },
+  "alle": {
+    "en": "all",
+    "pos": "adj",
+    "gender": null
+  },
+  "ingen": {
+    "en": "no / none",
+    "pos": "adj",
+    "gender": null
+  },
+  "anden": {
+    "en": "second",
+    "pos": "adj",
+    "gender": null
+  },
+  "andet": {
+    "en": "other (et)",
+    "pos": "adj",
+    "gender": null
+  },
+  "begge": {
+    "en": "both",
+    "pos": "adj",
+    "gender": null
+  },
+  "hver": {
+    "en": "each / every",
+    "pos": "adj",
+    "gender": null
+  },
+  "hvert": {
+    "en": "each / every (et)",
+    "pos": "adj",
+    "gender": null
+  },
+  "samme": {
+    "en": "same",
+    "pos": "adj",
+    "gender": null
+  },
+  "næste": {
+    "en": "next",
+    "pos": "adj",
+    "gender": null
+  },
+  "sidste": {
+    "en": "last",
+    "pos": "adj",
+    "gender": null
+  },
+  "første": {
+    "en": "first",
+    "pos": "adj",
+    "gender": null
+  },
+  "tredje": {
+    "en": "third",
+    "pos": "adj",
+    "gender": null
+  },
+  "dog": {
+    "en": "however / though",
+    "pos": "adv",
+    "gender": null
+  },
+  "vel": {
+    "en": "surely / I suppose",
+    "pos": "adv",
+    "gender": null
+  },
+  "vist": {
+    "en": "apparently",
+    "pos": "adv",
+    "gender": null
+  },
+  "nemlig": {
+    "en": "namely / you see",
+    "pos": "adv",
+    "gender": null
+  },
+  "derimod": {
+    "en": "on the other hand",
+    "pos": "adv",
+    "gender": null
+  },
+  "dermed": {
+    "en": "thereby / with that",
+    "pos": "adv",
+    "gender": null
+  },
+  "hvorvidt": {
+    "en": "whether",
+    "pos": "conj",
+    "gender": null
+  },
+  "idet": {
+    "en": "as / since",
+    "pos": "conj",
+    "gender": null
+  },
+  "skønt": {
+    "en": "although",
+    "pos": "conj",
+    "gender": null
+  },
+  "træ": {
+    "en": "tree / wood",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "blomst": {
+    "en": "flower",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "sted": {
+    "en": "place",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "område": {
+    "en": "area / region",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "side": {
+    "en": "side / page",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "del": {
+    "en": "part",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "form": {
+    "en": "form / shape",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "slags": {
+    "en": "kind / sort",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "måde": {
+    "en": "way / manner",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "gang": {
+    "en": "time / corridor",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "tid": {
+    "en": "time",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "liv": {
+    "en": "life",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "ting": {
+    "en": "thing",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "brev": {
+    "en": "letter",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "nyhed": {
+    "en": "news",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "grund": {
+    "en": "reason / ground",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "lyst": {
+    "en": "desire / inclination",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "glæde": {
+    "en": "joy / pleasure",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "ønske": {
+    "en": "wish",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "plan": {
+    "en": "plan",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "mål": {
+    "en": "goal / target",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "resultat": {
+    "en": "result",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "forskel": {
+    "en": "difference",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "eksempel": {
+    "en": "example",
+    "pos": "noun",
+    "gender": "et"
+  },
+  "sætning": {
+    "en": "sentence",
+    "pos": "noun",
+    "gender": "en"
+  },
+  "anderledes": {
+    "en": "different",
+    "pos": "adj",
+    "gender": null
+  },
+  "særlig": {
+    "en": "special / particularly",
+    "pos": "adj",
+    "gender": null
+  },
+  "typisk": {
+    "en": "typical",
+    "pos": "adj",
+    "gender": null
+  },
+  "mulig": {
+    "en": "possible",
+    "pos": "adj",
+    "gender": null
+  },
+  "umulig": {
+    "en": "impossible",
+    "pos": "adj",
+    "gender": null
+  },
+  "naturlig": {
+    "en": "natural",
+    "pos": "adj",
+    "gender": null
+  },
+  "sund": {
+    "en": "healthy",
+    "pos": "adj",
+    "gender": null
+  },
+  "farlig": {
+    "en": "dangerous",
+    "pos": "adj",
+    "gender": null
+  },
+  "tryg": {
+    "en": "safe / secure",
+    "pos": "adj",
+    "gender": null
+  },
+  "alene": {
+    "en": "alone",
+    "pos": "adj",
+    "gender": null
+  },
+  "færdig": {
+    "en": "finished / done",
+    "pos": "adj",
+    "gender": null
+  },
+  "klar": {
+    "en": "ready / clear",
+    "pos": "adj",
+    "gender": null
+  },
+  "fælles": {
+    "en": "common / shared",
+    "pos": "adj",
+    "gender": null
+  },
+  "privat": {
+    "en": "private",
+    "pos": "adj",
+    "gender": null
+  },
+  "offentlig": {
+    "en": "public",
+    "pos": "adj",
+    "gender": null
+  },
+  "hel": {
+    "en": "whole / entire",
+    "pos": "adj",
+    "gender": null
+  },
+  "halv": {
+    "en": "half",
+    "pos": "adj",
+    "gender": null
+  },
+  "tom": {
+    "en": "empty",
+    "pos": "adj",
+    "gender": null
+  },
+  "fuld": {
+    "en": "full / drunk",
+    "pos": "adj",
+    "gender": null
+  },
+  "åben": {
+    "en": "open",
+    "pos": "adj",
+    "gender": null
+  },
+  "lukket": {
+    "en": "closed",
+    "pos": "adj",
+    "gender": null
+  },
+  "rigtig": {
+    "en": "right / correct",
+    "pos": "adj",
+    "gender": null
+  },
+  "forkert": {
+    "en": "wrong / incorrect",
+    "pos": "adj",
+    "gender": null
+  },
+  "sikker": {
+    "en": "certain / safe",
+    "pos": "adj",
+    "gender": null
+  },
+  "nysgerrig": {
+    "en": "curious",
+    "pos": "adj",
+    "gender": null
+  },
+  "overrasket": {
+    "en": "surprised",
+    "pos": "adj",
+    "gender": null
   }
 }

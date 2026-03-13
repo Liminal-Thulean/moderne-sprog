@@ -642,6 +642,30 @@ function checkSentence(sentTokens) {
     }
   }
 
+  // ── Missing finite verb ──────────────────────────────────────────────────────
+  var hasFiniteVerb = words.some(function(t) {
+    var ab = best(t);
+    return ab && ab.pos === "verb" &&
+      (ab.tense === "present" || ab.tense === "past" || ab.tense === "passive");
+  });
+  var hasSubjectClause = PRONOUNS.has(w0) || (function() {
+    if (words.length < 2) return false;
+    var b0 = best(words[0]); var b1 = best(words[1]);
+    return (b0 && (b0.pos === "num" || b0.lemma === "en" || b0.lemma === "et")) &&
+           (b1 && b1.pos === "noun");
+  })();
+  if (hasSubjectClause && !hasFiniteVerb && words.length >= 2) {
+    var hasContent = words.some(function(t) {
+      var ab = best(t);
+      return ab && (ab.pos === "noun" || ab.pos === "adj" || ab.pos === "adv" || ab.pos === "prep");
+    });
+    if (hasContent) {
+      errors.push({ type:"missing_verb",
+        message: "Missing verb: this clause appears to have no finite verb. Every Danish sentence needs one (e.g. er, har, hedder, kommer...)"
+      });
+    }
+  }
+
   // ── Article + noun agreement ───────────────────────────────────────────────
   words.forEach(function(t, i) {
     var w = t.word.toLowerCase();
@@ -747,26 +771,46 @@ function checkSentence(sentTokens) {
     }
   });
 
-  // ── Participle used as finite verb ─────────────────────────────────────────
+  // ── Non-finite verb used as main clause verb ─────────────────────────────────
+  // Catches: "En by hedde Franklin" (infinitive used, should be "hedder")
+  //          "Jeg spist mad" (participle used, should be "spiste"/"spiser")
   words.forEach(function(t, i) {
     var ab = best(t);
-    if (!ab || ab.pos !== "verb" || ab.tense !== "participle") return;
-    // Is this the main verb? — i.e. no auxiliary before it
-    var prev = words[i-1];
+    if (!ab || ab.pos !== "verb") return;
+    if (ab.tense !== "participle" && ab.tense !== "infinitive") return;
+
+    var prev  = words[i-1];
     var prevW = prev ? prev.word.toLowerCase() : "";
-    var hasAux = AUXILIARIES.has(prevW);
-    if (!hasAux && i === 1 && PRONOUNS.has(words[0].word.toLowerCase())) {
-      // Subject + participle — likely finite verb intended
-      var pres = "";
-      var vdata = VERB_DICT[ab.lemma];
-      if (vdata && vdata.forms && vdata.forms.present) pres = vdata.forms.present;
-      else if (vdata) {
-        var stem = ab.lemma.endsWith("e") ? ab.lemma.slice(0,-1) : ab.lemma;
-        pres = stem + "er";
+
+    // Skip if preceded by auxiliary, "at" marker, or "og" (coordinated infinitives)
+    if (AUXILIARIES.has(prevW) || prevW === "at" || prevW === "og") return;
+
+    // Is there a subject (pronoun or noun) somewhere before this verb?
+    var hasSubject = false;
+    for (var si = 0; si < i; si++) {
+      var sb = best(words[si]);
+      if (PRONOUNS.has(words[si].word.toLowerCase()) ||
+          (sb && (sb.pos === "noun" || sb.pos === "num"))) {
+        hasSubject = true; break;
       }
+    }
+    if (!hasSubject) return;
+
+    var vdata = VERB_DICT[ab.lemma];
+    var pres  = vdata && vdata.forms && vdata.forms.present ? vdata.forms.present
+                : (ab.lemma.endsWith("e") ? ab.lemma.slice(0,-1)+"er" : ab.lemma+"er");
+    var past  = vdata && vdata.forms && vdata.forms.past ? vdata.forms.past
+                : ab.lemma + "ede";
+
+    if (ab.tense === "infinitive") {
+      errors.push({ type:"infinitive_as_finite",
+        message: "\"" + t.word + "\" is an infinitive — use a finite form: present \"" + pres +
+          "\" or past \"" + past + "\""
+      });
+    } else {
       errors.push({ type:"participle_as_finite",
-        message: "\"" + t.word + "\" is a past participle — did you mean the present \"" + pres +
-          "\" or past \"" + (vdata && vdata.forms ? vdata.forms.past : ab.lemma+"ede") + "\"?"
+        message: "\"" + t.word + "\" is a past participle — did you mean present \"" + pres +
+          "\" or past \"" + past + "\"?"
       });
     }
   });
@@ -820,12 +864,29 @@ function checkSentence(sentTokens) {
   }
 
   // ── Genitive -s ───────────────────────────────────────────────────────────
-  // Flag: "af + noun" where genitive -s would be more natural
-  // Also flag: apostrophe-s (Peters' hund) — apostrophe shouldn't be used
   words.forEach(function(t, i) {
     if (t.word.includes("'") && t.word.toLowerCase().endsWith("s")) {
       errors.push({ type:"genitive",
         message: "Danish genitive: no apostrophe needed — write \"" + t.word.replace("'","") + "\" not \"" + t.word + "\""
+      });
+    }
+  });
+
+  // ── "og at + infinitive" as coordinated predicate ─────────────────────────
+  // "En by er lille og at have mange traeer" — "og at have" should be "og har"
+  words.forEach(function(t, i) {
+    var w = t.word.toLowerCase();
+    if (w !== "og") return;
+    var next1 = words[i+1]; var next2 = words[i+2];
+    if (!next1 || !next2) return;
+    if (next1.word.toLowerCase() !== "at") return;
+    var b2 = best(next2);
+    if (b2 && b2.pos === "verb" && b2.tense === "infinitive") {
+      var vdata = VERB_DICT[b2.lemma];
+      var pres  = vdata && vdata.forms && vdata.forms.present ? vdata.forms.present
+                  : (b2.lemma.endsWith("e") ? b2.lemma.slice(0,-1)+"er" : b2.lemma+"er");
+      errors.push({ type:"infinitive_as_finite",
+        message: "\"og at " + next2.word + "\" — after \"og\" use a finite verb: \"og " + pres + "\""
       });
     }
   });
@@ -1521,17 +1582,21 @@ function FreeWriting({section, onScore}) {
                            color:"var(--gold)",marginBottom:"6px"}}>GRAMMAR NOTES</div>
               {result.grammar.map((e,i) => {
                 const TYPE_TAG = {
-                  v2:                "Word Order (V2)",
-                  sov:               "Word Order (SOV)",
-                  article:           "Article",
-                  definite:          "Definite Form",
-                  possessive:        "Possessive",
-                  verb_form:         "Verb Form",
-                  adj_agreement:     "Adjective Agreement",
-                  auxiliary:         "Auxiliary (har/er)",
-                  participle_as_finite: "Verb Form",
-                  reflexive:         "Reflexive (sig)",
-                  genitive:          "Genitive",
+                  v2:                   "Word Order (V2)",
+                  sov:                  "Word Order (SOV)",
+                  missing_verb:         "Missing Verb",
+                  infinitive_as_finite: "Verb Form",
+                  participle_as_finite:  "Verb Form",
+                  infinitive_as_finite:  "Verb Form",
+                  nonfinite_as_finite:   "Verb Form",
+                  missing_verb:          "Missing Verb",
+                  article:              "Article",
+                  definite:             "Definite Form",
+                  adj_agreement:        "Adjective Agreement",
+                  auxiliary:            "Auxiliary (har/er)",
+                  possessive:           "Possessive",
+                  reflexive:            "Reflexive (sig)",
+                  genitive:             "Genitive",
                 };
                 const tag = TYPE_TAG[e.type] || "Grammar";
                 return (
