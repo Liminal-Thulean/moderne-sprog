@@ -173,6 +173,11 @@ function ReaderMode() {
       .then(setDict).catch(() => setDict({}));
   }, []);
 
+  // ALL hooks must be called unconditionally — guard values instead of early-returning
+  const work   = workIdx !== null ? WORKS[workIdx] : null;
+  const page   = work ? work.pages[pageIdx] : null;
+  const tokens = React.useMemo(() => page ? tokenise(page.text) : [], [workIdx, pageIdx]);
+
   const openWork = (i) => { setWorkIdx(i); setPageIdx(0); setView("reading"); setActiveId(null); };
   const back     = ()  => { setView("library"); setActiveId(null); };
 
@@ -202,9 +207,6 @@ function ReaderMode() {
   }
 
   // ── Reading view ───────────────────────────────────────────────────────────
-  const work   = WORKS[workIdx];
-  const page   = work.pages[pageIdx];
-  const tokens = React.useMemo(() => tokenise(page.text), [workIdx, pageIdx]);
   const wordTokens = tokens.filter(t => t.type === "word");
   const activeDict = dict || {};
   const inDict = wordTokens.filter(t => {

@@ -97,6 +97,14 @@ function ReaderMode() {
       .then(setDict).catch(e=>setErr(e.message));
   },[]);
 
+  // ALL hooks must be unconditional — guard values, never early-return before a hook
+  const work       = workIdx !== null ? WORKS[workIdx] : null;
+  const page       = work ? work.pages[pageIdx] : null;
+  const tokens     = React.useMemo(() => page ? tokenise(page.text) : [], [workIdx, pageIdx]);
+  const wordTokens = tokens.filter(t => t.type === "word");
+  const inDict     = dict ? wordTokens.filter(t => dict[toKey(t.text)]).length : 0;
+  const coverage   = wordTokens.length > 0 ? Math.round((inDict / wordTokens.length) * 100) : 0;
+
   const openWork = (i) => { setWorkIdx(i); setPageIdx(0); setView("reading"); setActiveId(null); };
   const back     = ()  => { setView("library"); setActiveId(null); };
 
@@ -131,12 +139,6 @@ function ReaderMode() {
   }
 
   // ── Reading view ──────────────────────────────────────────────────────────
-  const work   = WORKS[workIdx];
-  const page   = work.pages[pageIdx];
-  const tokens = React.useMemo(()=>tokenise(page.text),[workIdx,pageIdx]);
-  const wordTokens = tokens.filter(t=>t.type==="word");
-  const inDict = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
-  const coverage = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
   let wc = 0;
 
   return (
