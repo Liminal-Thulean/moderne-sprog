@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Latin — Language Nexus</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<title>Latin — Glossarium</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #f5f0e8; }
@@ -17,1453 +16,180 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f0e8d0; }
   ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
-  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;font-family:sans-serif}
-  .topbar-logo{font-size:16px;font-weight:600;color:#fff;text-decoration:none}
-  .topbar-lang{font-size:12px;color:rgba(255,255,255,0.85)}
-  .topbar-right{margin-left:auto}
 </style>
 </head>
 <body>
 <div id="root"></div>
+
+<!-- Load order: shared utilities → reader → tables → this shell (App) -->
+<script type="text/babel" src="latin_shared.js"></script>
+<script type="text/babel" src="latin_reader.js"></script>
+<script type="text/babel" src="latin_tables.js"></script>
+
 <script type="text/babel">
-
-// ─── DATA ─────────────────────────────────────────────────────────────────────
-// To add vocabulary: find the category you want, copy an existing line inside
-// the `words: [...]` array, paste it, and edit the lemma, meaning, and stem.
-// For 3rd declension nouns, also include nom_sg (the nominative singular form).
-//
-// To add a new tense/pattern, copy an existing category block and adjust.
-
-const CONJUGATION_PATTERNS = {
-  "1st_present": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["ō",   "āmus"] },
-      { label: "2nd", suffixes: ["ās",  "ātis"] },
-      { label: "3rd", suffixes: ["at",  "ant"]  },
-    ],
-  },
-  "1st_imperfect": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["ābam",  "ābāmus"] },
-      { label: "2nd", suffixes: ["ābās",  "ābātis"] },
-      { label: "3rd", suffixes: ["ābat",  "ābant"]  },
-    ],
-  },
-  "1st_future": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["ābō",  "ābimus"] },
-      { label: "2nd", suffixes: ["ābis", "ābitis"] },
-      { label: "3rd", suffixes: ["ābit", "ābunt"]  },
-    ],
-  },
-  "1st_perfect": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["āvī",    "āvimus"]  },
-      { label: "2nd", suffixes: ["āvistī", "āvistis"] },
-      { label: "3rd", suffixes: ["āvit",   "āvērunt"] },
-    ],
-  },
-  "2nd_present": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["eō", "ēmus"] },
-      { label: "2nd", suffixes: ["ēs", "ētis"] },
-      { label: "3rd", suffixes: ["et", "ent"]  },
-    ],
-  },
-  "2nd_imperfect": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["ēbam",  "ēbāmus"] },
-      { label: "2nd", suffixes: ["ēbās",  "ēbātis"] },
-      { label: "3rd", suffixes: ["ēbat",  "ēbant"]  },
-    ],
-  },
-  "3rd_present": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["ō",  "imus"] },
-      { label: "2nd", suffixes: ["is", "itis"] },
-      { label: "3rd", suffixes: ["it", "unt"]  },
-    ],
-  },
-  "4th_present": {
-    headers: ["", "Singular", "Plural"],
-    rows: [
-      { label: "1st", suffixes: ["iō", "īmus"] },
-      { label: "2nd", suffixes: ["īs", "ītis"] },
-      { label: "3rd", suffixes: ["it", "iunt"] },
-    ],
-  },
-};
-
-const DECLENSION_PATTERNS = {
-  "1st_decl": {
-    headers: ["Case", "Singular", "Plural"],
-    rows: [
-      { label: "Nominative", suffixes: ["a",  "ae"]   },
-      { label: "Genitive",   suffixes: ["ae", "ārum"] },
-      { label: "Dative",     suffixes: ["ae", "īs"]   },
-      { label: "Accusative", suffixes: ["am", "ās"]   },
-      { label: "Ablative",   suffixes: ["ā",  "īs"]   },
-      { label: "Vocative",   suffixes: ["a",  "ae"]   },
-    ],
-  },
-  "2nd_decl_m": {
-    headers: ["Case", "Singular", "Plural"],
-    rows: [
-      { label: "Nominative", suffixes: ["us", "ī"]   },
-      { label: "Genitive",   suffixes: ["ī",  "ōrum"] },
-      { label: "Dative",     suffixes: ["ō",  "īs"]   },
-      { label: "Accusative", suffixes: ["um", "ōs"]   },
-      { label: "Ablative",   suffixes: ["ō",  "īs"]   },
-      { label: "Vocative",   suffixes: ["e",  "ī"]    },
-    ],
-  },
-  "2nd_decl_n": {
-    headers: ["Case", "Singular", "Plural"],
-    rows: [
-      { label: "Nominative", suffixes: ["um", "a"]    },
-      { label: "Genitive",   suffixes: ["ī",  "ōrum"] },
-      { label: "Dative",     suffixes: ["ō",  "īs"]   },
-      { label: "Accusative", suffixes: ["um", "a"]    },
-      { label: "Ablative",   suffixes: ["ō",  "īs"]   },
-      { label: "Vocative",   suffixes: ["um", "a"]    },
-    ],
-  },
-  "3rd_decl": {
-    headers: ["Case", "Singular", "Plural"],
-    rows: [
-      { label: "Nominative", suffixes: [null, "ēs"]   },
-      { label: "Genitive",   suffixes: ["is",  "um"]  },
-      { label: "Dative",     suffixes: ["ī",   "ibus"] },
-      { label: "Accusative", suffixes: ["em",  "ēs"]  },
-      { label: "Ablative",   suffixes: ["e",   "ibus"] },
-      { label: "Vocative",   suffixes: [null,  "ēs"]  },
-    ],
-  },
-};
-
-// ─── VOCABULARY ───────────────────────────────────────────────────────────────
-
-const CATEGORIES = [
-  // ════════════════════════════════════════════════════════════
-  //  CONJUGATIONS
-  // ════════════════════════════════════════════════════════════
-  {
-    id: "conj_1_present",
-    label: "1st Conjugation",
-    sublabel: "Present Active Indicative",
-    type: "conjugation",
-    pattern: "1st_present",
-    words: [
-      // ADD NEW 1ST CONJUGATION VERBS HERE — copy a line and edit it
-      // Format: { lemma: "infinitive", meaning: "English", stem: "stem before endings" }
-      { lemma: "amāre",     meaning: "to love",        stem: "am"     },
-      { lemma: "portāre",   meaning: "to carry",       stem: "port"   },
-      { lemma: "laudāre",   meaning: "to praise",      stem: "laud"   },
-      { lemma: "vocāre",    meaning: "to call",        stem: "voc"    },
-      { lemma: "dare",      meaning: "to give",        stem: "d"      },
-      { lemma: "stāre",     meaning: "to stand",       stem: "st"     },
-      { lemma: "nārrāre",   meaning: "to tell",        stem: "nārr"   },
-      { lemma: "habitāre",  meaning: "to live/dwell",  stem: "habit"  },
-      { lemma: "labōrāre",  meaning: "to work",        stem: "labōr"  },
-      { lemma: "ambulāre",  meaning: "to walk",        stem: "ambul"  },
-      { lemma: "cantāre",   meaning: "to sing",        stem: "cant"   },
-      { lemma: "cūrāre",    meaning: "to care for",    stem: "cūr"    },
-      { lemma: "festīnāre", meaning: "to hurry",       stem: "festīn" },
-      { lemma: "nuntiāre",  meaning: "to announce",    stem: "nunti"  },
-      { lemma: "oppugnāre", meaning: "to attack",      stem: "oppugn" },
-      { lemma: "parāre",    meaning: "to prepare",     stem: "par"    },
-      { lemma: "pugnāre",   meaning: "to fight",       stem: "pugn"   },
-      { lemma: "rogāre",    meaning: "to ask",         stem: "rog"    },
-      { lemma: "spectāre",  meaning: "to watch",       stem: "spect"  },
-      { lemma: "errāre",    meaning: "to wander/err",  stem: "err"    },
-      { lemma: "nāvigāre",  meaning: "to sail",        stem: "nāvig"  },
-      { lemma: "servāre",   meaning: "to save/keep",   stem: "serv"   },
-      { lemma: "superāre",  meaning: "to overcome",    stem: "super"  },
-      { lemma: "clamāre",   meaning: "to shout",       stem: "clam"   },
-      { lemma: "vastāre",   meaning: "to devastate",   stem: "vast"   },
-    ],
-  },
-  {
-    id: "conj_1_imperfect",
-    label: "1st Conjugation",
-    sublabel: "Imperfect Active Indicative",
-    type: "conjugation",
-    pattern: "1st_imperfect",
-    words: [
-      { lemma: "amāre",     meaning: "to love",        stem: "am"     },
-      { lemma: "portāre",   meaning: "to carry",       stem: "port"   },
-      { lemma: "laudāre",   meaning: "to praise",      stem: "laud"   },
-      { lemma: "vocāre",    meaning: "to call",        stem: "voc"    },
-      { lemma: "nārrāre",   meaning: "to tell",        stem: "nārr"   },
-      { lemma: "habitāre",  meaning: "to live/dwell",  stem: "habit"  },
-      { lemma: "labōrāre",  meaning: "to work",        stem: "labōr"  },
-      { lemma: "ambulāre",  meaning: "to walk",        stem: "ambul"  },
-      { lemma: "cantāre",   meaning: "to sing",        stem: "cant"   },
-      { lemma: "cūrāre",    meaning: "to care for",    stem: "cūr"    },
-      { lemma: "festīnāre", meaning: "to hurry",       stem: "festīn" },
-      { lemma: "oppugnāre", meaning: "to attack",      stem: "oppugn" },
-      { lemma: "parāre",    meaning: "to prepare",     stem: "par"    },
-      { lemma: "pugnāre",   meaning: "to fight",       stem: "pugn"   },
-      { lemma: "rogāre",    meaning: "to ask",         stem: "rog"    },
-      { lemma: "spectāre",  meaning: "to watch",       stem: "spect"  },
-      { lemma: "errāre",    meaning: "to wander/err",  stem: "err"    },
-      { lemma: "nāvigāre",  meaning: "to sail",        stem: "nāvig"  },
-      { lemma: "servāre",   meaning: "to save/keep",   stem: "serv"   },
-      { lemma: "superāre",  meaning: "to overcome",    stem: "super"  },
-      { lemma: "vastāre",   meaning: "to devastate",   stem: "vast"   },
-      { lemma: "nuntiāre",  meaning: "to announce",    stem: "nunti"  },
-      { lemma: "clamāre",   meaning: "to shout",       stem: "clam"   },
-      { lemma: "dēlectāre", meaning: "to delight",     stem: "dēlect" },
-      { lemma: "vetāre",    meaning: "to forbid",      stem: "vet"    },
-    ],
-  },
-  {
-    id: "conj_1_future",
-    label: "1st Conjugation",
-    sublabel: "Future Active Indicative",
-    type: "conjugation",
-    pattern: "1st_future",
-    words: [
-      { lemma: "amāre",     meaning: "to love",        stem: "am"     },
-      { lemma: "portāre",   meaning: "to carry",       stem: "port"   },
-      { lemma: "laudāre",   meaning: "to praise",      stem: "laud"   },
-      { lemma: "vocāre",    meaning: "to call",        stem: "voc"    },
-      { lemma: "nārrāre",   meaning: "to tell",        stem: "nārr"   },
-      { lemma: "habitāre",  meaning: "to live/dwell",  stem: "habit"  },
-      { lemma: "labōrāre",  meaning: "to work",        stem: "labōr"  },
-      { lemma: "parāre",    meaning: "to prepare",     stem: "par"    },
-      { lemma: "pugnāre",   meaning: "to fight",       stem: "pugn"   },
-      { lemma: "rogāre",    meaning: "to ask",         stem: "rog"    },
-      { lemma: "spectāre",  meaning: "to watch",       stem: "spect"  },
-      { lemma: "errāre",    meaning: "to wander/err",  stem: "err"    },
-      { lemma: "nāvigāre",  meaning: "to sail",        stem: "nāvig"  },
-      { lemma: "servāre",   meaning: "to save/keep",   stem: "serv"   },
-      { lemma: "superāre",  meaning: "to overcome",    stem: "super"  },
-      { lemma: "vastāre",   meaning: "to devastate",   stem: "vast"   },
-      { lemma: "nuntiāre",  meaning: "to announce",    stem: "nunti"  },
-      { lemma: "clamāre",   meaning: "to shout",       stem: "clam"   },
-      { lemma: "dēlectāre", meaning: "to delight",     stem: "dēlect" },
-      { lemma: "vetāre",    meaning: "to forbid",      stem: "vet"    },
-      { lemma: "festīnāre", meaning: "to hurry",       stem: "festīn" },
-      { lemma: "oppugnāre", meaning: "to attack",      stem: "oppugn" },
-      { lemma: "cūrāre",    meaning: "to care for",    stem: "cūr"    },
-      { lemma: "cantāre",   meaning: "to sing",        stem: "cant"   },
-      { lemma: "ambulāre",  meaning: "to walk",        stem: "ambul"  },
-    ],
-  },
-  {
-    id: "conj_1_perfect",
-    label: "1st Conjugation",
-    sublabel: "Perfect Active Indicative",
-    type: "conjugation",
-    pattern: "1st_perfect",
-    words: [
-      { lemma: "amāre",     meaning: "to love",        stem: "am"     },
-      { lemma: "portāre",   meaning: "to carry",       stem: "port"   },
-      { lemma: "laudāre",   meaning: "to praise",      stem: "laud"   },
-      { lemma: "vocāre",    meaning: "to call",        stem: "voc"    },
-      { lemma: "nārrāre",   meaning: "to tell",        stem: "nārr"   },
-      { lemma: "habitāre",  meaning: "to live/dwell",  stem: "habit"  },
-      { lemma: "labōrāre",  meaning: "to work",        stem: "labōr"  },
-      { lemma: "parāre",    meaning: "to prepare",     stem: "par"    },
-      { lemma: "pugnāre",   meaning: "to fight",       stem: "pugn"   },
-      { lemma: "rogāre",    meaning: "to ask",         stem: "rog"    },
-      { lemma: "spectāre",  meaning: "to watch",       stem: "spect"  },
-      { lemma: "errāre",    meaning: "to wander/err",  stem: "err"    },
-      { lemma: "nāvigāre",  meaning: "to sail",        stem: "nāvig"  },
-      { lemma: "servāre",   meaning: "to save/keep",   stem: "serv"   },
-      { lemma: "superāre",  meaning: "to overcome",    stem: "super"  },
-      { lemma: "vastāre",   meaning: "to devastate",   stem: "vast"   },
-      { lemma: "nuntiāre",  meaning: "to announce",    stem: "nunti"  },
-      { lemma: "clamāre",   meaning: "to shout",       stem: "clam"   },
-      { lemma: "dēlectāre", meaning: "to delight",     stem: "dēlect" },
-      { lemma: "festīnāre", meaning: "to hurry",       stem: "festīn" },
-      { lemma: "oppugnāre", meaning: "to attack",      stem: "oppugn" },
-      { lemma: "cūrāre",    meaning: "to care for",    stem: "cūr"    },
-      { lemma: "cantāre",   meaning: "to sing",        stem: "cant"   },
-      { lemma: "ambulāre",  meaning: "to walk",        stem: "ambul"  },
-      { lemma: "vetāre",    meaning: "to forbid",      stem: "vet"    },
-    ],
-  },
-  {
-    id: "conj_2_present",
-    label: "2nd Conjugation",
-    sublabel: "Present Active Indicative",
-    type: "conjugation",
-    pattern: "2nd_present",
-    words: [
-      { lemma: "monēre",     meaning: "to warn/advise",   stem: "mon"     },
-      { lemma: "habēre",     meaning: "to have",          stem: "hab"     },
-      { lemma: "vidēre",     meaning: "to see",           stem: "vid"     },
-      { lemma: "tenēre",     meaning: "to hold",          stem: "ten"     },
-      { lemma: "docēre",     meaning: "to teach",         stem: "doc"     },
-      { lemma: "timēre",     meaning: "to fear",          stem: "tim"     },
-      { lemma: "manēre",     meaning: "to remain",        stem: "man"     },
-      { lemma: "movēre",     meaning: "to move",          stem: "mov"     },
-      { lemma: "respondēre", meaning: "to respond",       stem: "respond" },
-      { lemma: "sedēre",     meaning: "to sit",           stem: "sed"     },
-      { lemma: "tacēre",     meaning: "to be silent",     stem: "tac"     },
-      { lemma: "valēre",     meaning: "to be strong",     stem: "val"     },
-      { lemma: "iubēre",     meaning: "to order",         stem: "iub"     },
-      { lemma: "dēbēre",     meaning: "to owe/ought",     stem: "dēb"     },
-      { lemma: "flēre",      meaning: "to weep",          stem: "fl"      },
-      { lemma: "mordēre",    meaning: "to bite",          stem: "mord"    },
-      { lemma: "nocēre",     meaning: "to harm",          stem: "noc"     },
-      { lemma: "placēre",    meaning: "to please",        stem: "plac"    },
-      { lemma: "prohibēre",  meaning: "to prohibit",      stem: "prohib"  },
-      { lemma: "ridēre",     meaning: "to laugh",         stem: "rid"     },
-      { lemma: "splendēre",  meaning: "to shine",         stem: "splend"  },
-      { lemma: "terrēre",    meaning: "to terrify",       stem: "terr"    },
-      { lemma: "torquēre",   meaning: "to twist",         stem: "torqu"   },
-      { lemma: "patēre",     meaning: "to lie open",      stem: "pat"     },
-      { lemma: "augēre",     meaning: "to increase",      stem: "aug"     },
-    ],
-  },
-  {
-    id: "conj_2_imperfect",
-    label: "2nd Conjugation",
-    sublabel: "Imperfect Active Indicative",
-    type: "conjugation",
-    pattern: "2nd_imperfect",
-    words: [
-      { lemma: "monēre",     meaning: "to warn/advise",   stem: "mon"     },
-      { lemma: "habēre",     meaning: "to have",          stem: "hab"     },
-      { lemma: "vidēre",     meaning: "to see",           stem: "vid"     },
-      { lemma: "tenēre",     meaning: "to hold",          stem: "ten"     },
-      { lemma: "docēre",     meaning: "to teach",         stem: "doc"     },
-      { lemma: "timēre",     meaning: "to fear",          stem: "tim"     },
-      { lemma: "manēre",     meaning: "to remain",        stem: "man"     },
-      { lemma: "movēre",     meaning: "to move",          stem: "mov"     },
-      { lemma: "respondēre", meaning: "to respond",       stem: "respond" },
-      { lemma: "sedēre",     meaning: "to sit",           stem: "sed"     },
-      { lemma: "tacēre",     meaning: "to be silent",     stem: "tac"     },
-      { lemma: "valēre",     meaning: "to be strong",     stem: "val"     },
-      { lemma: "iubēre",     meaning: "to order",         stem: "iub"     },
-      { lemma: "dēbēre",     meaning: "to owe/ought",     stem: "dēb"     },
-      { lemma: "nocēre",     meaning: "to harm",          stem: "noc"     },
-      { lemma: "placēre",    meaning: "to please",        stem: "plac"    },
-      { lemma: "prohibēre",  meaning: "to prohibit",      stem: "prohib"  },
-      { lemma: "ridēre",     meaning: "to laugh",         stem: "rid"     },
-      { lemma: "terrēre",    meaning: "to terrify",       stem: "terr"    },
-      { lemma: "augēre",     meaning: "to increase",      stem: "aug"     },
-      { lemma: "flēre",      meaning: "to weep",          stem: "fl"      },
-      { lemma: "mordēre",    meaning: "to bite",          stem: "mord"    },
-      { lemma: "splendēre",  meaning: "to shine",         stem: "splend"  },
-      { lemma: "torquēre",   meaning: "to twist",         stem: "torqu"   },
-      { lemma: "patēre",     meaning: "to lie open",      stem: "pat"     },
-    ],
-  },
-  {
-    id: "conj_3_present",
-    label: "3rd Conjugation",
-    sublabel: "Present Active Indicative",
-    type: "conjugation",
-    pattern: "3rd_present",
-    words: [
-      { lemma: "dūcere",     meaning: "to lead",          stem: "dūc"     },
-      { lemma: "mittere",    meaning: "to send",          stem: "mitt"    },
-      { lemma: "scrībere",   meaning: "to write",         stem: "scrīb"   },
-      { lemma: "legere",     meaning: "to read/gather",   stem: "leg"     },
-      { lemma: "regere",     meaning: "to rule",          stem: "reg"     },
-      { lemma: "currere",    meaning: "to run",           stem: "curr"    },
-      { lemma: "dicere",     meaning: "to say",           stem: "dīc"     },
-      { lemma: "facere",     meaning: "to make/do",       stem: "fac"     },
-      { lemma: "vincere",    meaning: "to conquer",       stem: "vinc"    },
-      { lemma: "discere",    meaning: "to learn",         stem: "disc"    },
-      { lemma: "ponere",     meaning: "to place",         stem: "pon"     },
-      { lemma: "capere",     meaning: "to take/seize",    stem: "cap"     },
-      { lemma: "trahere",    meaning: "to drag/draw",     stem: "trah"    },
-      { lemma: "gerere",     meaning: "to carry/wage",    stem: "ger"     },
-      { lemma: "petere",     meaning: "to seek/attack",   stem: "pet"     },
-      { lemma: "quaerere",   meaning: "to seek/ask",      stem: "quaer"   },
-      { lemma: "relinquere", meaning: "to leave behind",  stem: "relinqu" },
-      { lemma: "solvere",    meaning: "to loosen/pay",    stem: "solv"    },
-      { lemma: "vertere",    meaning: "to turn",          stem: "vert"    },
-      { lemma: "vivere",     meaning: "to live",          stem: "viv"     },
-      { lemma: "cadere",     meaning: "to fall",          stem: "cad"     },
-      { lemma: "cedere",     meaning: "to yield/go",      stem: "ced"     },
-      { lemma: "colere",     meaning: "to cultivate",     stem: "col"     },
-      { lemma: "credere",    meaning: "to believe",       stem: "cred"    },
-      { lemma: "defendere",  meaning: "to defend",        stem: "defend"  },
-    ],
-  },
-  {
-    id: "conj_4_present",
-    label: "4th Conjugation",
-    sublabel: "Present Active Indicative",
-    type: "conjugation",
-    pattern: "4th_present",
-    words: [
-      { lemma: "audīre",     meaning: "to hear",          stem: "aud"     },
-      { lemma: "venīre",     meaning: "to come",          stem: "ven"     },
-      { lemma: "sentīre",    meaning: "to feel/sense",    stem: "sent"    },
-      { lemma: "dormīre",    meaning: "to sleep",         stem: "dorm"    },
-      { lemma: "scīre",      meaning: "to know",          stem: "sc"      },
-      { lemma: "invenīre",   meaning: "to find",          stem: "inven"   },
-      { lemma: "munīre",     meaning: "to fortify",       stem: "mun"     },
-      { lemma: "servīre",    meaning: "to serve",         stem: "serv"    },
-      { lemma: "impedīre",   meaning: "to hinder",        stem: "imped"   },
-      { lemma: "aperīre",    meaning: "to open",          stem: "aper"    },
-      { lemma: "custōdīre",  meaning: "to guard",         stem: "custōd"  },
-      { lemma: "fīnīre",     meaning: "to finish/limit",  stem: "fīn"     },
-      { lemma: "nescīre",    meaning: "to not know",      stem: "nesc"    },
-      { lemma: "punīre",     meaning: "to punish",        stem: "pun"     },
-      { lemma: "reperīre",   meaning: "to discover",      stem: "reper"   },
-      { lemma: "salīre",     meaning: "to leap",          stem: "sal"     },
-      { lemma: "sepelīre",   meaning: "to bury",          stem: "sepel"   },
-      { lemma: "sitīre",     meaning: "to thirst",        stem: "sit"     },
-      { lemma: "vincīre",    meaning: "to bind",          stem: "vinc"    },
-      { lemma: "vestīre",    meaning: "to clothe",        stem: "vest"    },
-      { lemma: "largīrī",    meaning: "to give freely",   stem: "larg"    },
-      { lemma: "mōlīrī",     meaning: "to toil/build",    stem: "mōl"     },
-      { lemma: "ōrdīrī",     meaning: "to begin",         stem: "ōrd"     },
-      { lemma: "experīrī",   meaning: "to try/test",      stem: "exper"   },
-      { lemma: "obīre",      meaning: "to meet/die",      stem: "ob"      },
-    ],
-  },
-  // ════════════════════════════════════════════════════════════
-  //  IRREGULAR VERBS
-  //  Each word has its own `tables` array with explicit answers.
-  //  To edit forms, find the word and change the `answers` arrays.
-  // ════════════════════════════════════════════════════════════
-  {
-    id: "irreg_esse",
-    label: "Irregular: esse",
-    sublabel: "To Be — Present, Imperfect, Future",
-    type: "irregular",
-    words: [
-      {
-        lemma: "esse", meaning: "to be",
-        tables: [
-          {
-            tense: "Present",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["sum",  "sumus"] },
-              { label: "2nd", answers: ["es",   "estis"] },
-              { label: "3rd", answers: ["est",  "sunt"]  },
-            ],
-          },
-          {
-            tense: "Imperfect",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["eram",  "erāmus"] },
-              { label: "2nd", answers: ["erās",  "erātis"] },
-              { label: "3rd", answers: ["erat",  "erant"]  },
-            ],
-          },
-          {
-            tense: "Future",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["erō",  "erimus"] },
-              { label: "2nd", answers: ["eris", "eritis"] },
-              { label: "3rd", answers: ["erit", "erunt"]  },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "irreg_ire",
-    label: "Irregular: īre",
-    sublabel: "To Go — Present, Imperfect, Future",
-    type: "irregular",
-    words: [
-      {
-        lemma: "īre", meaning: "to go",
-        tables: [
-          {
-            tense: "Present",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["eō",  "īmus"] },
-              { label: "2nd", answers: ["īs",  "ītis"] },
-              { label: "3rd", answers: ["it",  "eunt"] },
-            ],
-          },
-          {
-            tense: "Imperfect",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["ībam",  "ībāmus"] },
-              { label: "2nd", answers: ["ībās",  "ībātis"] },
-              { label: "3rd", answers: ["ībat",  "ībant"]  },
-            ],
-          },
-          {
-            tense: "Future",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["ībō",  "ībimus"] },
-              { label: "2nd", answers: ["ībis", "ībitis"] },
-              { label: "3rd", answers: ["ībit", "ībunt"]  },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "irreg_velle",
-    label: "Irregular: velle",
-    sublabel: "To Want — Present, Imperfect",
-    type: "irregular",
-    words: [
-      {
-        lemma: "velle", meaning: "to want/wish",
-        tables: [
-          {
-            tense: "Present",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["volō",  "volumus"] },
-              { label: "2nd", answers: ["vīs",   "vultis"]  },
-              { label: "3rd", answers: ["vult",  "volunt"]  },
-            ],
-          },
-          {
-            tense: "Imperfect",
-            headers: ["", "Singular", "Plural"],
-            rows: [
-              { label: "1st", answers: ["volēbam",  "volēbāmus"] },
-              { label: "2nd", answers: ["volēbās",  "volēbātis"] },
-              { label: "3rd", answers: ["volēbat",  "volēbant"]  },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  // ════════════════════════════════════════════════════════════
-  //  DECLENSIONS
-  // ════════════════════════════════════════════════════════════
-  {
-    id: "decl_1",
-    label: "1st Declension",
-    sublabel: "Feminine Nouns (-a, -ae)",
-    type: "declension",
-    pattern: "1st_decl",
-    words: [
-      // Format: { lemma: "nom, gen", meaning: "English", stem: "stem" }
-      { lemma: "puella, -ae",   meaning: "girl",            stem: "puell"   },
-      { lemma: "fēmina, -ae",   meaning: "woman",           stem: "fēmin"   },
-      { lemma: "aqua, -ae",     meaning: "water",           stem: "aqu"     },
-      { lemma: "terra, -ae",    meaning: "land/earth",      stem: "terr"    },
-      { lemma: "porta, -ae",    meaning: "gate/door",       stem: "port"    },
-      { lemma: "via, -ae",      meaning: "road/way",        stem: "vi"      },
-      { lemma: "silva, -ae",    meaning: "forest/wood",     stem: "silv"    },
-      { lemma: "insula, -ae",   meaning: "island",          stem: "insul"   },
-      { lemma: "casa, -ae",     meaning: "house/cottage",   stem: "cas"     },
-      { lemma: "luna, -ae",     meaning: "moon",            stem: "lun"     },
-      { lemma: "stella, -ae",   meaning: "star",            stem: "stell"   },
-      { lemma: "nauta, -ae",    meaning: "sailor (m.)",     stem: "naut"    },
-      { lemma: "poeta, -ae",    meaning: "poet (m.)",       stem: "poet"    },
-      { lemma: "cōpia, -ae",    meaning: "abundance/supply",stem: "cōpi"    },
-      { lemma: "fāma, -ae",     meaning: "fame/rumor",      stem: "fām"     },
-      { lemma: "fortūna, -ae",  meaning: "fortune/luck",    stem: "fortūn"  },
-      { lemma: "glōria, -ae",   meaning: "glory",           stem: "glōri"   },
-      { lemma: "īra, -ae",      meaning: "anger",           stem: "īr"      },
-      { lemma: "patria, -ae",   meaning: "fatherland",      stem: "patri"   },
-      { lemma: "pīrāta, -ae",   meaning: "pirate (m.)",     stem: "pīrāt"   },
-      { lemma: "rēgīna, -ae",   meaning: "queen",           stem: "rēgīn"   },
-      { lemma: "sagitta, -ae",  meaning: "arrow",           stem: "sagitt"  },
-      { lemma: "toga, -ae",     meaning: "toga",            stem: "tog"     },
-      { lemma: "victoria, -ae", meaning: "victory",         stem: "victori" },
-      { lemma: "lingua, -ae",   meaning: "tongue/language", stem: "lingu"   },
-    ],
-  },
-  {
-    id: "decl_2_m",
-    label: "2nd Declension",
-    sublabel: "Masculine Nouns (-us, -ī)",
-    type: "declension",
-    pattern: "2nd_decl_m",
-    words: [
-      { lemma: "servus, -ī",    meaning: "slave/servant",   stem: "serv"    },
-      { lemma: "dominus, -ī",   meaning: "master/lord",     stem: "domin"   },
-      { lemma: "filius, -ī",    meaning: "son",             stem: "fili"    },
-      { lemma: "amicus, -ī",    meaning: "friend",          stem: "amic"    },
-      { lemma: "equus, -ī",     meaning: "horse",           stem: "equ"     },
-      { lemma: "lupus, -ī",     meaning: "wolf",            stem: "lup"     },
-      { lemma: "animus, -ī",    meaning: "mind/spirit",     stem: "anim"    },
-      { lemma: "modus, -ī",     meaning: "manner/way",      stem: "mod"     },
-      { lemma: "populus, -ī",   meaning: "people",          stem: "popul"   },
-      { lemma: "locus, -ī",     meaning: "place",           stem: "loc"     },
-      { lemma: "nuntius, -ī",   meaning: "messenger/news",  stem: "nunti"   },
-      { lemma: "oculus, -ī",    meaning: "eye",             stem: "ocul"    },
-      { lemma: "hortus, -ī",    meaning: "garden",          stem: "hort"    },
-      { lemma: "mundus, -ī",    meaning: "world",           stem: "mund"    },
-      { lemma: "numerus, -ī",   meaning: "number",          stem: "numer"   },
-      { lemma: "puer, -ī",      meaning: "boy",             stem: "puer"    },
-      { lemma: "vir, virī",     meaning: "man/husband",     stem: "vir"     },
-      { lemma: "ager, agrī",    meaning: "field",           stem: "agr"     },
-      { lemma: "deus, -ī",      meaning: "god",             stem: "de"      },
-      { lemma: "gladius, -ī",   meaning: "sword",           stem: "gladi"   },
-      { lemma: "liber, librī",  meaning: "book",            stem: "libr"    },
-      { lemma: "murus, -ī",     meaning: "wall",            stem: "mur"     },
-      { lemma: "socius, -ī",    meaning: "ally/companion",  stem: "soci"    },
-      { lemma: "ventus, -ī",    meaning: "wind",            stem: "vent"    },
-      { lemma: "focus, -ī",     meaning: "hearth/fire",     stem: "foc"     },
-    ],
-  },
-  {
-    id: "decl_2_n",
-    label: "2nd Declension",
-    sublabel: "Neuter Nouns (-um, -ī)",
-    type: "declension",
-    pattern: "2nd_decl_n",
-    words: [
-      { lemma: "bellum, -ī",    meaning: "war",             stem: "bell"    },
-      { lemma: "verbum, -ī",    meaning: "word",            stem: "verb"    },
-      { lemma: "templum, -ī",   meaning: "temple",          stem: "templ"   },
-      { lemma: "oppidum, -ī",   meaning: "town",            stem: "oppid"   },
-      { lemma: "periculum, -ī", meaning: "danger",          stem: "pericul" },
-      { lemma: "auxilium, -ī",  meaning: "help/aid",        stem: "auxili"  },
-      { lemma: "caelum, -ī",    meaning: "sky/heaven",      stem: "cael"    },
-      { lemma: "consilium, -ī", meaning: "plan/council",    stem: "consili" },
-      { lemma: "dōnum, -ī",     meaning: "gift",            stem: "dōn"     },
-      { lemma: "fātum, -ī",     meaning: "fate",            stem: "fāt"     },
-      { lemma: "forum, -ī",     meaning: "forum/market",    stem: "for"     },
-      { lemma: "gaudium, -ī",   meaning: "joy",             stem: "gaudi"   },
-      { lemma: "imperium, -ī",  meaning: "command/empire",  stem: "imperi"  },
-      { lemma: "initium, -ī",   meaning: "beginning",       stem: "initi"   },
-      { lemma: "iūdicium, -ī",  meaning: "judgment",        stem: "iūdici"  },
-      { lemma: "malum, -ī",     meaning: "evil/apple",      stem: "mal"     },
-      { lemma: "medium, -ī",    meaning: "middle",          stem: "medi"    },
-      { lemma: "odium, -ī",     meaning: "hatred",          stem: "odi"     },
-      { lemma: "praemium, -ī",  meaning: "reward",          stem: "praemi"  },
-      { lemma: "proelium, -ī",  meaning: "battle",          stem: "proeli"  },
-      { lemma: "rēgnum, -ī",    meaning: "kingdom/rule",    stem: "rēgn"    },
-      { lemma: "signum, -ī",    meaning: "sign/signal",     stem: "sign"    },
-      { lemma: "vinum, -ī",     meaning: "wine",            stem: "vin"     },
-      { lemma: "saxum, -ī",     meaning: "rock/stone",      stem: "sax"     },
-      { lemma: "scūtum, -ī",    meaning: "shield",          stem: "scūt"    },
-    ],
-  },
-  {
-    id: "decl_3",
-    label: "3rd Declension",
-    sublabel: "Consonant Stem Nouns",
-    type: "declension",
-    pattern: "3rd_decl",
-    words: [
-      // 3rd decl needs nom_sg (the nominative singular) since it can't be derived from stem
-      { lemma: "rēx, rēgis",      meaning: "king",            stem: "rēg",    nom_sg: "rēx"    },
-      { lemma: "lēx, lēgis",      meaning: "law",             stem: "lēg",    nom_sg: "lēx"    },
-      { lemma: "miles, militis",  meaning: "soldier",         stem: "milit",  nom_sg: "miles"  },
-      { lemma: "dux, ducis",      meaning: "leader",          stem: "duc",    nom_sg: "dux"    },
-      { lemma: "pater, patris",   meaning: "father",          stem: "patr",   nom_sg: "pater"  },
-      { lemma: "mater, matris",   meaning: "mother",          stem: "matr",   nom_sg: "mater"  },
-      { lemma: "frāter, frātris", meaning: "brother",         stem: "frātr",  nom_sg: "frāter" },
-      { lemma: "homō, hominis",   meaning: "man/person",      stem: "homin",  nom_sg: "homō"   },
-      { lemma: "leō, leōnis",     meaning: "lion",            stem: "leōn",   nom_sg: "leō"    },
-      { lemma: "canis, canis",    meaning: "dog",             stem: "can",    nom_sg: "canis"  },
-      { lemma: "corpus, corporis",meaning: "body",            stem: "corpor", nom_sg: "corpus" },
-      { lemma: "tempus, temporis",meaning: "time",            stem: "tempor", nom_sg: "tempus" },
-      { lemma: "nōmen, nōminis",  meaning: "name",            stem: "nōmin",  nom_sg: "nōmen"  },
-      { lemma: "iter, itineris",  meaning: "journey/route",   stem: "itiner", nom_sg: "iter"   },
-      { lemma: "flūmen, flūminis",meaning: "river",           stem: "flūmin", nom_sg: "flūmen" },
-      { lemma: "ōrātor, -ōris",   meaning: "orator/speaker",  stem: "ōrātōr", nom_sg: "ōrātor" },
-      { lemma: "pāx, pācis",      meaning: "peace",           stem: "pāc",    nom_sg: "pāx"    },
-      { lemma: "vōx, vōcis",      meaning: "voice",           stem: "vōc",    nom_sg: "vōx"    },
-      { lemma: "amor, amōris",    meaning: "love",            stem: "amōr",   nom_sg: "amor"   },
-      { lemma: "timor, timōris",  meaning: "fear",            stem: "timōr",  nom_sg: "timor"  },
-      { lemma: "virtūs, virtūtis",meaning: "virtue/courage",  stem: "virtūt", nom_sg: "virtūs" },
-      { lemma: "cīvis, cīvis",    meaning: "citizen",         stem: "cīv",    nom_sg: "cīvis"  },
-      { lemma: "nox, noctis",     meaning: "night",           stem: "noct",   nom_sg: "nox"    },
-      { lemma: "urbs, urbis",     meaning: "city",            stem: "urb",    nom_sg: "urbs"   },
-      { lemma: "dens, dentis",    meaning: "tooth",           stem: "dent",   nom_sg: "dens"   },
-    ],
-  },
-];
-
-// ─── HELPERS ──────────────────────────────────────────────────────────────────
-
-function normalize(str) {
-  return str.trim().toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[āa]/g,"a").replace(/[ēe]/g,"e").replace(/[īi]/g,"i")
-    .replace(/[ōo]/g,"o").replace(/[ūu]/g,"u");
-}
-
-function checkAnswer(input, answer) {
-  if (!input.trim()) return "empty";
-  return normalize(input) === normalize(answer) ? "correct" : "wrong";
-}
-
-function getAnswers(category, word) {
-  const patterns = category.type === "conjugation" ? CONJUGATION_PATTERNS : DECLENSION_PATTERNS;
-  const pattern = patterns[category.pattern];
-  return pattern.rows.map((row) =>
-    row.suffixes.map((suf) => suf === null ? word.nom_sg : word.stem + suf)
-  );
-}
-
-// ─── TAG COLORS ───────────────────────────────────────────────────────────────
-
-const TAG = {
-  conjugation: { bg: "#3a2410", text: "#e8c97a" },
-  irregular:   { bg: "#2a1040", text: "#c4a0f0" },
-  declension:  { bg: "#0f2e20", text: "#7ed8a4" },
-};
-
-// ─── MATCHING MODE ────────────────────────────────────────────────────────────
-
-// Build a flat pool of all {latin, english} pairs from all CATEGORIES
-function buildMatchPool() {
-  const pool = [];
-  CATEGORIES.forEach(cat => {
-    cat.words.forEach(w => {
-      // For irregular verbs with multiple tables, just use the lemma
-      const latin = w.lemma;
-      const english = w.meaning;
-      if (latin && english) pool.push({ latin, english, catId: cat.id });
-    });
-  });
-  return pool;
-}
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-const PAIRS_PER_ROUND = 8;
-
-// Pastel pair colors — one per matched pair so lines/highlights share a color
-const PAIR_COLORS = [
-  { light: "#fef3c7", border: "#d97706", text: "#92400e" },
-  { light: "#d1fae5", border: "#059669", text: "#065f46" },
-  { light: "#dbeafe", border: "#2563eb", text: "#1e3a8a" },
-  { light: "#fce7f3", border: "#db2777", text: "#831843" },
-  { light: "#ede9fe", border: "#7c3aed", text: "#4c1d95" },
-  { light: "#ffedd5", border: "#ea580c", text: "#7c2d12" },
-  { light: "#cffafe", border: "#0891b2", text: "#164e63" },
-  { light: "#dcfce7", border: "#16a34a", text: "#14532d" },
-];
-
-function MatchingMode() {
-  const allPairs = React.useMemo(() => buildMatchPool(), []);
-
-  const [round, setRound] = React.useState(0);
-  const [roundPairs, setRoundPairs] = React.useState([]);
-  const [leftItems, setLeftItems] = React.useState([]);   // shuffled latin
-  const [rightItems, setRightItems] = React.useState([]); // shuffled english
-  const [selectedLeft, setSelectedLeft] = React.useState(null);
-  const [selectedRight, setSelectedRight] = React.useState(null);
-  const [matched, setMatched] = React.useState({}); // id -> colorIdx
-  const [wrong, setWrong] = React.useState({ left: null, right: null });
-  const [roundDone, setRoundDone] = React.useState(false);
-  const [totalCorrect, setTotalCorrect] = React.useState(0);
-  const [totalAttempts, setTotalAttempts] = React.useState(0);
-
-  const startRound = React.useCallback((roundNum) => {
-    const start = (roundNum * PAIRS_PER_ROUND) % allPairs.length;
-    // slice cyclically
-    let slice = [];
-    for (let i = 0; i < PAIRS_PER_ROUND; i++) {
-      slice.push(allPairs[(start + i) % allPairs.length]);
-    }
-    // give each pair a unique id for this round
-    const pairs = slice.map((p, i) => ({ ...p, id: i }));
-    setRoundPairs(pairs);
-    setLeftItems(shuffle(pairs.map(p => ({ id: p.id, text: p.latin }))));
-    setRightItems(shuffle(pairs.map(p => ({ id: p.id, text: p.english }))));
-    setMatched({});
-    setSelectedLeft(null);
-    setSelectedRight(null);
-    setWrong({ left: null, right: null });
-    setRoundDone(false);
-  }, [allPairs]);
-
-  React.useEffect(() => { startRound(0); }, []);
-
-  // When both sides selected, check match
-  React.useEffect(() => {
-    if (selectedLeft === null || selectedRight === null) return;
-    setTotalAttempts(a => a + 1);
-    if (selectedLeft === selectedRight) {
-      // correct
-      const colorIdx = Object.keys(matched).length % PAIR_COLORS.length;
-      setMatched(m => ({ ...m, [selectedLeft]: colorIdx }));
-      setTotalCorrect(c => c + 1);
-      setSelectedLeft(null);
-      setSelectedRight(null);
-      // check if round complete
-      setTimeout(() => {
-        setMatched(m => {
-          if (Object.keys(m).length === PAIRS_PER_ROUND) setRoundDone(true);
-          return m;
-        });
-      }, 300);
-    } else {
-      // wrong — flash red briefly
-      setWrong({ left: selectedLeft, right: selectedRight });
-      setTimeout(() => {
-        setWrong({ left: null, right: null });
-        setSelectedLeft(null);
-        setSelectedRight(null);
-      }, 700);
-    }
-  }, [selectedLeft, selectedRight]);
-
-  const handleLeft = (id) => {
-    if (matched[id] !== undefined) return;
-    if (wrong.left !== null) return;
-    setSelectedLeft(id);
-  };
-
-  const handleRight = (id) => {
-    if (matched[id] !== undefined) return;
-    if (wrong.left !== null) return;
-    setSelectedRight(id);
-  };
-
-  const nextRound = () => {
-    setRound(r => { const next = r + 1; startRound(next); return next; });
-  };
-
-  const matchedCount = Object.keys(matched).length;
-  const accuracy = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : null;
-
-  const itemStyle = (id, side) => {
-    const isMatched = matched[id] !== undefined;
-    const colorIdx = isMatched ? matched[id] : null;
-    const c = colorIdx !== null ? PAIR_COLORS[colorIdx] : null;
-    const isSelected = side === "left" ? selectedLeft === id : selectedRight === id;
-    const isWrong = side === "left" ? wrong.left === id : wrong.right === id;
-
-    return {
-      padding: "10px 16px",
-      border: "1.5px solid",
-      borderColor: isMatched ? c.border
-        : isWrong ? "#9b2335"
-        : isSelected ? "#b8973e"
-        : "#d4bc84",
-      borderRadius: "4px",
-      background: isMatched ? c.light
-        : isWrong ? "rgba(155,35,53,0.08)"
-        : isSelected ? "rgba(184,151,62,0.12)"
-        : "#fffdf6",
-      color: isMatched ? c.text
-        : isWrong ? "#9b2335"
-        : "#2c1f0e",
-      cursor: isMatched ? "default" : "pointer",
-      fontFamily: side === "left" ? "'EB Garamond',serif" : "'EB Garamond',serif",
-      fontSize: "15px",
-      transition: "all 0.15s",
-      textAlign: "center",
-      userSelect: "none",
-      opacity: isMatched ? 0.75 : 1,
-      textDecoration: isMatched ? "line-through" : "none",
-      fontStyle: side === "left" ? "italic" : "normal",
-      minHeight: "44px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    };
-  };
-
-  return (
-    <div style={{ marginTop: "16px" }}>
-
-      {/* Progress bar */}
-      <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
-        <div style={{ flex: 1, height: "6px", background: "#e8dfc0", borderRadius: "3px", overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${(matchedCount / PAIRS_PER_ROUND) * 100}%`, background: "#8a6914", borderRadius: "3px", transition: "width 0.4s ease" }} />
-        </div>
-        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", color: "#8a6a3a", whiteSpace: "nowrap" }}>
-          {matchedCount} / {PAIRS_PER_ROUND} matched
-        </div>
-        {accuracy !== null && (
-          <div style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", color: "#8a6a3a", whiteSpace: "nowrap" }}>
-            {accuracy}% accuracy
-          </div>
-        )}
-      </div>
-
-      {/* Instruction */}
-      {!roundDone && (
-        <div style={{ textAlign: "center", marginBottom: "14px", fontStyle: "italic", color: "#9a7a3a", fontSize: "13px" }}>
-          Click a Latin word, then its English meaning
-        </div>
-      )}
-
-      {/* Round complete banner */}
-      {roundDone && (
-        <div style={{ textAlign: "center", marginBottom: "16px", padding: "16px", background: "linear-gradient(180deg,#4a3010,#3a2410)", borderRadius: "4px", border: "1px solid #b8973e" }}>
-          <div style={{ fontFamily: "'Cinzel',serif", fontSize: "20px", color: "#e8c97a", fontWeight: "700", marginBottom: "4px" }}>
-            {accuracy === 100 ? "Optimus! 🏆" : accuracy >= 80 ? "Bene! ✓" : accuracy >= 60 ? "Satis" : "Melius studē!"}
-          </div>
-          <div style={{ color: "#c4a060", fontSize: "13px", marginBottom: "14px" }}>
-            Round complete · {accuracy}% accuracy
-          </div>
-          <button onClick={nextRound} style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", letterSpacing: "1.5px", padding: "9px 24px", background: "#8a6914", color: "#f5f0e8", border: "none", borderRadius: "2px", cursor: "pointer" }}>
-            NEXT ROUND →
-          </button>
-        </div>
-      )}
-
-      {/* Two-column matching grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 20px" }}>
-        {/* Left column header */}
-        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "2px", color: "#8a6a3a", textAlign: "center", paddingBottom: "4px", borderBottom: "1px solid #d4bc84", textTransform: "uppercase" }}>Latin</div>
-        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "2px", color: "#8a6a3a", textAlign: "center", paddingBottom: "4px", borderBottom: "1px solid #d4bc84", textTransform: "uppercase" }}>English</div>
-
-        {/* Items — left and right columns rendered together in grid */}
-        {leftItems.map((item, i) => (
-          <React.Fragment key={item.id}>
-            <div onClick={() => handleLeft(item.id)} style={itemStyle(item.id, "left")}>
-              {item.text}
-            </div>
-            <div onClick={() => handleRight(rightItems[i].id)} style={itemStyle(rightItems[i].id, "right")}>
-              {rightItems[i].text}
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── READER DATA & COMPONENTS ────────────────────────────────────────────────
-//
-//  HOW TO ADD A NEW PASSAGE:
-//  Add an object to PASSAGES: { id, title, author, work, date, intro, text }
-//  text is plain Latin — no per-word annotation needed.
-//
-//  HOW TO ADD WORDS: edit latin_dict.json
-//  key = lowercase, no diacritics.
-
-const PASSAGES = [
-  {
-    id:"dbg_1_1", title:"I.1", section:"Book I, Chapter 1",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"The famous opening, establishing the tripartite division of Gaul and its three peoples.",
-    text:`Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur. Hi omnes lingua, institutis, legibus inter se differunt. Gallos ab Aquitanis Garumna flumen, a Belgis Matrona et Sequana dividit. Horum omnium fortissimi sunt Belgae, propterea quod a cultu atque humanitate provinciae longissime absunt, minimeque ad eos mercatores saepe commeant atque ea quae ad effeminandos animos pertinent important, proximique sunt Germanis, qui trans Rhenum incolunt, quibuscum continenter bellum gerunt. Qua de causa Helvetii quoque reliquos Gallos virtute praecedunt, quod fere cotidianis proeliis cum Germanis contendunt, cum aut suis finibus eos prohibent aut ipsi in eorum finibus bellum gerunt.`
-  },
-  {
-    id:"dbg_1_2", title:"I.2", section:"Book I, Chapter 2",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"Orgetorix, the most noble and wealthy of the Helvetii, conspires to seize power.",
-    text:`Apud Helvetios longe nobilissimus fuit et ditissimus Orgetorix. Is Marco Messala et Marco Pisone consulibus regni cupiditate inductus coniurationem nobilitatis fecit et civitati persuasit ut de finibus suis cum omnibus copiis exirent: perfacile esse, cum virtute omnibus praestaret, totius Galliae imperio potiri. Id hoc facilius eis persuasit, quod undique loci natura Helvetii continentur: una ex parte flumine Rheno latissimo atque altissimo, qui agrum Helvetium a Germanis dividit; altera ex parte monte Iura altissimo, qui est inter Sequanos et Helvetios; tertia lacu Lemanno et flumine Rhodano, qui provinciam nostram ab Helvetiis dividit.`
-  },
-  {
-    id:"dbg_1_3", title:"I.3", section:"Book I, Chapter 3",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"Orgetorix is sent to neighboring peoples to forge alliances for his plan.",
-    text:`His rebus adducti et auctoritate Orgetorigis permoti constituerunt ea quae ad proficiscendum pertinerent comparare, iumentorum et carrorum quam maximum numerum coemere, sementes quam maximas facere, ut in itinere copia frumenti suppeteret, cum proximis civitatibus pacem et amicitiam confirmare. Ad eas res conficiendas biennium sibi satis esse duxerunt; in tertium annum profectionem lege confirmant. Ad eas res conficiendas Orgetorix deligitur. Is sibi legationem ad civitates suscepit. In eo itinere persuadet Castico, Catamantaloedis filio, Sequano, cuius pater regnum in Sequanis multos annos obtinuerat et a senatu populi Romani amicus appellatus erat, ut regnum in civitate sua occuparet, quod pater ante habuerat.`
-  },
-  {
-    id:"dbg_1_4", title:"I.4", section:"Book I, Chapter 4",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"Orgetorix's conspiracy is discovered; he is summoned to trial but dies before it.",
-    text:`Orgetorix mortem sibi conscivit. Ea res, uti Helvetii arbitrabantur, ita accidit: propter amplitudinem gratiae suae a iudicio discedere non potuerat. Helvetii nihilominus id quod constituerant facere conantur, ut e finibus suis exeant. Ubi iam se ad eam rem paratos esse arbitrati sunt, oppida sua omnia, numero ad duodecim, vicos ad quadringentos, reliqua privata aedificia incendunt; frumentum omne, praeter quod secum portaturi erant, comburunt, ut domum reditionis spe sublata paratiores ad omnia pericula subeunda essent; trium mensum molita cibaria sibi quemque domo efferre iubent.`
-  },
-  {
-    id:"dbg_1_5", title:"I.5", section:"Book I, Chapter 5",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"The Helvetii prepare to migrate and seek passage through the Roman province.",
-    text:`Erant omnino itinera duo, quibus itineribus domo exire possent: unum per Sequanos, angustum et difficile, inter montem Iuram et flumen Rhodanum, vix qua singuli carri ducerentur, mons autem altissimus impendebat, ut facile perpauci prohibere possent; alterum per provinciam nostram, multo facilius atque expeditius, propterea quod inter fines Helvetiorum et Allobrogum, qui nuper pacati erant, Rhodanus fluit isque non nullis locis vado transitur. Extremum oppidum Allobrogum est proximumque Helvetiorum finibus Genava. Ex eo oppido pons ad Helvetios pertinet. Allobrogibus sese vel persuasuros, quod nondum bono animo in populum Romanum viderentur, existimabant vel vi coacturos ut per suos fines eos ire paterentur.`
-  },
-  {
-    id:"dbg_1_6", title:"I.6", section:"Book I, Chapter 6",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"Caesar races to Geneva and orders the bridge broken to stop the Helvetii.",
-    text:`Caesari cum id nuntiatum esset, eos per provinciam nostram iter facere conari, maturat ab urbe proficisci et quam maximis potest itineribus in Galliam ulteriorem contendit et ad Genavam pervenit. Provinciae toti quam maximum potest militum numerum imperat (erat omnino in Gallia ulteriore legio una), pontem qui erat ad Genavam iubet rescindi. Ubi de eius adventu Helvetii certiores facti sunt, legatos ad eum mittunt nobilissimos civitatis, cuius legationis Nammeius et Verucloetius principem locum obtinebant, qui dicerent sibi esse in animo sine ullo maleficio iter per provinciam facere, propterea quod aliud iter haberent nullum: rogare ut eius voluntate id sibi facere liceat.`
-  },
-  {
-    id:"dbg_1_7", title:"I.7", section:"Book I, Chapter 7",
-    author:"C. Iūlius Caesar", work:"Dē Bellō Gallicō", date:"58–49 BC",
-    intro:"Caesar stalls for time while fortifying the Rhône against the Helvetii.",
-    text:`Caesar, quod memoria tenebat Lucium Cassium consulem occisum exercitumque eius ab Helvetiis pulsum et sub iugum missum, concedendum non putabat; neque homines inimico animo, data facultate per provinciam itineris faciundi, temperaturos ab iniuria et maleficio existimabat. Tamen, ut spatium intercedere posset dum milites quos imperaverat convenirent, legatis respondit diem se ad deliberandum sumpturum: si quid vellent, ad Id. April. reverterentur. Interea ea legione quam secum habebat militibusque qui ex provincia convenerant a lacu Lemanno, qui in flumen Rhodanum influit, ad montem Iuram, qui fines Sequanorum ab Helvetiis dividit, milia passuum undeviginti murum in altitudinem pedum sedecim fossamque perducit.`
-  },
-];
-
-function toKey(w) {
-  return w.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z]/g,"");
-}
-
-function tokenise(text) {
-  const tokens = [];
-  text.trim().split(/\s+/).forEach(raw => {
-    const m = raw.match(/^([^a-zA-Z\xC0-\xFF]*)([a-zA-Z\xC0-\xFF\-]+)([^a-zA-Z\xC0-\xFF]*)$/);
-    if (m) {
-      if (m[1]) tokens.push({type:"punct",text:m[1]});
-      tokens.push({type:"word",text:m[2]});
-      if (m[3]) tokens.push({type:"punct",text:m[3]});
-    } else { tokens.push({type:"punct",text:raw}); }
-  });
-  return tokens;
-}
-
-const POS_COLORS = {
-  noun:{bg:"rgba(45,106,79,0.15)",  border:"#2d6a4f"},
-  verb:{bg:"rgba(74,52,16,0.15)",   border:"#8a6914"},
-  adj: {bg:"rgba(60,30,100,0.12)",  border:"#6a3a9a"},
-  adv: {bg:"rgba(20,80,120,0.12)",  border:"#2a6090"},
-  prep:{bg:"rgba(120,40,20,0.12)",  border:"#902a14"},
-  conj:{bg:"rgba(80,80,20,0.12)",   border:"#807814"},
-  pron:{bg:"rgba(100,30,80,0.12)",  border:"#7a2060"},
-  part:{bg:"rgba(20,100,100,0.12)", border:"#146a6a"},
-  num: {bg:"rgba(140,60,0,0.12)",   border:"#8c3c00"},
-};
-
-function WordToken({ text, dict, activeId, setActiveId, idx }) {
-  const isActive = activeId === idx;
-  const entry = dict ? dict[toKey(text)] : null;
-  const pc = entry ? (POS_COLORS[entry.pos] || POS_COLORS.noun) : null;
-  return (
-    <span style={{position:"relative",display:"inline"}}>
-      <span onClick={()=>setActiveId(isActive?null:idx)} onMouseEnter={()=>setActiveId(idx)} onMouseLeave={()=>setActiveId(null)}
-        style={{cursor:"pointer",fontStyle:"italic",
-          borderBottom:isActive?(entry?"2px solid #b8973e":"2px solid #888"):(entry?"1px dotted #c9a84c":"none"),
-          color:isActive?(entry?"#8a6914":"#888"):"#2c1f0e",
-          background:isActive?"rgba(184,151,62,0.07)":"transparent",
-          borderRadius:"2px",padding:"0 1px",transition:"all 0.1s"}}>
-        {text}
-      </span>
-      {isActive && (
-        <span style={{position:"absolute",bottom:"calc(100% + 10px)",left:"50%",transform:"translateX(-50%)",zIndex:200,width:"268px",background:"#1e1408",border:"1px solid "+(entry?"#8a6914":"#555"),borderRadius:"5px",boxShadow:"0 8px 32px rgba(0,0,0,0.5)",padding:"12px 14px",pointerEvents:"none"}}>
-          <span style={{position:"absolute",bottom:"-6px",left:"50%",width:"10px",height:"10px",background:"#1e1408",border:"1px solid "+(entry?"#8a6914":"#555"),borderTop:"none",borderLeft:"none",transform:"translateX(-50%) rotate(45deg)",display:"block"}}/>
-          {entry ? <>
-            <div style={{display:"flex",alignItems:"baseline",gap:"8px",marginBottom:"7px",flexWrap:"wrap"}}>
-              <span style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"18px",color:"#e8c97a"}}>{text}</span>
-              <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#c4a060",fontStyle:"italic"}}>{entry.lemma}</span>
-            </div>
-            <div style={{marginBottom:"6px"}}>
-              <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1.5px",textTransform:"uppercase",padding:"2px 7px",borderRadius:"10px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border}}>{entry.pos}</span>
-            </div>
-            <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#a09070",marginBottom:"5px",lineHeight:"1.4"}}>
-              <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:"#6a5a3a",textTransform:"uppercase",marginRight:"5px"}}>Form</span>{entry.parse}
-            </div>
-            <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#e8c97a",lineHeight:"1.4"}}>
-              <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:"#6a5a3a",textTransform:"uppercase",marginRight:"5px"}}>Meaning</span>"{entry.eng}"
-            </div>
-          </> : <>
-            <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"17px",color:"#aaa",marginBottom:"8px"}}>{text}</div>
-            <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#666",textTransform:"uppercase",marginBottom:"5px"}}>Not yet in dictionary</div>
-            <div style={{fontFamily:"'EB Garamond',serif",fontSize:"11px",color:"#555",fontStyle:"italic"}}>Key to add: <span style={{fontFamily:"monospace",background:"#111",padding:"1px 5px",borderRadius:"2px",color:"#888"}}>"{toKey(text)}"</span></div>
-          </>}
-        </span>
-      )}
-    </span>
-  );
-}
-
-function ReaderMode() {
-  const [dict, setDict]         = React.useState(null);
-  const [err, setErr]           = React.useState(null);
-  const [view, setView]         = React.useState("library");
-  const [pidx, setPidx]         = React.useState(0);
-  const [page, setPage]         = React.useState(0);
-  const [activeId, setActiveId] = React.useState(null);
-  const WORDS_PER_PAGE          = 75;
-
-  React.useEffect(()=>{
-    fetch("latin_dict.json")
-      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(setDict).catch(e=>setErr(e.message));
-  },[]);
-
-  const openPassage = (idx) => { setPidx(idx); setPage(0); setActiveId(null); setView("reader"); };
-  const goLibrary   = ()    => { setView("library"); };
-
-  const passage    = PASSAGES[pidx];
-  const allTokens  = React.useMemo(()=> passage ? tokenise(passage.text) : [], [pidx]);
-  const wordTokens = allTokens.filter(t=>t.type==="word");
-  const inDict     = dict ? wordTokens.filter(t=>dict[toKey(t.text)]).length : 0;
-  const coverage   = wordTokens.length>0 ? Math.round((inDict/wordTokens.length)*100) : 0;
-
-  const pages = React.useMemo(()=>{
-    if(!allTokens.length) return [];
-    const result=[]; let cur=[]; let wc=0;
-    allTokens.forEach(t=>{
-      cur.push(t);
-      if(t.type==="word") wc++;
-      if(wc>=WORDS_PER_PAGE){ result.push(cur); cur=[]; wc=0; }
-    });
-    if(cur.length) result.push(cur);
-    return result;
-  },[pidx]);
-
-  const pageTokens = pages[page] || [];
-  let wc = 0;
-
-  // ── LIBRARY VIEW ──────────────────────────────────────────────────────────
-  if(view==="library") {
-    return (
-      <div style={{marginTop:"20px"}}>
-        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"4px",color:"#9a7a3a",marginBottom:"16px"}}>LIBRARY</div>
-        {err && <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#c06060",fontStyle:"italic",marginBottom:"12px"}}>Dictionary unavailable: {err}</div>}
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"16px",marginBottom:"28px"}}>
-          <div style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"6px",overflow:"hidden",cursor:"pointer"}} onClick={()=>openPassage(0)}>
-            <div style={{height:"120px",background:"linear-gradient(135deg,#3a2410 0%,#6a4820 100%)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"28px",color:"rgba(200,160,80,0.35)",letterSpacing:"4px"}}>SPQR</div>
-            </div>
-            <div style={{padding:"14px 16px"}}>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#9a7a3a",marginBottom:"4px"}}>C. IŪLIUS CAESAR</div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"14px",fontWeight:"600",color:"#2c1f0e",marginBottom:"6px"}}>Dē Bellō Gallicō</div>
-              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.5",marginBottom:"8px"}}>Caesar's first-hand account of the Gallic Wars — the most widely read Latin prose in the classroom tradition.</div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#b8973e"}}>58–49 BC · {PASSAGES.length} sections</div>
-            </div>
-          </div>
-        </div>
-        <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"3px",color:"#9a7a3a",marginBottom:"12px"}}>SECTIONS</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:"8px"}}>
-          {PASSAGES.map((p,i)=>(
-            <div key={p.id} onClick={()=>openPassage(i)}
-              style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",padding:"14px 16px",cursor:"pointer"}}>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#b8973e",marginBottom:"4px"}}>{p.section}</div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"13px",fontWeight:"600",color:"#2c1f0e",marginBottom:"5px"}}>{p.title}</div>
-              <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic",lineHeight:"1.4"}}>{p.intro}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // ── READER VIEW ───────────────────────────────────────────────────────────
-  return (
-    <div style={{marginTop:"16px"}}>
-      <button onClick={goLibrary}
-        style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"5px 14px",border:"1px solid #c9b48a",borderRadius:"20px",background:"transparent",color:"#7a5c2a",cursor:"pointer",marginBottom:"16px"}}>
-        ← Library
-      </button>
-      <div style={{background:"#fffdf6",border:"1px solid #d4bc84",borderRadius:"4px",boxShadow:"0 2px 16px rgba(44,31,14,0.09)",padding:"24px 28px"}}>
-        <div style={{marginBottom:"14px",paddingBottom:"12px",borderBottom:"1px solid #e8dfc0"}}>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",flexWrap:"wrap",gap:"8px"}}>
-            <div>
-              <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"#9a7a3a",marginBottom:"3px"}}>{passage.section}</div>
-              <h2 style={{fontFamily:"'Cinzel',serif",fontSize:"17px",fontWeight:"700",color:"#2c1f0e",marginBottom:"3px"}}>{passage.work} {passage.title}</h2>
-              <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"13px",color:"#7a5c2a"}}>{passage.author} · {passage.date}</div>
-            </div>
-            {dict && (
-              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",flexShrink:0}}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:"#9a7a3a"}}>COVERAGE</div>
-                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                  <div style={{width:"70px",height:"3px",background:"#e8dfc0",borderRadius:"2px",overflow:"hidden"}}>
-                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?"#b8973e":coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}}></div>
-                  </div>
-                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#8a6914",fontWeight:"600"}}>{coverage}%</span>
-                </div>
-              </div>
-            )}
-          </div>
-          {passage.intro && <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:"#9a7a3a",lineHeight:"1.6",fontStyle:"italic"}}>{passage.intro}</div>}
-        </div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginBottom:"14px",alignItems:"center"}}>
-          {Object.entries(POS_COLORS).map(([pos,c])=>(
-            <span key={pos} style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",textTransform:"uppercase",padding:"2px 6px",borderRadius:"10px",background:c.bg,border:"1px solid "+c.border,color:c.border}}>{pos}</span>
-          ))}
-          <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#9a7a3a",fontStyle:"italic",marginLeft:"6px"}}>
-            {dict?"hover or tap any word":"loading dictionary…"}
-          </span>
-        </div>
-        <div style={{fontFamily:"'EB Garamond',serif",fontSize:"22px",lineHeight:"2.4",color:"#2c1f0e",marginBottom:"18px"}}>
-          {pageTokens.map((token,i)=>{
-            if(token.type==="punct") return <span key={i} style={{color:"#7a5c2a"}}>{token.text}{" "}</span>;
-            const id=wc++;
-            return <React.Fragment key={i}><WordToken text={token.text} dict={dict} activeId={activeId} setActiveId={setActiveId} idx={id}/>{" "}</React.Fragment>;
-          })}
-        </div>
-        {pages.length>1 && (
-          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"20px",padding:"16px 0",borderTop:"1px solid #e8dfc0",marginBottom:"16px"}}>
-            <button onClick={()=>{setPage(p=>Math.max(0,p-1));setActiveId(null);}} disabled={page===0}
-              style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"7px 18px",border:"1px solid #c9b48a",borderRadius:"2px",background:"transparent",color:page===0?"#c9b48a":"#7a5c2a",cursor:page===0?"default":"pointer"}}>
-              ← PREV
-            </button>
-            <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:"#9a7a3a",letterSpacing:"1px"}}>{page+1} / {pages.length}</span>
-            <button onClick={()=>{setPage(p=>Math.min(pages.length-1,p+1));setActiveId(null);}} disabled={page===pages.length-1}
-              style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",padding:"7px 18px",border:"1px solid",borderColor:page===pages.length-1?"#c9b48a":"#b8973e",borderRadius:"2px",background:page===pages.length-1?"transparent":"#3a2410",color:page===pages.length-1?"#c9b48a":"#e8c97a",cursor:page===pages.length-1?"default":"pointer"}}>
-              NEXT →
-            </button>
-          </div>
-        )}
-        <details>
-          <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:"#8a6914",cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
-            ▸ Word List {dict?"("+inDict+" found · "+(wordTokens.length-inDict)+" missing)":""}
-          </summary>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(250px,1fr))",gap:"4px",marginTop:"10px"}}>
-            {wordTokens.map((token,i)=>{
-              const entry=dict?dict[toKey(token.text)]:null;
-              const pc=entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
-              return (
-                <div key={i} style={{display:"flex",alignItems:"baseline",gap:"6px",padding:"5px 9px",background:entry?"rgba(200,170,100,0.05)":"rgba(150,50,50,0.04)",border:"1px solid",borderColor:entry?"#e8dfc0":"#e0c0c0",borderRadius:"3px"}}>
-                  <span style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"15px",color:entry?"#8a6914":"#c08080",minWidth:"72px"}}>{token.text}</span>
-                  {entry
-                    ? <React.Fragment>
-                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
-                        <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#7a5c2a",fontStyle:"italic"}}>{entry.eng}</span>
-                      </React.Fragment>
-                    : <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",color:"#c08080"}}>{dict?"not in dictionary":"loading…"}</span>
-                  }
-                </div>
-              );
-            })}
-          </div>
-        </details>
-      </div>
-    </div>
-  );
-}
-
-
-// ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
-
-function ScoreBar({ score, total, submitted }) {
-  if (!submitted) return null;
-  const pct = Math.round((score / total) * 100);
-  const grade =
-    pct === 100 ? { label: "Optimus!", color: "#2d6a4f" }
-    : pct >= 80  ? { label: "Bene!",    color: "#4a7c59" }
-    : pct >= 60  ? { label: "Satis",    color: "#8a6914" }
-    :              { label: "Melius studē!", color: "#9b2335" };
-  return (
-    <div style={{ padding:"12px 24px", background:"#f9f3e3", borderBottom:"1px solid #d4bc84", display:"flex", alignItems:"center", gap:"16px" }}>
-      <div style={{ fontFamily:"'Cinzel',serif", fontSize:"19px", fontWeight:"700", color:grade.color, minWidth:"140px" }}>{grade.label}</div>
-      <div style={{ flex:1 }}>
-        <div style={{ height:"5px", background:"#e0d0a8", borderRadius:"3px", overflow:"hidden" }}>
-          <div style={{ height:"100%", width:`${pct}%`, background:grade.color, borderRadius:"3px", transition:"width 0.6s ease" }} />
-        </div>
-      </div>
-      <div style={{ fontSize:"14px", color:"#5a3e1b", fontWeight:"500", minWidth:"80px", textAlign:"right" }}>{score}/{total} · {pct}%</div>
-    </div>
-  );
-}
-
-function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onInput }) {
-  return (
-    <table style={{ width:"100%", borderCollapse:"collapse" }}>
-      <thead>
-        <tr>
-          {headers.map((h,i) => (
-            <th key={i} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", textTransform:"uppercase", color:"#7a5c2a", padding:"7px 10px", textAlign: i===0?"left":"center", borderBottom:"1px solid #d4bc84", fontWeight:"600" }}>{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, ri) => (
-          <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(200,170,100,0.04)" }}>
-            <td style={{ padding:"8px 10px", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"0.5px", color:"#5a3e1b", borderBottom:"1px solid #e8dfc0", whiteSpace:"nowrap", fontWeight:"500" }}>{row.label}</td>
-            {answers[ri].map((answer, ci) => {
-              const key = `${ri}-${ci}`;
-              const val = inputs[key] || "";
-              const status = submitted ? checkAnswer(val, answer) : null;
-              return (
-                <td key={ci} style={{ padding:"5px 8px", textAlign:"center", borderBottom:"1px solid #e8dfc0",
-                  background: !status?"transparent": status==="correct"?"rgba(45,106,79,0.07)": status==="wrong"?"rgba(155,35,53,0.07)":"rgba(200,170,100,0.08)" }}>
-                  <div style={{ position:"relative" }}>
-                    <input type="text" value={val} onChange={(e) => onInput(key, e.target.value)}
-                      style={{ width:"100%", minWidth:"80px", padding:"5px 6px",
-                        fontFamily:"'EB Garamond',serif", fontSize:"15px", textAlign:"center",
-                        background: !status?"#faf8f0": status==="correct"?"rgba(45,106,79,0.05)": status==="wrong"?"rgba(155,35,53,0.05)":"rgba(200,150,50,0.08)",
-                        border:"1px solid",
-                        borderColor: !status?"#d4bc84": status==="correct"?"#2d6a4f": status==="wrong"?"#9b2335":"#b8973e",
-                        borderRadius:"2px", outline:"none", color:"#2c1f0e", transition:"border-color 0.2s, background 0.2s" }} />
-                    {submitted && status==="wrong" && showAnswers && (
-                      <div style={{ position:"absolute", bottom:"-16px", left:"50%", transform:"translateX(-50%)", fontSize:"11px", color:"#2d6a4f", fontStyle:"italic", whiteSpace:"nowrap", pointerEvents:"none", zIndex:1 }}>{answer}</div>
-                    )}
-                  </div>
-                </td>
-              );
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
-
-const SUPABASE_URL = "https://tdyvlwiayrbkeqdcvtdi.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkeXZsd2lheXJia2VxZGN2dGRpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTcyNzAsImV4cCI6MjA4ODYzMzI3MH0.rw6VHSWf8m142kJVOFWZYQViU6NlHu8uPz7fwgxju94";
-const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ─── APP ──────────────────────────────────────────────────────────────────────
+// latin.html is intentionally thin — all logic lives in the three .js modules.
+// Add a new text:      edit latin_reader.js → WORKS
+// Add a new paradigm:  edit latin_tables.js → CATEGORIES
+// Shared components:   edit latin_shared.js → WordToken, POS_COLORS, tokenise
 
 function App() {
-  const [mode, setMode] = React.useState("tables"); // "tables" | "matching"
-  const [catIdx, setCatIdx] = React.useState(0);
-  const [wordIdx, setWordIdx] = React.useState(0);
-  const [inputs, setInputs] = React.useState({});
+  const [mode, setMode]           = React.useState("tables"); // "tables" | "matching" | "reader"
+  const [catIdx, setCatIdx]       = React.useState(0);
+  const [wordIdx, setWordIdx]     = React.useState(0);
+  const [inputs, setInputs]       = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
-  const [userName, setUserName] = React.useState("");
-
-  React.useEffect(()=>{
-    _supabase.auth.getSession().then(({data:{session}})=>{
-      if (!session) { window.location.href="/login.html"; return; }
-      const u = session.user;
-      setUserName((u.user_metadata?.full_name||u.user_metadata?.name||u.email||"").split(" ")[0]);
-    });
-  },[]);
   const [showAnswers, setShowAnswers] = React.useState(false);
 
   const category = CATEGORIES[catIdx];
-  const word = category.words[wordIdx];
-  const tag = TAG[category.type];
+  const word     = category.words[wordIdx];
+  const tag      = TAG[category.type];
 
   const tableData = React.useMemo(() => {
     if (category.type === "irregular") return word.tables.map(t => ({
       ...t, answers: t.rows.map(r => r.answers)
     }));
     const patterns = category.type === "conjugation" ? CONJUGATION_PATTERNS : DECLENSION_PATTERNS;
-    const pattern = patterns[category.pattern];
+    const pattern  = patterns[category.pattern];
     return [{ tense: null, headers: pattern.headers, rows: pattern.rows, answers: getAnswers(category, word) }];
   }, [catIdx, wordIdx]);
 
-  const allCells = tableData.flatMap((t,ti) =>
-    t.answers.flatMap((row,ri) => row.map((_,ci) => `${ti}-${ri}-${ci}`))
+  const allCells    = tableData.flatMap((t, ti) =>
+    t.answers.flatMap((row, ri) => row.map((_, ci) => `${ti}-${ri}-${ci}`))
   );
-  const total = allCells.length;
+  const total       = allCells.length;
   const filledCount = allCells.filter(k => inputs[k]?.trim()).length;
-  const score = submitted ? allCells.filter(k => {
-    const [ti,ri,ci] = k.split("-").map(Number);
-    return checkAnswer(inputs[k]||"", tableData[ti].answers[ri][ci]) === "correct";
+  const score       = submitted ? allCells.filter(k => {
+    const [ti, ri, ci] = k.split("-").map(Number);
+    return checkAnswer(inputs[k] || "", tableData[ti].answers[ri][ci]) === "correct";
   }).length : 0;
 
-  const handleInput = (ti, key, val) => {
+  const handleInput  = (ti, key, val) => {
     setInputs(p => ({ ...p, [`${ti}-${key}`]: val }));
     if (submitted) setSubmitted(false);
   };
-
-  const reset = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
-
-  const goWord = (dir) => {
-    setWordIdx((wordIdx + dir + category.words.length) % category.words.length);
-    reset();
-  };
-
-  const goCategory = (idx) => { setCatIdx(idx); setWordIdx(0); reset(); };
+  const reset      = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
+  const goWord     = dir => { setWordIdx((wordIdx + dir + category.words.length) % category.words.length); reset(); };
+  const goCategory = idx => { setCatIdx(idx); setWordIdx(0); reset(); };
 
   return (
-    <div style={{ minHeight:"100vh", background:"#f5f0e8", backgroundImage:"radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily:"'EB Garamond','Palatino Linotype',Palatino,serif", color:"#2c1f0e", paddingBottom:"60px" }}>
+    <div style={{ minHeight: "100vh", background: "#f5f0e8", backgroundImage: "radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily: "'EB Garamond','Palatino Linotype',Palatino,serif", color: "#2c1f0e", paddingBottom: "60px" }}>
 
-      {/* Platform topbar */}
-      <nav className="topbar">
-        <a href="../index.html" className="topbar-logo">Language Nexus</a>
-        <span style={{width:"1px",height:"18px",background:"rgba(255,255,255,0.25)",margin:"0 4px",display:"inline-block"}}></span>
-        <span className="topbar-lang">Latin</span>
-        <div className="topbar-right">
-          {userName && <span style={{fontSize:"12px",color:"rgba(255,255,255,0.8)"}}>{userName}</span>}
-          <button style={{background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.25)",color:"#fff",fontSize:"11px",fontWeight:"600",letterSpacing:"0.8px",padding:"5px 14px",borderRadius:"20px",textTransform:"uppercase",cursor:"pointer"}} onClick={()=>_supabase.auth.signOut().then(()=>window.location.href="/login.html")}>Sign Out</button>
+      {/* Header */}
+      <header style={{ borderBottom: "2px solid #b8973e", background: "linear-gradient(180deg,#2c1f0e 0%,#3d2c12 100%)", padding: "20px 32px 16px", display: "flex", alignItems: "flex-end", gap: "20px" }}>
+        <div>
+          <div style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "4px", color: "#b8973e", marginBottom: "4px" }}>GRAMMATICA LATINA</div>
+          <h1 style={{ fontFamily: "'Cinzel',serif", fontSize: "22px", fontWeight: "700", color: "#f0e4c4", margin: 0, letterSpacing: "1px" }}>Latin — Glossarium</h1>
         </div>
-      </nav>
+        <div style={{ marginLeft: "auto", fontStyle: "italic", color: "#7a5a2a", fontSize: "13px", paddingBottom: "2px", display: "flex", alignItems: "center", gap: "20px" }}>
+          <a href="../index.html" style={{ color: "#7a5a2a", textDecoration: "none", opacity: 0.7, fontSize: "11px", fontFamily: "'Cinzel',serif", letterSpacing: "1px" }}>← Hub</a>
+          <span>Repetitio est mater studiōrum</span>
+        </div>
+      </header>
 
-      <div style={{ maxWidth:"860px", margin:"0 auto", padding:"0 20px" }}>
+      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "0 20px" }}>
 
         {/* Mode tabs */}
-        <div style={{ display:"flex", gap:"0", marginTop:"24px", borderBottom:"2px solid #c9a84c" }}>
-          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Library"]].map(([m, label]) => (
-            <button key={m} onClick={() => setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 22px", border:"none", borderBottom: mode===m?"2px solid #2c1f0e":"2px solid transparent", marginBottom:"-2px", background: mode===m?"#f5f0e8":"transparent", color: mode===m?"#2c1f0e":"#7a5c2a", cursor:"pointer", fontWeight: mode===m?"600":"400", transition:"all 0.15s" }}>
+        <div style={{ display: "flex", gap: "0", marginTop: "24px", borderBottom: "2px solid #c9a84c" }}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"]].map(([m, label]) => (
+            <button key={m} onClick={() => setMode(m)}
+              style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", letterSpacing: "1px", padding: "9px 22px", border: "none", borderBottom: mode === m ? "2px solid #2c1f0e" : "2px solid transparent", marginBottom: "-2px", background: mode === m ? "#f5f0e8" : "transparent", color: mode === m ? "#2c1f0e" : "#7a5c2a", cursor: "pointer", fontWeight: mode === m ? "600" : "400", transition: "all 0.15s" }}>
               {label}
             </button>
           ))}
         </div>
 
-        {/* MATCHING MODE */}
+        {/* MATCHING */}
         {mode === "matching" && <MatchingMode />}
 
-        {/* READER MODE */}
+        {/* READER */}
         {mode === "reader" && <ReaderMode />}
 
-        {/* TABLES MODE */}
-        {mode === "tables" && <div>
-
-        {/* Category pills */}
-        <div style={{ marginTop:"20px", display:"flex", flexWrap:"wrap", gap:"5px" }}>
-          {CATEGORIES.map((cat, i) => {
-            const tc = TAG[cat.type];
-            const active = i === catIdx;
-            return (
-              <button key={cat.id} onClick={() => goCategory(i)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"4px 11px", border:"1px solid", borderColor: active?tc.bg:"#c9b48a", borderRadius:"20px", background: active?tc.bg:"transparent", color: active?tc.text:"#7a5c2a", cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap" }}>
-                {cat.label}
-                <span style={{ fontFamily:"'EB Garamond',serif", fontWeight:"400", marginLeft:"4px", opacity:0.75, fontSize:"9px" }}>{cat.sublabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Main card */}
-        <div style={{ marginTop:"16px", background:"#fffdf6", border:"1px solid #d4bc84", borderRadius:"4px", boxShadow:"0 2px 16px rgba(44,31,14,0.09)", overflow:"hidden" }}>
-
-          {/* Card header */}
-          <div style={{ background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)", padding:"13px 22px", borderBottom:"2px solid #b8973e", display:"flex", alignItems:"center", gap:"14px" }}>
-            <button onClick={() => goWord(-1)} style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(184,151,62,0.4)", borderRadius:"2px", color:"#e8c97a", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>‹</button>
-            <div style={{ flex:1 }}>
-              <div style={{ display:"flex", alignItems:"baseline", gap:"10px", flexWrap:"wrap" }}>
-                <span style={{ fontFamily:"'Cinzel',serif", fontSize:"16px", fontWeight:"600", color:"#f0e4c4" }}>{word.lemma}</span>
-                <span style={{ fontStyle:"italic", color:"#c4a060", fontSize:"14px" }}>— {word.meaning}</span>
-              </div>
-              <div style={{ display:"flex", alignItems:"center", gap:"8px", marginTop:"3px" }}>
-                <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1.5px", padding:"2px 7px", borderRadius:"10px", background:tag.bg, color:tag.text, border:`1px solid ${tag.text}44` }}>{category.type.toUpperCase()}</span>
-                <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", color:"#8a6a3a", letterSpacing:"1px" }}>{category.sublabel.toUpperCase()}</span>
-              </div>
+        {/* TABLES */}
+        {mode === "tables" && (
+          <div>
+            <div style={{ marginTop: "20px", display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {CATEGORIES.map((cat, i) => {
+                const tc = TAG[cat.type];
+                const active = i === catIdx;
+                return (
+                  <button key={cat.id} onClick={() => goCategory(i)}
+                    style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "0.8px", padding: "4px 11px", border: "1px solid", borderColor: active ? tc.bg : "#c9b48a", borderRadius: "20px", background: active ? tc.bg : "transparent", color: active ? tc.text : "#7a5c2a", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+                    {cat.label}
+                    <span style={{ fontFamily: "'EB Garamond',serif", fontWeight: "400", marginLeft: "4px", opacity: 0.75, fontSize: "9px" }}>{cat.sublabel}</span>
+                  </button>
+                );
+              })}
             </div>
-            <div style={{ textAlign:"center", color:"#8a6a3a", fontSize:"11px", flexShrink:0 }}>
-              <div style={{ fontFamily:"'Cinzel',serif", fontSize:"15px", color:"#e8c97a", fontWeight:"600" }}>{wordIdx+1}</div>
-              <div>of {category.words.length}</div>
-            </div>
-            <button onClick={() => goWord(1)} style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(184,151,62,0.4)", borderRadius:"2px", color:"#e8c97a", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>›</button>
-          </div>
 
-          <ScoreBar score={score} total={total} submitted={submitted} />
+            <div style={{ marginTop: "16px", background: "#fffdf6", border: "1px solid #d4bc84", borderRadius: "4px", boxShadow: "0 2px 16px rgba(44,31,14,0.09)", overflow: "hidden" }}>
 
-          {/* Tables */}
-          <div style={{ padding:"16px 22px", display:"flex", flexDirection:"column", gap:"26px" }}>
-            {tableData.map((t, ti) => {
-              const subInputs = {};
-              Object.entries(inputs).forEach(([k,v]) => {
-                const [tIdx,...rest] = k.split("-");
-                if (Number(tIdx)===ti) subInputs[rest.join("-")] = v;
-              });
-              return (
-                <div key={ti}>
-                  {t.tense && (
-                    <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:"#8a6914", marginBottom:"9px", textTransform:"uppercase", borderLeft:"3px solid #c9a84c", paddingLeft:"9px" }}>{t.tense}</div>
-                  )}
-                  <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={subInputs} submitted={submitted} showAnswers={showAnswers} onInput={(key,val) => handleInput(ti,key,val)} />
+              <div style={{ background: "linear-gradient(180deg,#4a3010 0%,#3a2410 100%)", padding: "13px 22px", borderBottom: "2px solid #b8973e", display: "flex", alignItems: "center", gap: "14px" }}>
+                <button onClick={() => goWord(-1)} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,151,62,0.4)", borderRadius: "2px", color: "#e8c97a", cursor: "pointer", width: "30px", height: "30px", fontSize: "17px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "10px", flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "16px", fontWeight: "600", color: "#f0e4c4" }}>{word.lemma}</span>
+                    <span style={{ fontStyle: "italic", color: "#c4a060", fontSize: "14px" }}>— {word.meaning}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "3px" }}>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", letterSpacing: "1.5px", padding: "2px 7px", borderRadius: "10px", background: tag.bg, color: tag.text, border: `1px solid ${tag.text}44` }}>{category.type.toUpperCase()}</span>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", color: "#8a6a3a", letterSpacing: "1px" }}>{category.sublabel.toUpperCase()}</span>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+                <div style={{ textAlign: "center", color: "#8a6a3a", fontSize: "11px", flexShrink: 0 }}>
+                  <div style={{ fontFamily: "'Cinzel',serif", fontSize: "15px", color: "#e8c97a", fontWeight: "600" }}>{wordIdx + 1}</div>
+                  <div>of {category.words.length}</div>
+                </div>
+                <button onClick={() => goWord(1)} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,151,62,0.4)", borderRadius: "2px", color: "#e8c97a", cursor: "pointer", width: "30px", height: "30px", fontSize: "17px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
+              </div>
 
-          {/* Controls */}
-          <div style={{ padding:"13px 22px 17px", borderTop:"1px solid #e8dfc0", display:"flex", alignItems:"center", gap:"9px", flexWrap:"wrap" }}>
-            <button onClick={() => setSubmitted(true)} disabled={filledCount===0} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 20px", background: filledCount===0?"#c9b48a":"#3a2410", color:"#f0e4c4", border:"none", borderRadius:"2px", cursor: filledCount===0?"default":"pointer" }}>
-              GRADE ({filledCount}/{total})
-            </button>
-            <button onClick={reset} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 16px", background:"transparent", color:"#7a5c2a", border:"1px solid #c9b48a", borderRadius:"2px", cursor:"pointer" }}>RESET</button>
-            {submitted && score < total && (
-              <button onClick={() => setShowAnswers(v => !v)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 16px", background:"transparent", color: showAnswers?"#2d6a4f":"#9b2335", border:"1px solid", borderColor: showAnswers?"#2d6a4f":"#c9b48a", borderRadius:"2px", cursor:"pointer" }}>
-                {showAnswers?"HIDE ANSWERS":"SHOW ANSWERS"}
-              </button>
-            )}
-            <div style={{ marginLeft:"auto", display:"flex", gap:"7px" }}>
-              <button onClick={() => goWord(-1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 13px", background:"transparent", color:"#7a5c2a", border:"1px solid #c9b48a", borderRadius:"2px", cursor:"pointer" }}>← PREV</button>
-              <button onClick={() => goWord(1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 13px", background:"#8a6914", color:"#f5f0e8", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT →</button>
+              <ScoreBar score={score} total={total} submitted={submitted} />
+
+              <div style={{ padding: "16px 22px", display: "flex", flexDirection: "column", gap: "26px" }}>
+                {tableData.map((t, ti) => {
+                  const subInputs = {};
+                  Object.entries(inputs).forEach(([k, v]) => {
+                    const [tIdx, ...rest] = k.split("-");
+                    if (Number(tIdx) === ti) subInputs[rest.join("-")] = v;
+                  });
+                  return (
+                    <div key={ti}>
+                      {t.tense && (
+                        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "2px", color: "#8a6914", marginBottom: "9px", textTransform: "uppercase", borderLeft: "3px solid #c9a84c", paddingLeft: "9px" }}>{t.tense}</div>
+                      )}
+                      <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={subInputs} submitted={submitted} showAnswers={showAnswers} onInput={(key, val) => handleInput(ti, key, val)} />
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ padding: "13px 22px 17px", borderTop: "1px solid #e8dfc0", display: "flex", alignItems: "center", gap: "9px", flexWrap: "wrap" }}>
+                <button onClick={() => setSubmitted(true)} disabled={filledCount === 0}
+                  style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 20px", background: filledCount === 0 ? "#c9b48a" : "#3a2410", color: "#f0e4c4", border: "none", borderRadius: "2px", cursor: filledCount === 0 ? "default" : "pointer" }}>
+                  GRADE ({filledCount}/{total})
+                </button>
+                <button onClick={reset}
+                  style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 16px", background: "transparent", color: "#7a5c2a", border: "1px solid #c9b48a", borderRadius: "2px", cursor: "pointer" }}>
+                  RESET
+                </button>
+                {submitted && score < total && (
+                  <button onClick={() => setShowAnswers(v => !v)}
+                    style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 16px", background: "transparent", color: showAnswers ? "#2d6a4f" : "#9b2335", border: "1px solid", borderColor: showAnswers ? "#2d6a4f" : "#c9b48a", borderRadius: "2px", cursor: "pointer" }}>
+                    {showAnswers ? "HIDE ANSWERS" : "SHOW ANSWERS"}
+                  </button>
+                )}
+                <div style={{ marginLeft: "auto", display: "flex", gap: "7px" }}>
+                  <button onClick={() => goWord(-1)} style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 13px", background: "transparent", color: "#7a5c2a", border: "1px solid #c9b48a", borderRadius: "2px", cursor: "pointer" }}>← PREV</button>
+                  <button onClick={() => goWord(1)}  style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 13px", background: "#8a6914", color: "#f5f0e8", border: "none", borderRadius: "2px", cursor: "pointer" }}>NEXT →</button>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "14px", fontSize: "12px", color: "#9a7a3a", fontStyle: "italic", textAlign: "center" }}>
+              Macrons optional · ā = a, ē = e, ī = i, ō = o, ū = u
             </div>
           </div>
-        </div>
-
-        <div style={{ marginTop:"14px", fontSize:"12px", color:"#9a7a3a", fontStyle:"italic", textAlign:"center" }}>
-          Macrons optional · ā = a, ē = e, ī = i, ō = o, ū = u
-        </div>
-        </div>}
+        )}
 
       </div>
     </div>
