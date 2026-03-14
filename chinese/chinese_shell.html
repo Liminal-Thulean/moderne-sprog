@@ -9,21 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f5f0e8; }
-  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(184,151,62,0.3); }
-  button { transition: all 0.15s; }
-  button:hover { opacity: 0.88; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #f0e8d0; }
-  ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
-  details summary { list-style: none; }
-  details summary::-webkit-details-marker { display: none; }
-  /* ── Topbar ── */
-  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
-  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
-  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
-  .topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
+/* @@STYLES@@ */
 </style>
 </head>
 <body>
@@ -55,7 +41,7 @@ function App() {
   const [mode, setMode] = React.useState("drill");
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, backgroundImage: "radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily: "'EB Garamond',serif", color: C.text, paddingBottom: "60px" }}>
+    <div className="gl-page">
 
       {/* Topbar — matches Danish/Greek/Latin/Sanskrit */}
       <nav className="topbar">
@@ -64,12 +50,12 @@ function App() {
         <span className="topbar-course">文言文</span>
       </nav>
 
-      <div style={{ maxWidth: "880px", margin: "0 auto", padding: "0 20px" }}>
+      <div className="gl-content">
         {/* Mode tabs */}
-        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "24px", borderBottom: "2px solid #c9a84c" }}>
+        <div className="mode-tabs">
           {MODES.map(([m, label]) => (
             <button key={m} onClick={() => setMode(m)}
-              style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "0.8px", padding: "9px 18px", border: "none", borderBottom: mode === m ? "2px solid #2c1f0e" : "2px solid transparent", marginBottom: "-2px", background: mode === m ? C.surface : "transparent", color: mode === m ? C.text : C.textMuted, cursor: "pointer", fontWeight: mode === m ? "600" : "400", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+              className={`mode-tab${mode === m ? " active" : ""}`}>
               {label}
             </button>
           ))}

@@ -1,0 +1,502 @@
+/*
+ * glossarium.css — Shared base stylesheet for all language sections
+ * Glossarium / Language Nexus
+ *
+ * Defines:
+ *   - CSS custom properties (mirrors the JS C palette in each shared.js)
+ *   - Base resets
+ *   - Topbar
+ *   - Shared structural classes: gl-page, gl-content, gl-card, mode tabs
+ *   - Buttons, score bar, progress track, POS badge
+ *   - @keyframes and animation utility classes
+ *
+ * Language-specific files (latin.css, greek.css, chinese.css) come after this.
+ *
+ * HOW TO ANIMATE A COMPONENT
+ * ────────────────────────────────────────────────────────────────────────────
+ * Static animation:  add className="anim-fade-in" (or any .anim-* class)
+ * Re-trigger on state change:  give the element a key={someStateValue}
+ *   e.g. <div key={cardIndex} className="anim-slide-up">...</div>
+ * Staggered children:  add className="anim-stagger" to the parent
+ * Loading skeleton:  add className="anim-shimmer" to placeholder elements
+ */
+
+/* ── Custom properties ───────────────────────────────────────────────────────
+   These mirror the JS `C` object in each language's _shared.js.
+   Dynamic/computed values stay as inline styles; static design lives here.   */
+
+:root {
+  /* Parchment palette */
+  --c-bg:          #f5f0e8;
+  --c-surface:     #fffdf6;
+  --c-border:      #d4bc84;
+  --c-border-dim:  #e8dfc0;
+  --c-gold:        #b8973e;
+  --c-gold-light:  #f0e4c4;
+  --c-gold-dim:    #8a6914;
+  --c-gold-faint:  rgba(184,151,62,0.10);
+  --c-text:        #2c1f0e;
+  --c-text-muted:  #9a7a3a;
+  --c-red:         #c84030;
+  --c-green:       #2d8a5f;
+
+  /* Topbar */
+  --topbar-bg:     #c8403a;
+  --topbar-height: 52px;
+
+  /* Card header dark gradient */
+  --card-header-bg: linear-gradient(180deg, #4a3010 0%, #3a2410 100%);
+
+  /* Typography */
+  --font-serif:    'EB Garamond', 'Palatino Linotype', Palatino, serif;
+  --font-display:  'Cinzel', serif;
+  --font-logo:     'Fraunces', serif;
+
+  /* Radii */
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   6px;
+  --radius-pill: 20px;
+
+  /* Transitions */
+  --t-fast: 0.15s ease;
+  --t-med:  0.25s ease;
+  --t-slow: 0.4s  ease;
+
+  /* Shadows */
+  --shadow-card: 0 2px 16px rgba(44,31,14,0.09);
+  --shadow-lift: 0 4px 18px rgba(44,31,14,0.13);
+}
+
+/* ── Resets ──────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+input:focus { outline: none; box-shadow: 0 0 0 2px rgba(184,151,62,0.3); }
+
+button { transition: all var(--t-fast); }
+button:hover { opacity: 0.85; }
+
+details summary { list-style: none; cursor: pointer; user-select: none; }
+details summary::-webkit-details-marker { display: none; }
+
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: #f0e8d0; }
+::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+
+/* ── Page wrapper ────────────────────────────────────────────────────────── */
+
+.gl-page {
+  min-height: 100vh;
+  background: var(--c-bg);
+  background-image:
+    radial-gradient(ellipse at 15% 0%,  rgba(180,140,80,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(100,60,20,0.06)  0%, transparent 55%);
+  font-family: var(--font-serif);
+  color: var(--c-text);
+  padding-bottom: 60px;
+}
+
+.gl-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Topbar ──────────────────────────────────────────────────────────────── */
+
+.topbar {
+  background: var(--topbar-bg);
+  padding: 0 24px;
+  height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(200,64,58,0.3);
+}
+
+.topbar-logo {
+  font-family: var(--font-logo);
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+}
+.topbar-logo:hover { opacity: 0.85; }
+
+.topbar-sep    { width: 1px; height: 18px; background: rgba(255,255,255,0.25); }
+
+.topbar-course {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.5px;
+}
+
+/* ── Mode tabs ───────────────────────────────────────────────────────────── */
+
+.mode-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  border-bottom: 2px solid var(--c-gold);
+}
+
+.mode-tab {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 9px 22px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: transparent;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: all var(--t-fast);
+}
+
+.mode-tab:hover { opacity: 1; color: var(--c-text); }
+
+.mode-tab.active {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-weight: 600;
+  border-bottom-color: var(--c-text);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+
+.gl-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.gl-card-header {
+  background: var(--card-header-bg);
+  padding: 13px 22px;
+  border-bottom: 2px solid var(--c-gold);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gl-card-body   { padding: 16px 22px; }
+
+.gl-card-footer {
+  padding: 13px 22px 17px;
+  border-top: 1px solid var(--c-border-dim);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+/* ── Reader card ─────────────────────────────────────────────────────────── */
+
+.reader-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 24px 28px;
+}
+
+/* ── Library grid ────────────────────────────────────────────────────────── */
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.library-tile {
+  text-align: left;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  display: block;
+  width: 100%;
+}
+.library-tile:hover {
+  opacity: 1;
+  border-color: var(--c-gold);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ── Drill ───────────────────────────────────────────────────────────────── */
+
+.drill-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.drill-char-display {
+  background: var(--card-header-bg);
+  padding: 36px 20px 28px;
+  text-align: center;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.drill-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.drill-toggle {
+  display: flex;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  width: fit-content;
+  margin-bottom: 20px;
+}
+
+.drill-toggle-btn {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--c-text-muted);
+  border: none;
+  border-right: 1px solid var(--c-border);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.drill-toggle-btn:last-child { border-right: none; }
+.drill-toggle-btn.active     { background: #3a2410; color: #e8c97a; }
+.drill-toggle-btn.soon       { cursor: not-allowed; color: var(--c-border); }
+
+/* ── Paradigm table ──────────────────────────────────────────────────────── */
+
+.paradigm-table              { width: 100%; border-collapse: collapse; }
+.paradigm-table th           { font-family: var(--font-display); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--c-text-muted); padding: 7px 8px; border-bottom: 1px solid var(--c-border); }
+.paradigm-table td           { padding: 4px 5px; text-align: center; border-bottom: 1px solid var(--c-border-dim); }
+.paradigm-table tr:nth-child(even) td { background: rgba(200,170,100,0.04); }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.btn {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+}
+.btn-primary   { background: #3a2410; color: var(--c-gold-light); }
+.btn-secondary { background: transparent; color: var(--c-text-muted); border: 1px solid var(--c-border); }
+.btn-gold      { background: var(--c-gold-dim); color: #f5f0e8; }
+
+.btn-pill {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--c-border);
+  background: transparent;
+  color: var(--c-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--t-fast);
+}
+.btn-pill.active { background: #3a2410; border-color: var(--c-gold); color: var(--c-gold-light); }
+
+/* ── Score bar ───────────────────────────────────────────────────────────── */
+
+.score-bar {
+  padding: 11px 22px;
+  background: rgba(200,170,100,0.08);
+  border-bottom: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── Progress track ──────────────────────────────────────────────────────── */
+
+.progress-track { height: 3px; background: var(--c-border-dim); border-radius: 2px; overflow: hidden; }
+.progress-fill  { height: 100%; background: var(--c-gold); border-radius: 2px; transition: width var(--t-slow); }
+
+/* ── Feedback ────────────────────────────────────────────────────────────── */
+
+.feedback-correct {
+  background: rgba(45,138,95,0.08);
+  border: 1px solid var(--c-green);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+.feedback-wrong {
+  background: rgba(200,64,48,0.07);
+  border: 1px solid var(--c-red);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+
+/* ── POS badge ───────────────────────────────────────────────────────────── */
+
+.pos-badge {
+  font-family: var(--font-display);
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 10px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* ── Section / tense labels ──────────────────────────────────────────────── */
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.tense-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--c-gold-dim);
+  text-transform: uppercase;
+  border-left: 3px solid var(--c-gold);
+  padding-left: 9px;
+  margin-bottom: 9px;
+}
+
+/* ── Word list (reader character/vocab list) ─────────────────────────────── */
+
+.word-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 4px;
+  margin-top: 10px;
+}
+.word-list-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 9px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border-dim);
+  background: rgba(200,170,100,0.05);
+}
+.word-list-item.missing {
+  background: rgba(150,50,50,0.04);
+  border-color: #e0c0c0;
+}
+
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
+
+@keyframes fadeIn    { from { opacity: 0; }                        to { opacity: 1; } }
+@keyframes slideUp   { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px);  } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn   { from { opacity: 0; transform: scale(0.96); }     to { opacity: 1; transform: scale(1); } }
+@keyframes pulse     { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+@keyframes correctFlash {
+  0%   { background: rgba(45,138,95,0.00); }
+  30%  { background: rgba(45,138,95,0.22); }
+  100% { background: rgba(45,138,95,0.08); }
+}
+
+@keyframes wrongShake {
+  0%,100% { transform: translateX(0);  }
+  20%     { transform: translateX(-6px); }
+  40%     { transform: translateX( 6px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX( 4px); }
+}
+
+/* ── Animation utility classes ───────────────────────────────────────────── */
+/*
+   Usage in React:
+     <div className="anim-fade-in">...</div>
+
+   Re-trigger on state change (e.g. new card):
+     <div key={cardIndex} className="anim-slide-up">...</div>
+
+   Staggered list (add to parent):
+     <div className="anim-stagger">{items.map(...)}</div>
+
+   Loading skeleton:
+     <div className="anim-shimmer" style={{height:18,borderRadius:4}} />
+*/
+
+.anim-fade-in    { animation: fadeIn    var(--t-med)  ease both; }
+.anim-slide-up   { animation: slideUp   var(--t-med)  ease both; }
+.anim-slide-down { animation: slideDown var(--t-fast) ease both; }
+.anim-scale-in   { animation: scaleIn   var(--t-fast) ease both; }
+.anim-pulse      { animation: pulse 1.5s ease infinite; }
+.anim-correct    { animation: correctFlash 0.5s ease both; }
+.anim-wrong      { animation: wrongShake   0.4s ease both; }
+
+.anim-shimmer {
+  background: linear-gradient(90deg, var(--c-border-dim) 25%, var(--c-surface) 50%, var(--c-border-dim) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+/* Staggered children — parent gets .anim-stagger, each child slides up with delay */
+.anim-stagger > * { animation: slideUp var(--t-med) ease both; }
+.anim-stagger > *:nth-child(1) { animation-delay: 0.00s; }
+.anim-stagger > *:nth-child(2) { animation-delay: 0.05s; }
+.anim-stagger > *:nth-child(3) { animation-delay: 0.10s; }
+.anim-stagger > *:nth-child(4) { animation-delay: 0.15s; }
+.anim-stagger > *:nth-child(5) { animation-delay: 0.20s; }
+.anim-stagger > *:nth-child(6) { animation-delay: 0.25s; }
+.anim-stagger > *:nth-child(7) { animation-delay: 0.30s; }
+.anim-stagger > *:nth-child(8) { animation-delay: 0.35s; }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .topbar        { padding: 0 14px; }
+  .gl-content    { padding: 0 12px; }
+  .reader-card   { padding: 16px 14px; }
+  .gl-card-body  { padding: 12px 14px; }
+  .drill-options { grid-template-columns: 1fr; }
+  .library-grid  { grid-template-columns: 1fr; }
+  .mode-tab      { padding: 9px 14px; font-size: 10px; }
+}
