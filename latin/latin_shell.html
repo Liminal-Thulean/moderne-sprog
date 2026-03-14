@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Latin — Glossarium</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f0e8; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(184,151,62,0.3); }
+  button:hover { opacity: 0.85; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f0e8d0; }
+  ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Load order: shared utilities → reader → tables → this shell (App) -->
+<script type="text/babel">
+// @@MODULES@@
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+// latin.html is intentionally thin — all logic lives in the three .js modules.
+// Add a new text:      edit latin_reader.js → WORKS
+// Add a new paradigm:  edit latin_tables.js → CATEGORIES
+// Shared components:   edit latin_shared.js → WordToken, POS_COLORS, tokenise
+
+function App() {
+  const [mode, setMode]           = React.useState("tables"); // "tables" | "matching" | "reader"
+  const [catIdx, setCatIdx]       = React.useState(0);
+  const [wordIdx, setWordIdx]     = React.useState(0);
+  const [inputs, setInputs]       = React.useState({});
+  const [submitted, setSubmitted] = React.useState(false);
+  const [showAnswers, setShowAnswers] = React.useState(false);
+
+  const category = CATEGORIES[catIdx];
+  const word     = category.words[wordIdx];
+  const tag      = TAG[category.type];
+
+  const tableData = React.useMemo(() => {
+    if (category.type === "irregular") return word.tables.map(t => ({
+      ...t, answers: t.rows.map(r => r.answers)
+    }));
+    const patterns = category.type === "conjugation" ? CONJUGATION_PATTERNS : DECLENSION_PATTERNS;
+    const pattern  = patterns[category.pattern];
+    return [{ tense: null, headers: pattern.headers, rows: pattern.rows, answers: getAnswers(category, word) }];
+  }, [catIdx, wordIdx]);
+
+  const allCells    = tableData.flatMap((t, ti) =>
+    t.answers.flatMap((row, ri) => row.map((_, ci) => `${ti}-${ri}-${ci}`))
+  );
+  const total       = allCells.length;
+  const filledCount = allCells.filter(k => inputs[k]?.trim()).length;
+  const score       = submitted ? allCells.filter(k => {
+    const [ti, ri, ci] = k.split("-").map(Number);
+    return checkAnswer(inputs[k] || "", tableData[ti].answers[ri][ci]) === "correct";
+  }).length : 0;
+
+  const handleInput  = (ti, key, val) => {
+    setInputs(p => ({ ...p, [`${ti}-${key}`]: val }));
+    if (submitted) setSubmitted(false);
+  };
+  const reset      = () => { setInputs({}); setSubmitted(false); setShowAnswers(false); };
+  const goWord     = dir => { setWordIdx((wordIdx + dir + category.words.length) % category.words.length); reset(); };
+  const goCategory = idx => { setCatIdx(idx); setWordIdx(0); reset(); };
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f5f0e8", backgroundImage: "radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily: "'EB Garamond','Palatino Linotype',Palatino,serif", color: "#2c1f0e", paddingBottom: "60px" }}>
+
+      {/* Header */}
+      <header style={{ borderBottom: "2px solid #b8973e", background: "linear-gradient(180deg,#2c1f0e 0%,#3d2c12 100%)", padding: "20px 32px 16px", display: "flex", alignItems: "flex-end", gap: "20px" }}>
+        <div>
+          <div style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "4px", color: "#b8973e", marginBottom: "4px" }}>GRAMMATICA LATINA</div>
+          <h1 style={{ fontFamily: "'Cinzel',serif", fontSize: "22px", fontWeight: "700", color: "#f0e4c4", margin: 0, letterSpacing: "1px" }}>Latin — Glossarium</h1>
+        </div>
+        <div style={{ marginLeft: "auto", fontStyle: "italic", color: "#7a5a2a", fontSize: "13px", paddingBottom: "2px", display: "flex", alignItems: "center", gap: "20px" }}>
+          <a href="../index.html" style={{ color: "#7a5a2a", textDecoration: "none", opacity: 0.7, fontSize: "11px", fontFamily: "'Cinzel',serif", letterSpacing: "1px" }}>← Hub</a>
+          <span>Repetitio est mater studiōrum</span>
+        </div>
+      </header>
+
+      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "0 20px" }}>
+
+        {/* Mode tabs */}
+        <div style={{ display: "flex", gap: "0", marginTop: "24px", borderBottom: "2px solid #c9a84c" }}>
+          {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"],["reader","📖  Reader"]].map(([m, label]) => (
+            <button key={m} onClick={() => setMode(m)}
+              style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", letterSpacing: "1px", padding: "9px 22px", border: "none", borderBottom: mode === m ? "2px solid #2c1f0e" : "2px solid transparent", marginBottom: "-2px", background: mode === m ? "#f5f0e8" : "transparent", color: mode === m ? "#2c1f0e" : "#7a5c2a", cursor: "pointer", fontWeight: mode === m ? "600" : "400", transition: "all 0.15s" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* MATCHING */}
+        {mode === "matching" && <MatchingMode />}
+
+        {/* READER */}
+        {mode === "reader" && <ReaderMode />}
+
+        {/* TABLES */}
+        {mode === "tables" && (
+          <div>
+            <div style={{ marginTop: "20px", display: "flex", flexWrap: "wrap", gap: "5px" }}>
+              {CATEGORIES.map((cat, i) => {
+                const tc = TAG[cat.type];
+                const active = i === catIdx;
+                return (
+                  <button key={cat.id} onClick={() => goCategory(i)}
+                    style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "0.8px", padding: "4px 11px", border: "1px solid", borderColor: active ? tc.bg : "#c9b48a", borderRadius: "20px", background: active ? tc.bg : "transparent", color: active ? tc.text : "#7a5c2a", cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" }}>
+                    {cat.label}
+                    <span style={{ fontFamily: "'EB Garamond',serif", fontWeight: "400", marginLeft: "4px", opacity: 0.75, fontSize: "9px" }}>{cat.sublabel}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ marginTop: "16px", background: "#fffdf6", border: "1px solid #d4bc84", borderRadius: "4px", boxShadow: "0 2px 16px rgba(44,31,14,0.09)", overflow: "hidden" }}>
+
+              <div style={{ background: "linear-gradient(180deg,#4a3010 0%,#3a2410 100%)", padding: "13px 22px", borderBottom: "2px solid #b8973e", display: "flex", alignItems: "center", gap: "14px" }}>
+                <button onClick={() => goWord(-1)} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,151,62,0.4)", borderRadius: "2px", color: "#e8c97a", cursor: "pointer", width: "30px", height: "30px", fontSize: "17px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "10px", flexWrap: "wrap" }}>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "16px", fontWeight: "600", color: "#f0e4c4" }}>{word.lemma}</span>
+                    <span style={{ fontStyle: "italic", color: "#c4a060", fontSize: "14px" }}>— {word.meaning}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "3px" }}>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", letterSpacing: "1.5px", padding: "2px 7px", borderRadius: "10px", background: tag.bg, color: tag.text, border: `1px solid ${tag.text}44` }}>{category.type.toUpperCase()}</span>
+                    <span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", color: "#8a6a3a", letterSpacing: "1px" }}>{category.sublabel.toUpperCase()}</span>
+                  </div>
+                </div>
+                <div style={{ textAlign: "center", color: "#8a6a3a", fontSize: "11px", flexShrink: 0 }}>
+                  <div style={{ fontFamily: "'Cinzel',serif", fontSize: "15px", color: "#e8c97a", fontWeight: "600" }}>{wordIdx + 1}</div>
+                  <div>of {category.words.length}</div>
+                </div>
+                <button onClick={() => goWord(1)} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,151,62,0.4)", borderRadius: "2px", color: "#e8c97a", cursor: "pointer", width: "30px", height: "30px", fontSize: "17px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>
+              </div>
+
+              <ScoreBar score={score} total={total} submitted={submitted} />
+
+              <div style={{ padding: "16px 22px", display: "flex", flexDirection: "column", gap: "26px" }}>
+                {tableData.map((t, ti) => {
+                  const subInputs = {};
+                  Object.entries(inputs).forEach(([k, v]) => {
+                    const [tIdx, ...rest] = k.split("-");
+                    if (Number(tIdx) === ti) subInputs[rest.join("-")] = v;
+                  });
+                  return (
+                    <div key={ti}>
+                      {t.tense && (
+                        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "2px", color: "#8a6914", marginBottom: "9px", textTransform: "uppercase", borderLeft: "3px solid #c9a84c", paddingLeft: "9px" }}>{t.tense}</div>
+                      )}
+                      <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={subInputs} submitted={submitted} showAnswers={showAnswers} onInput={(key, val) => handleInput(ti, key, val)} />
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ padding: "13px 22px 17px", borderTop: "1px solid #e8dfc0", display: "flex", alignItems: "center", gap: "9px", flexWrap: "wrap" }}>
+                <button onClick={() => setSubmitted(true)} disabled={filledCount === 0}
+                  style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 20px", background: filledCount === 0 ? "#c9b48a" : "#3a2410", color: "#f0e4c4", border: "none", borderRadius: "2px", cursor: filledCount === 0 ? "default" : "pointer" }}>
+                  GRADE ({filledCount}/{total})
+                </button>
+                <button onClick={reset}
+                  style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 16px", background: "transparent", color: "#7a5c2a", border: "1px solid #c9b48a", borderRadius: "2px", cursor: "pointer" }}>
+                  RESET
+                </button>
+                {submitted && score < total && (
+                  <button onClick={() => setShowAnswers(v => !v)}
+                    style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "1.5px", padding: "8px 16px", background: "transparent", color: showAnswers ? "#2d6a4f" : "#9b2335", border: "1px solid", borderColor: showAnswers ? "#2d6a4f" : "#c9b48a", borderRadius: "2px", cursor: "pointer" }}>
+                    {showAnswers ? "HIDE ANSWERS" : "SHOW ANSWERS"}
+                  </button>
+                )}
+                <div style={{ marginLeft: "auto", display: "flex", gap: "7px" }}>
+                  <button onClick={() => goWord(-1)} style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 13px", background: "transparent", color: "#7a5c2a", border: "1px solid #c9b48a", borderRadius: "2px", cursor: "pointer" }}>← PREV</button>
+                  <button onClick={() => goWord(1)}  style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 13px", background: "#8a6914", color: "#f5f0e8", border: "none", borderRadius: "2px", cursor: "pointer" }}>NEXT →</button>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: "14px", fontSize: "12px", color: "#9a7a3a", fontStyle: "italic", textAlign: "center" }}>
+              Macrons optional · ā = a, ē = e, ī = i, ō = o, ū = u
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
