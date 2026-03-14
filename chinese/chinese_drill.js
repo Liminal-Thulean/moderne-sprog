@@ -58,11 +58,11 @@ function CharDrill() {
       {/* Card */}
       <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",marginBottom:"16px"}}>
         {/* Character display */}
-        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:C.text,lineHeight:1,marginBottom:"12px",textShadow:"0 2px 20px rgba(212,168,64,0.3)"}}>
+        <div style={{background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:"#f0e4c4",lineHeight:1,marginBottom:"12px",textShadow:"none"}}>
             {char.char}
           </div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase"}}>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"rgba(255,255,255,0.5)",textTransform:"uppercase"}}>
             {char.pos}
           </div>
         </div>

@@ -125,13 +125,15 @@ function ReaderMode() {
             const isActive = activeId === id;
             return (
               <React.Fragment key={i}>
-                <span style={{ position: "relative", display: "inline-block" }}>
+                <span style={{ position: "relative", display: "inline-block" }}
+                  onMouseEnter={() => entry && setActiveId(id)}
+                  onMouseLeave={() => setActiveId(null)}>
                   <span onClick={() => setActiveId(isActive ? null : id)}
                     style={{ cursor: entry ? "pointer" : "default", borderBottom: entry ? "2px solid " + (pc.border + "88") : "none", background: isActive ? (pc ? pc.bg : "transparent") : "transparent", borderRadius: "2px", padding: "0 1px", transition: "all 0.15s" }}>
                     {token}
                   </span>
                   {isActive && entry && (
-                    <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "8px 12px", zIndex: 10, minWidth: "140px", boxShadow: "0 4px 16px rgba(44,31,14,0.15)", textAlign: "left" }}>
+                    <div style={{ position: "absolute", top: "110%", left: "50%", transform: "translateX(-50%)", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "8px 12px", zIndex: 100, minWidth: "160px", boxShadow: "0 4px 16px rgba(44,31,14,0.20)", textAlign: "left", pointerEvents: "none" }}>
                       <div style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "22px", color: C.text, marginBottom: "2px" }}>{token}</div>
                       <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "12px", color: C.textMuted, marginBottom: "4px" }}>{entry.pinyin}</div>
                       <div style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", padding: "1px 5px", borderRadius: "8px", background: pc.bg, border: "1px solid " + pc.border, color: pc.border, display: "inline-block", marginBottom: "4px" }}>{entry.pos}</div>

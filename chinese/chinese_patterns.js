@@ -34,10 +34,10 @@ function PatternsMode() {
 
       <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden"}}>
         {/* Pattern header */}
-        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:C.text,letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:C.textMuted,textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:C.text,textAlign:"center"}}>{pat.meaning}</div>
+        <div style={{background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:"#f0e4c4",letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:"rgba(255,255,255,0.6)",textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:"#e8c97a",textAlign:"center"}}>{pat.meaning}</div>
         </div>
 
         <div style={{padding:"22px 28px"}}>

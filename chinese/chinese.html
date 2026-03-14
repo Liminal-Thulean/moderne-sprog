@@ -301,11 +301,11 @@ function CharDrill() {
       {/* Card */}
       <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",marginBottom:"16px"}}>
         {/* Character display */}
-        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:C.text,lineHeight:1,marginBottom:"12px",textShadow:"0 2px 20px rgba(212,168,64,0.3)"}}>
+        <div style={{background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:"#f0e4c4",lineHeight:1,marginBottom:"12px",textShadow:"none"}}>
             {char.char}
           </div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase"}}>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:"rgba(255,255,255,0.5)",textTransform:"uppercase"}}>
             {char.pos}
           </div>
         </div>
@@ -478,13 +478,15 @@ function ReaderMode() {
             const isActive = activeId === id;
             return (
               <React.Fragment key={i}>
-                <span style={{ position: "relative", display: "inline-block" }}>
+                <span style={{ position: "relative", display: "inline-block" }}
+                  onMouseEnter={() => entry && setActiveId(id)}
+                  onMouseLeave={() => setActiveId(null)}>
                   <span onClick={() => setActiveId(isActive ? null : id)}
                     style={{ cursor: entry ? "pointer" : "default", borderBottom: entry ? "2px solid " + (pc.border + "88") : "none", background: isActive ? (pc ? pc.bg : "transparent") : "transparent", borderRadius: "2px", padding: "0 1px", transition: "all 0.15s" }}>
                     {token}
                   </span>
                   {isActive && entry && (
-                    <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "8px 12px", zIndex: 10, minWidth: "140px", boxShadow: "0 4px 16px rgba(44,31,14,0.15)", textAlign: "left" }}>
+                    <div style={{ position: "absolute", top: "110%", left: "50%", transform: "translateX(-50%)", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "8px 12px", zIndex: 100, minWidth: "160px", boxShadow: "0 4px 16px rgba(44,31,14,0.20)", textAlign: "left", pointerEvents: "none" }}>
                       <div style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "22px", color: C.text, marginBottom: "2px" }}>{token}</div>
                       <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "12px", color: C.textMuted, marginBottom: "4px" }}>{entry.pinyin}</div>
                       <div style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", padding: "1px 5px", borderRadius: "8px", background: pc.bg, border: "1px solid " + pc.border, color: pc.border, display: "inline-block", marginBottom: "4px" }}>{entry.pos}</div>
@@ -564,10 +566,10 @@ function PatternsMode() {
 
       <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden"}}>
         {/* Pattern header */}
-        <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:C.text,letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:C.textMuted,textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:C.text,textAlign:"center"}}>{pat.meaning}</div>
+        <div style={{background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:"#f0e4c4",letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
+          <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:"rgba(255,255,255,0.6)",textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:"#e8c97a",textAlign:"center"}}>{pat.meaning}</div>
         </div>
 
         <div style={{padding:"22px 28px"}}>
