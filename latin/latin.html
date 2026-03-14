@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #f5f0e8; }
@@ -16,6 +16,11 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f0e8d0; }
   ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
+  /* ── Topbar (matches Danish / index) ─────────────────────────────────── */
+  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
+  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
+  .topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
 </style>
 </head>
 <body>
@@ -1361,17 +1366,12 @@ function App() {
   return (
     <div style={{ minHeight: "100vh", background: "#f5f0e8", backgroundImage: "radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily: "'EB Garamond','Palatino Linotype',Palatino,serif", color: "#2c1f0e", paddingBottom: "60px" }}>
 
-      {/* Header */}
-      <header style={{ borderBottom: "2px solid #b8973e", background: "linear-gradient(180deg,#2c1f0e 0%,#3d2c12 100%)", padding: "20px 32px 16px", display: "flex", alignItems: "flex-end", gap: "20px" }}>
-        <div>
-          <div style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "4px", color: "#b8973e", marginBottom: "4px" }}>GRAMMATICA LATINA</div>
-          <h1 style={{ fontFamily: "'Cinzel',serif", fontSize: "22px", fontWeight: "700", color: "#f0e4c4", margin: 0, letterSpacing: "1px" }}>Latin — Glossarium</h1>
-        </div>
-        <div style={{ marginLeft: "auto", fontStyle: "italic", color: "#7a5a2a", fontSize: "13px", paddingBottom: "2px", display: "flex", alignItems: "center", gap: "20px" }}>
-          <a href="../index.html" style={{ color: "#7a5a2a", textDecoration: "none", opacity: 0.7, fontSize: "11px", fontFamily: "'Cinzel',serif", letterSpacing: "1px" }}>← Hub</a>
-          <span>Repetitio est mater studiōrum</span>
-        </div>
-      </header>
+      {/* Topbar — matches Danish/index */}
+      <nav className="topbar">
+        <a href="../index.html" className="topbar-logo">Glossarium</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-course">Latina</span>
+      </nav>
 
       <div style={{ maxWidth: "860px", margin: "0 auto", padding: "0 20px" }}>
 
