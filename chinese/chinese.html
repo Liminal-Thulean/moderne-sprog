@@ -3,64 +3,52 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Classical Chinese — 文言文</title>
+<title>Classical Chinese — Glossarium</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Noto+Serif+TC:wght@300;400;500;600;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0e0a06; }
-  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(210,160,60,0.35); }
+  body { background: #f5f0e8; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(184,151,62,0.3); }
   button { transition: all 0.15s; }
   button:hover { opacity: 0.88; }
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #1a1208; }
-  ::-webkit-scrollbar-thumb { background: #8a6820; border-radius: 3px; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f0e8d0; }
+  ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
   details summary { list-style: none; }
   details summary::-webkit-details-marker { display: none; }
+  /* ── Topbar ── */
+  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
+  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
+  .topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
 </style>
 </head>
 <body>
 <div id="root"></div>
+
+<!-- Load order: shared → data → components → App -->
 <script type="text/babel">
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  CLASSICAL CHINESE — 文言文
-//  Four modes: Character Drill · Reader · Patterns · Matching
-//
-//  CHARACTER FORMAT (CHARACTERS array):
-//  { char:"人", pinyin:"rén", eng:"person, people, human being",
-//    pos:"noun/verb", notes:"One of the most common characters." }
-//
-//  PASSAGE FORMAT (PASSAGES array):
-//  { id, title, source, date, intro, text: "學 而 時 習 之 ，不 亦 說 乎" }
-//  Separate each character/punctuation with a space for the tokeniser.
-//
-//  PATTERN FORMAT (PATTERNS array):
-//  { id, pattern, pinyin, meaning, example, translation, notes }
-//
-//  DICTIONARY (chinese_dict.json):
-//  { "人": { "pinyin":"rén", "pos":"noun", "eng":"person, human", "notes":"..." } }
-// ═══════════════════════════════════════════════════════════════════════════
-
-// ─── COLORS ──────────────────────────────────────────────────────────────────
+// ── chinese_shared.js ──────────────────────────
+// ─── COLOUR PALETTE ───────────────────────────────────────────────────────────
+// Parchment/gold theme — matches Latin, Greek, Sanskrit
 
 const C = {
-  bg:         "#0e0a06",
-  surface:    "#16100a",
-  card:       "#1e1508",
-  border:     "#3a2a10",
-  borderDim:  "#2a1e0a",
-  gold:       "#d4a840",
-  goldLight:  "#f0c870",
-  goldDim:    "#8a6820",
-  goldFaint:  "rgba(212,168,64,0.12)",
-  text:       "#f0e8d0",
-  textMuted:  "#8a7a5a",
+  bg:         "#f5f0e8",
+  surface:    "#fffdf6",
+  card:       "#fffdf6",
+  border:     "#d4bc84",
+  borderDim:  "#e8dfc0",
+  gold:       "#b8973e",
+  goldLight:  "#f0e4c4",
+  goldDim:    "#8a6914",
+  goldFaint:  "rgba(184,151,62,0.10)",
+  text:       "#2c1f0e",
+  textMuted:  "#9a7a3a",
   red:        "#c84030",
-  green:      "#3a8a50",
-  headerBg:   "linear-gradient(180deg,#100c04 0%,#1a1208 100%)",
+  green:      "#2d8a5f",
 };
 
 const POS_COLORS = {
@@ -73,6 +61,24 @@ const POS_COLORS = {
   numeral: { bg:"rgba(100,60,0,0.18)",    border:"#7a4800" },
 };
 
+// ─── UTILITIES ────────────────────────────────────────────────────────────────
+
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function normalise(s) {
+  return s.trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]/g,"");
+}
+
+// ── chinese_data.js ──────────────────────────
 // ─── CHARACTER DATA ───────────────────────────────────────────────────────────
 
 const CHARACTERS = [
@@ -245,21 +251,7 @@ const PASSAGES = [
   },
 ];
 
-// ─── UTILITIES ───────────────────────────────────────────────────────────────
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-function normalise(s) {
-  return s.trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]/g,"");
-}
-
+// ── chinese_drill.js ──────────────────────────
 // ─── CHARACTER DRILL ──────────────────────────────────────────────────────────
 
 function CharDrill() {
@@ -307,10 +299,10 @@ function CharDrill() {
       </div>
 
       {/* Card */}
-      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",marginBottom:"16px"}}>
+      <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden",marginBottom:"16px"}}>
         {/* Character display */}
         <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"40px 20px",textAlign:"center",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:C.goldLight,lineHeight:1,marginBottom:"12px",textShadow:"0 2px 20px rgba(212,168,64,0.3)"}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"96px",color:C.text,lineHeight:1,marginBottom:"12px",textShadow:"0 2px 20px rgba(212,168,64,0.3)"}}>
             {char.char}
           </div>
           <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase"}}>
@@ -361,7 +353,7 @@ function CharDrill() {
             </button>
           )}
           {showHint && char.notes && (
-            <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,fontStyle:"italic",lineHeight:"1.6",borderLeft:"2px solid "+C.border,paddingLeft:"12px"}}>
+            <div style={{marginTop:"8px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,fontStyle:"italic",lineHeight:"1.6",borderLeft:"2px solid #b8973e",paddingLeft:"12px"}}>
               {char.notes}
             </div>
           )}
@@ -371,146 +363,171 @@ function CharDrill() {
   );
 }
 
+// ── chinese_reader.js ──────────────────────────
 // ─── READER ───────────────────────────────────────────────────────────────────
 
 function ReaderMode() {
   const [dict, setDict]         = React.useState(null);
   const [err, setErr]           = React.useState(null);
-  const [pidx, setPidx]         = React.useState(0);
+  const [view, setView]         = React.useState("library");
+  const [pidx, setPidx]         = React.useState(null);
   const [activeId, setActiveId] = React.useState(null);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     fetch("chinese_dict.json")
-      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
-      .then(setDict).catch(e=>setErr(e.message));
-  },[]);
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(setDict).catch(e => setErr(e.message));
+  }, []);
 
-  const passage = PASSAGES[pidx];
-  // Tokenise: each space-separated item is a token
-  const tokens = passage.text.split(" ").filter(t=>t.length>0);
-  const charTokens = tokens.filter(t=>/[\u4e00-\u9fff]/.test(t));
-  const inDict = dict ? charTokens.filter(t=>dict[t]).length : 0;
-  const coverage = charTokens.length>0 ? Math.round((inDict/charTokens.length)*100) : 0;
+  // All hooks unconditional — guard with null checks
+  const passage    = pidx !== null ? PASSAGES[pidx] : null;
+  const tokens     = React.useMemo(() => passage ? passage.text.split(" ").filter(t => t.length > 0) : [], [pidx]);
+  const charTokens = tokens.filter(t => /[\u4e00-\u9fff]/.test(t));
+  const inDict     = dict ? charTokens.filter(t => dict[t]).length : 0;
+  const coverage   = charTokens.length > 0 ? Math.round((inDict / charTokens.length) * 100) : 0;
+  const isPunct    = t => /^[，。？！；：「」『』、]$/.test(t);
 
-  const isPunct = t => /^[，。？！；：「」『』、]$/.test(t);
+  const openPassage = (i) => { setPidx(i); setView("reading"); setActiveId(null); };
+  const back        = ()  => { setView("library"); setActiveId(null); };
+
+  // ── Library view ─────────────────────────────────────────────────────────────
+  if (view === "library") {
+    return (
+      <div style={{ marginTop: "20px" }}>
+        <div style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "3px", color: C.textMuted, textTransform: "uppercase", marginBottom: "14px" }}>Select a text</div>
+        {err && (
+          <div style={{ padding: "10px 14px", background: "rgba(180,30,30,0.06)", border: "1px solid #c88080", borderRadius: "4px", marginBottom: "12px", fontFamily: "'EB Garamond',serif", fontSize: "13px", color: "#c06060" }}>
+            Dictionary not loaded — hover popups unavailable. ({err})
+          </div>
+        )}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px,1fr))", gap: "12px" }}>
+          {PASSAGES.map((p, i) => (
+            <button key={p.id} onClick={() => openPassage(i)}
+              style={{ textAlign: "left", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "18px 20px", cursor: "pointer", boxShadow: "0 2px 10px rgba(44,31,14,0.07)", transition: "all 0.15s", display: "block", width: "100%" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.gold; e.currentTarget.style.boxShadow = "0 4px 18px rgba(44,31,14,0.13)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "0 2px 10px rgba(44,31,14,0.07)"; }}>
+              <div style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "22px", fontWeight: "600", color: C.text, marginBottom: "6px", letterSpacing: "2px" }}>{p.title}</div>
+              <div style={{ fontFamily: "'EB Garamond',serif", fontStyle: "italic", fontSize: "12px", color: C.textMuted, marginBottom: "10px" }}>{p.source} · {p.date}</div>
+              {p.intro && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "13px", color: "#5a4020", lineHeight: "1.5" }}>{p.intro}</div>}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Reading view ──────────────────────────────────────────────────────────────
   let wc = 0;
 
   return (
-    <div style={{marginTop:"20px"}}>
-      {/* Passage selector */}
-      <div style={{display:"flex",flexWrap:"wrap",gap:"6px",marginBottom:"14px"}}>
-        {PASSAGES.map((p,i)=>(
-          <button key={p.id} onClick={()=>{setPidx(i);setActiveId(null);}} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"5px 14px",border:"1px solid",borderColor:i===pidx?C.gold:C.border,borderRadius:"20px",background:i===pidx?"#2a1e08":"transparent",color:i===pidx?C.goldLight:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
-            {p.title}
-          </button>
-        ))}
+    <div style={{ marginTop: "16px" }}>
+      {/* Breadcrumb + passage tabs */}
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", flexWrap: "wrap" }}>
+        <button onClick={back} style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1.5px", padding: "5px 12px", background: "transparent", color: C.textMuted, border: "1px solid " + C.border, borderRadius: "2px", cursor: "pointer" }}>← LIBRARY</button>
+        <div style={{ marginLeft: "auto", display: "flex", gap: "5px", flexWrap: "wrap" }}>
+          {PASSAGES.map((p, i) => (
+            <button key={p.id} onClick={() => { setPidx(i); setActiveId(null); }}
+              style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "0.5px", padding: "4px 10px", border: "1px solid", borderColor: i === pidx ? C.gold : C.border, borderRadius: "12px", background: i === pidx ? "#3a2410" : "transparent", color: i === pidx ? C.goldLight : C.textMuted, cursor: "pointer", transition: "all 0.15s" }}>
+              {p.title}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {err && (
-        <div style={{padding:"14px",background:"rgba(180,30,30,0.08)",border:"1px solid #c88080",borderRadius:"4px",marginBottom:"12px"}}>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1px",color:"#c84040",marginBottom:"5px"}}>DICTIONARY NOT FOUND</div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,lineHeight:"1.6"}}>
-            Could not load <code>chinese_dict.json</code>. Ensure it is in the same folder and you are serving from Netlify or <code>npx serve .</code>
-          </div>
-          <div style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:"#c06060",marginTop:"5px",fontStyle:"italic"}}>Error: {err}</div>
-        </div>
-      )}
-
-      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",padding:"24px 28px"}}>
+      <div style={{ background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", boxShadow: "0 2px 16px rgba(44,31,14,0.09)", padding: "24px 28px" }}>
         {/* Header */}
-        <div style={{marginBottom:"16px",paddingBottom:"14px",borderBottom:"1px solid "+C.borderDim}}>
-          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",flexWrap:"wrap",gap:"8px"}}>
+        <div style={{ marginBottom: "16px", paddingBottom: "14px", borderBottom: "1px solid " + C.borderDim }}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
             <div>
-              <h2 style={{fontFamily:"'Noto Serif TC',serif",fontSize:"18px",fontWeight:"600",color:C.goldLight,marginBottom:"4px"}}>{passage.title}</h2>
-              <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"13px",color:C.textMuted}}>{passage.source} · {passage.date}</div>
+              <h2 style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "18px", fontWeight: "600", color: C.text, marginBottom: "4px" }}>{passage.title}</h2>
+              <div style={{ fontFamily: "'EB Garamond',serif", fontStyle: "italic", fontSize: "13px", color: C.textMuted }}>{passage.source} · {passage.date}</div>
             </div>
-            {dict && (
-              <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"3px",flexShrink:0}}>
-                <div style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",color:C.textMuted,textTransform:"uppercase"}}>Dictionary coverage</div>
-                <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
-                  <div style={{width:"70px",height:"3px",background:C.borderDim,borderRadius:"2px",overflow:"hidden"}}>
-                    <div style={{height:"100%",width:coverage+"%",background:coverage>80?C.gold:coverage>50?"#c88030":"#c84030",transition:"width 0.5s"}}/>
-                  </div>
-                  <span style={{fontFamily:"'Cinzel',serif",fontSize:"11px",color:C.goldDim,fontWeight:"600"}}>{coverage}%</span>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "3px", flexShrink: 0 }}>
+              <div style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", letterSpacing: "1px", color: C.textMuted, textTransform: "uppercase" }}>Dictionary coverage</div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div style={{ width: "70px", height: "3px", background: C.borderDim, borderRadius: "2px", overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: coverage + "%", background: coverage > 80 ? C.gold : coverage > 50 ? "#c88030" : C.red, transition: "width 0.5s" }} />
                 </div>
-                <div style={{fontFamily:"'EB Garamond',serif",fontSize:"11px",color:C.textMuted,fontStyle:"italic"}}>{inDict}/{charTokens.length} characters</div>
+                <span style={{ fontFamily: "'Cinzel',serif", fontSize: "11px", color: C.goldDim, fontWeight: "600" }}>{coverage}%</span>
               </div>
-            )}
+              <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "11px", color: C.textMuted, fontStyle: "italic" }}>{inDict}/{charTokens.length} chars</div>
+            </div>
           </div>
-          {passage.intro && <div style={{marginTop:"10px",fontFamily:"'EB Garamond',serif",fontSize:"13px",color:C.textMuted,lineHeight:"1.6",fontStyle:"italic"}}>{passage.intro}</div>}
+          {passage.intro && (
+            <div style={{ marginTop: "10px", fontFamily: "'EB Garamond',serif", fontSize: "13px", color: C.textMuted, lineHeight: "1.6", fontStyle: "italic" }}>{passage.intro}</div>
+          )}
         </div>
 
         {/* POS legend */}
-        <div style={{display:"flex",flexWrap:"wrap",gap:"4px",marginBottom:"16px",alignItems:"center"}}>
-          {Object.entries(POS_COLORS).map(([pos,c])=>(
-            <span key={pos} style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1px",textTransform:"uppercase",padding:"2px 6px",borderRadius:"10px",background:c.bg,border:"1px solid "+c.border,color:c.border}}>{pos}</span>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "16px", alignItems: "center" }}>
+          {Object.entries(POS_COLORS).map(([pos, c]) => (
+            <span key={pos} style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", letterSpacing: "1px", textTransform: "uppercase", padding: "2px 6px", borderRadius: "10px", background: c.bg, border: "1px solid " + c.border, color: c.border }}>{pos}</span>
           ))}
-          <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic",marginLeft:"6px"}}>{dict?"hover or tap any character":"loading dictionary…"}</span>
+          <span style={{ fontFamily: "'EB Garamond',serif", fontSize: "12px", color: C.textMuted, fontStyle: "italic", marginLeft: "6px" }}>
+            {dict ? "tap any character" : "loading dictionary…"}
+          </span>
         </div>
 
         {/* Text */}
-        <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"32px",lineHeight:"2.6",color:C.text,marginBottom:"20px",letterSpacing:"2px"}}>
-          {tokens.map((token,i)=>{
-            if (isPunct(token)) return <span key={i} style={{color:C.textMuted,fontSize:"28px"}}>{token}</span>;
+        <div style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "26px", lineHeight: "2.8", color: C.text, marginBottom: "20px", letterSpacing: "2px" }}>
+          {tokens.map((token, i) => {
+            if (isPunct(token)) return <span key={i} style={{ color: C.textMuted }}>{token}</span>;
             const id = wc++;
             const entry = dict ? dict[token] : null;
-            const isActive = activeId===id;
-            const pc = entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
+            const pc = entry ? (POS_COLORS[entry.pos] || POS_COLORS.noun) : null;
+            const isActive = activeId === id;
             return (
-              <span key={i} style={{position:"relative",display:"inline-block"}}>
-                <span onClick={()=>setActiveId(isActive?null:id)} onMouseEnter={()=>setActiveId(id)} onMouseLeave={()=>setActiveId(null)}
-                  style={{cursor:"pointer",
-                    borderBottom:isActive?(entry?"2px solid "+C.gold:"2px solid #888"):(entry?"1px dotted "+C.goldDim:"none"),
-                    color:isActive?(entry?C.gold:"#888"):C.text,
-                    background:isActive?C.goldFaint:"transparent",
-                    borderRadius:"2px",padding:"0 1px",transition:"all 0.1s",display:"inline-block"}}>
-                  {token}
-                </span>
-                {isActive && (
-                  <span style={{position:"absolute",bottom:"calc(100% + 10px)",left:"50%",transform:"translateX(-50%)",zIndex:200,width:"260px",background:"#100c04",border:"1px solid "+(entry?C.goldDim:"#555"),borderRadius:"5px",boxShadow:"0 8px 32px rgba(0,0,0,0.7)",padding:"12px 14px",pointerEvents:"none",fontFamily:"'EB Garamond',serif"}}>
-                    <span style={{position:"absolute",bottom:"-6px",left:"50%",width:"10px",height:"10px",background:"#100c04",border:"1px solid "+(entry?C.goldDim:"#555"),borderTop:"none",borderLeft:"none",transform:"translateX(-50%) rotate(45deg)",display:"block"}}/>
-                    {entry ? <>
-                      <div style={{display:"flex",alignItems:"baseline",gap:"10px",marginBottom:"7px",flexWrap:"wrap"}}>
-                        <span style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:C.goldLight,lineHeight:1}}>{token}</span>
-                        <span style={{fontSize:"14px",color:C.textMuted,fontStyle:"italic"}}>{entry.pinyin}</span>
-                      </div>
-                      {entry.pos && <div style={{marginBottom:"6px"}}>
-                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",letterSpacing:"1.5px",textTransform:"uppercase",padding:"2px 7px",borderRadius:"10px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border}}>{entry.pos}</span>
-                      </div>}
-                      <div style={{fontSize:"13px",color:C.goldLight,lineHeight:"1.4",marginBottom:entry.notes?"7px":"0"}}>
-                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:C.textMuted,textTransform:"uppercase",marginRight:"5px"}}>Meaning</span>"{entry.eng}"
-                      </div>
-                      {entry.notes && <div style={{fontSize:"11px",fontStyle:"italic",color:C.textMuted,borderTop:"1px solid "+C.borderDim,paddingTop:"6px",lineHeight:"1.5"}}>
-                        <span style={{fontFamily:"'Cinzel',serif",fontSize:"7px",letterSpacing:"1px",color:"#5a4a2a",textTransform:"uppercase",marginRight:"5px",fontStyle:"normal"}}>Note</span>{entry.notes}
-                      </div>}
-                    </> : <>
-                      <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:"#aaa",marginBottom:"8px",lineHeight:1}}>{token}</div>
-                      <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"1px",color:"#666",textTransform:"uppercase",marginBottom:"5px"}}>Not yet in dictionary</div>
-                      <div style={{fontSize:"11px",color:"#555",fontStyle:"italic"}}>Key to add: <span style={{fontFamily:"monospace",background:"#0a0804",padding:"1px 5px",borderRadius:"2px",color:"#888"}}>"{token}"</span></div>
-                    </>}
+              <React.Fragment key={i}>
+                <span style={{ position: "relative", display: "inline-block" }}>
+                  <span onClick={() => setActiveId(isActive ? null : id)}
+                    style={{ cursor: entry ? "pointer" : "default", borderBottom: entry ? "2px solid " + (pc.border + "88") : "none", background: isActive ? (pc ? pc.bg : "transparent") : "transparent", borderRadius: "2px", padding: "0 1px", transition: "all 0.15s" }}>
+                    {token}
                   </span>
-                )}
-              </span>
+                  {isActive && entry && (
+                    <div style={{ position: "absolute", bottom: "110%", left: "50%", transform: "translateX(-50%)", background: C.surface, border: "1px solid " + C.border, borderRadius: "4px", padding: "8px 12px", zIndex: 10, minWidth: "140px", boxShadow: "0 4px 16px rgba(44,31,14,0.15)", textAlign: "left" }}>
+                      <div style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "22px", color: C.text, marginBottom: "2px" }}>{token}</div>
+                      <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "12px", color: C.textMuted, marginBottom: "4px" }}>{entry.pinyin}</div>
+                      <div style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", padding: "1px 5px", borderRadius: "8px", background: pc.bg, border: "1px solid " + pc.border, color: pc.border, display: "inline-block", marginBottom: "4px" }}>{entry.pos}</div>
+                      <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "13px", color: C.text }}>{entry.eng}</div>
+                      {entry.notes && <div style={{ fontFamily: "'EB Garamond',serif", fontSize: "11px", color: C.textMuted, marginTop: "4px", fontStyle: "italic", lineHeight: "1.4" }}>{entry.notes}</div>}
+                    </div>
+                  )}
+                </span>
+              </React.Fragment>
             );
           })}
         </div>
 
-        {/* Word list */}
+        {/* Prev / Next */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "10px", borderTop: "1px solid " + C.borderDim, marginBottom: "16px" }}>
+          <button onClick={() => { setPidx(p => p - 1); setActiveId(null); }} disabled={pidx === 0}
+            style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 16px", background: "transparent", color: pidx === 0 ? C.border : C.textMuted, border: "1px solid", borderColor: pidx === 0 ? C.borderDim : C.border, borderRadius: "2px", cursor: pidx === 0 ? "default" : "pointer" }}>
+            ← PREV
+          </button>
+          <span style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", color: C.textMuted, letterSpacing: "1px" }}>{pidx + 1} / {PASSAGES.length}</span>
+          <button onClick={() => { setPidx(p => p + 1); setActiveId(null); }} disabled={pidx === PASSAGES.length - 1}
+            style={{ fontFamily: "'Cinzel',serif", fontSize: "9px", letterSpacing: "1px", padding: "8px 16px", background: pidx === PASSAGES.length - 1 ? "transparent" : C.goldDim, color: pidx === PASSAGES.length - 1 ? C.border : "#f5f0e8", border: "1px solid", borderColor: pidx === PASSAGES.length - 1 ? C.borderDim : C.goldDim, borderRadius: "2px", cursor: pidx === PASSAGES.length - 1 ? "default" : "pointer" }}>
+            NEXT →
+          </button>
+        </div>
+
+        {/* Character list */}
         <details>
-          <summary style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"2px",color:C.goldDim,cursor:"pointer",userSelect:"none",textTransform:"uppercase"}}>
-            ▸ Character List {dict?`(${inDict} found · ${charTokens.length-inDict} missing)`:""}
+          <summary style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "2px", color: C.goldDim, cursor: "pointer", userSelect: "none", textTransform: "uppercase" }}>
+            ▸ Character List ({inDict} found · {charTokens.length - inDict} missing)
           </summary>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:"4px",marginTop:"10px"}}>
-            {charTokens.map((token,i)=>{
-              const entry=dict?dict[token]:null;
-              const pc=entry?(POS_COLORS[entry.pos]||POS_COLORS.noun):null;
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px,1fr))", gap: "4px", marginTop: "10px" }}>
+            {charTokens.map((token, i) => {
+              const entry = dict ? dict[token] : null;
+              const pc = entry ? (POS_COLORS[entry.pos] || POS_COLORS.noun) : null;
               return (
-                <div key={i} style={{display:"flex",alignItems:"baseline",gap:"8px",padding:"6px 10px",background:entry?C.goldFaint:"rgba(150,50,50,0.06)",border:"1px solid",borderColor:entry?C.borderDim:"#3a2020",borderRadius:"3px"}}>
-                  <span style={{fontFamily:"'Noto Serif TC',serif",fontSize:"20px",color:entry?C.gold:"#c08080",minWidth:"28px",lineHeight:1}}>{token}</span>
-                  {entry?<>
-                    <span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",padding:"1px 5px",borderRadius:"8px",background:pc.bg,border:"1px solid "+pc.border,color:pc.border,whiteSpace:"nowrap"}}>{entry.pos}</span>
-                    <span style={{fontFamily:"'EB Garamond',serif",fontSize:"12px",color:C.textMuted,fontStyle:"italic"}}>{entry.eng.split(",")[0]}</span>
-                  </>:<span style={{fontFamily:"'Cinzel',serif",fontSize:"8px",color:"#c08080"}}>{dict?"not in dictionary":"loading…"}</span>}
+                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "6px", padding: "5px 9px", background: entry ? "rgba(200,170,100,0.05)" : "rgba(150,50,50,0.04)", border: "1px solid", borderColor: entry ? C.borderDim : "#e0c0c0", borderRadius: "3px" }}>
+                  <span style={{ fontFamily: "'Noto Serif TC',serif", fontSize: "18px", color: entry ? C.text : "#c08080", minWidth: "28px" }}>{token}</span>
+                  {entry
+                    ? <><span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", padding: "1px 5px", borderRadius: "8px", background: pc.bg, border: "1px solid " + pc.border, color: pc.border, whiteSpace: "nowrap" }}>{entry.pos}</span>
+                        <span style={{ fontFamily: "'EB Garamond',serif", fontSize: "12px", color: C.textMuted, fontStyle: "italic" }}>{entry.pinyin} — {entry.eng}</span></>
+                    : <span style={{ fontFamily: "'Cinzel',serif", fontSize: "8px", color: "#c08080" }}>not in dictionary</span>
+                  }
                 </div>
               );
             })}
@@ -521,6 +538,7 @@ function ReaderMode() {
   );
 }
 
+// ── chinese_patterns.js ──────────────────────────
 // ─── GRAMMAR PATTERNS ─────────────────────────────────────────────────────────
 
 function PatternsMode() {
@@ -538,18 +556,18 @@ function PatternsMode() {
       {/* Pattern pills */}
       <div style={{display:"flex",flexWrap:"wrap",gap:"5px",marginBottom:"16px"}}>
         {PATTERNS.map((p,i)=>(
-          <button key={p.id} onClick={()=>{setPidx(i);setRevealed(false);}} style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"0.8px",padding:"4px 12px",border:"1px solid",borderColor:i===pidx?C.gold:C.border,borderRadius:"20px",background:i===pidx?"#2a1e08":"transparent",color:i===pidx?C.goldLight:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+          <button key={p.id} onClick={()=>{setPidx(i);setRevealed(false);}} style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"0.8px",padding:"4px 12px",border:"1px solid",borderColor:i===pidx?C.gold:C.border,borderRadius:"20px",background:i===pidx?"#3a2410":"transparent",color:i===pidx?C.goldLight:C.textMuted,cursor:"pointer",transition:"all 0.15s",whiteSpace:"nowrap"}}>
             {p.pattern}
           </button>
         ))}
       </div>
 
-      <div style={{background:C.card,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden"}}>
+      <div style={{background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",overflow:"hidden"}}>
         {/* Pattern header */}
         <div style={{background:"linear-gradient(180deg,#140e04,#1e1508)",padding:"24px 28px",borderBottom:"1px solid "+C.border}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:C.goldLight,letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"36px",color:C.text,letterSpacing:"8px",marginBottom:"8px",textAlign:"center"}}>{pat.pattern}</div>
           <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"14px",color:C.textMuted,textAlign:"center",marginBottom:"6px"}}>{pat.pinyin}</div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:C.gold,textAlign:"center"}}>{pat.meaning}</div>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:"11px",letterSpacing:"1px",color:C.text,textAlign:"center"}}>{pat.meaning}</div>
         </div>
 
         <div style={{padding:"22px 28px"}}>
@@ -558,7 +576,7 @@ function PatternsMode() {
             <div style={{fontFamily:"'Cinzel',serif",fontSize:"9px",letterSpacing:"2px",color:C.textMuted,textTransform:"uppercase",marginBottom:"8px"}}>Example</div>
             <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"26px",color:C.text,letterSpacing:"4px",lineHeight:"1.6",marginBottom:"8px"}}>{pat.example}</div>
             {revealed
-              ? <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"16px",color:C.goldLight,lineHeight:"1.5"}}>{pat.translation}</div>
+              ? <div style={{fontFamily:"'EB Garamond',serif",fontStyle:"italic",fontSize:"16px",color:C.text,lineHeight:"1.5"}}>{pat.translation}</div>
               : <button onClick={()=>setRevealed(true)} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"1.5px",padding:"7px 18px",background:"transparent",color:C.textMuted,border:"1px solid "+C.border,borderRadius:"3px",cursor:"pointer"}}>REVEAL TRANSLATION</button>
             }
           </div>
@@ -581,6 +599,7 @@ function PatternsMode() {
   );
 }
 
+// ── chinese_matching.js ──────────────────────────
 // ─── MATCHING MODE ────────────────────────────────────────────────────────────
 
 const MATCH_COLORS = [
@@ -664,8 +683,8 @@ function MatchingMode() {
       </div>
       {!done && <div style={{textAlign:"center",marginBottom:"10px",color:C.textMuted,fontSize:"12px",fontFamily:"'Cinzel',serif",letterSpacing:"0.5px"}}>Match each character to its English meaning</div>}
       {done && (
-        <div style={{textAlign:"center",padding:"16px",background:C.card,border:"1px solid "+C.border,borderRadius:"6px",marginBottom:"14px"}}>
-          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"22px",color:C.goldLight,marginBottom:"4px"}}>
+        <div style={{textAlign:"center",padding:"16px",background:C.surface,border:"1px solid "+C.border,borderRadius:"6px",marginBottom:"14px"}}>
+          <div style={{fontFamily:"'Noto Serif TC',serif",fontSize:"22px",color:C.text,marginBottom:"4px"}}>
             {acc===100?"善！🎋":acc>=80?"甚好！✓":acc>=60?"尚可":"再學！"}
           </div>
           <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",color:C.textMuted,letterSpacing:"1px",marginBottom:"12px"}}>{acc}% ACCURACY</div>
@@ -690,7 +709,16 @@ function MatchingMode() {
   );
 }
 
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+// ─── APP ──────────────────────────────────────────────────────────────────────
+// chinese.html is intentionally thin — all logic lives in the modules above.
+//
+// Add a passage:       edit chinese_data.js   → PASSAGES
+// Add a character:     edit chinese_data.js   → CHARACTERS
+// Add a pattern:       edit chinese_data.js   → PATTERNS
+// Edit the reader:     edit chinese_reader.js
+// Edit the drill:      edit chinese_drill.js  (hanzi builder goes here)
+// Edit patterns view:  edit chinese_patterns.js
+// Edit matching:       edit chinese_matching.js
 
 const MODES = [
   ["drill",    "✏️  Character Drill"],
@@ -701,32 +729,32 @@ const MODES = [
 
 function App() {
   const [mode, setMode] = React.useState("drill");
+
   return (
-    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'EB Garamond',serif",color:C.text,paddingBottom:"60px"}}>
+    <div style={{ minHeight: "100vh", background: C.bg, backgroundImage: "radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily: "'EB Garamond',serif", color: C.text, paddingBottom: "60px" }}>
 
-      {/* Header */}
-      <header style={{borderBottom:"2px solid "+C.border,background:C.headerBg,padding:"20px 32px 16px",display:"flex",alignItems:"flex-end",gap:"20px"}}>
-        <div>
-          <div style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"4px",color:C.goldDim,marginBottom:"4px"}}>文言文</div>
-          <h1 style={{fontFamily:"'Noto Serif TC',serif",fontSize:"22px",fontWeight:"600",color:C.goldLight,margin:0,letterSpacing:"2px"}}>Classical Chinese</h1>
-        </div>
-        <div style={{marginLeft:"auto",fontStyle:"italic",color:C.textMuted,fontSize:"13px",paddingBottom:"2px"}}>學而時習之</div>
-      </header>
+      {/* Topbar — matches Danish/Greek/Latin/Sanskrit */}
+      <nav className="topbar">
+        <a href="../index.html" className="topbar-logo">Glossarium</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-course">文言文</span>
+      </nav>
 
-      <div style={{maxWidth:"880px",margin:"0 auto",padding:"0 20px"}}>
+      <div style={{ maxWidth: "880px", margin: "0 auto", padding: "0 20px" }}>
         {/* Mode tabs */}
-        <div style={{display:"flex",flexWrap:"wrap",marginTop:"24px",borderBottom:"2px solid "+C.border}}>
-          {MODES.map(([m,label])=>(
-            <button key={m} onClick={()=>setMode(m)} style={{fontFamily:"'Cinzel',serif",fontSize:"10px",letterSpacing:"0.8px",padding:"9px 18px",border:"none",borderBottom:mode===m?"2px solid "+C.gold:"2px solid transparent",marginBottom:"-2px",background:mode===m?C.card:"transparent",color:mode===m?C.goldLight:C.textMuted,cursor:"pointer",fontWeight:mode===m?"600":"400",transition:"all 0.15s",whiteSpace:"nowrap"}}>
+        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "24px", borderBottom: "2px solid #c9a84c" }}>
+          {MODES.map(([m, label]) => (
+            <button key={m} onClick={() => setMode(m)}
+              style={{ fontFamily: "'Cinzel',serif", fontSize: "10px", letterSpacing: "0.8px", padding: "9px 18px", border: "none", borderBottom: mode === m ? "2px solid #2c1f0e" : "2px solid transparent", marginBottom: "-2px", background: mode === m ? C.surface : "transparent", color: mode === m ? C.text : C.textMuted, cursor: "pointer", fontWeight: mode === m ? "600" : "400", transition: "all 0.15s", whiteSpace: "nowrap" }}>
               {label}
             </button>
           ))}
         </div>
 
-        {mode==="drill"    && <CharDrill />}
-        {mode==="reader"   && <ReaderMode />}
-        {mode==="patterns" && <PatternsMode />}
-        {mode==="matching" && <MatchingMode />}
+        {mode === "drill"    && <CharDrill />}
+        {mode === "reader"   && <ReaderMode />}
+        {mode === "patterns" && <PatternsMode />}
+        {mode === "matching" && <MatchingMode />}
       </div>
     </div>
   );
