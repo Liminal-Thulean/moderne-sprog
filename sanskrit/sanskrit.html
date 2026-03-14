@@ -3,21 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sanskrit Practice Tables</title>
+<title>Sanskrit — Glossarium</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Sanskrit:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Tiro+Devanagari+Sanskrit:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0e0a14; }
-  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(180,100,220,0.3); }
+  body { background: #f5f0e8; }
+  input:focus { outline: none; box-shadow: 0 0 0 2px rgba(184,151,62,0.3); }
   button { transition: all 0.15s; }
   button:hover { opacity: 0.85; }
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #1a1220; }
-  ::-webkit-scrollbar-thumb { background: #7a3a9a; border-radius: 3px; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f0e8d0; }
+  ::-webkit-scrollbar-thumb { background: #c9a84c; border-radius: 3px; }
   .deva { font-family: 'Tiro Devanagari Sanskrit', serif; }
+  /* ── Topbar ── */
+  .topbar{background:#c8403a;padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(200,64,58,0.3)}
+  .topbar-logo{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:0.3px;text-decoration:none}
+  .topbar-sep{width:1px;height:18px;background:rgba(255,255,255,0.25)}
+  .topbar-course{font-size:12px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.5px}
 </style>
 </head>
 <body>
@@ -429,16 +434,18 @@ function shuffle(arr) {
 // ─── COLORS ──────────────────────────────────────────────
 
 const C = {
-  bg: "#0e0a14", surface: "#1a1224", border: "#2e1e44",
-  purple: "#9b59d0", purpleLight: "#c4a0f0", purpleDim: "#6a3a9a",
-  gold: "#d4a840", text: "#e8dff5", textMuted: "#6a5a8a",
+  bg: "#f5f0e8", surface: "#fffdf6", border: "#d4bc84",
+  gold: "#b8973e", goldLight: "#f0e4c4", goldDim: "#8a6914",
+  text: "#2c1f0e", textMuted: "#9a7a3a",
   correct: "#2d8a5f", wrong: "#9b2335",
+  // Sanskrit accent — kept for pill/tag colours
+  accent: "#6a3a9a", accentLight: "#c4a0f0", accentDim: "#2e1e44",
 };
 
 const TAG = {
-  declension:  { bg: "#0f1e30", text: "#7ec8f0" },
-  conjugation: { bg: "#1a1030", text: "#c4a0f0" },
-  irregular:   { bg: "#2a1040", text: "#f0c0a0" },
+  declension:  { bg: "rgba(126,200,240,0.12)", text: "#2a6a8a" },
+  conjugation: { bg: "rgba(155,89,208,0.10)",  text: "#6a3a9a" },
+  irregular:   { bg: "rgba(200,120,60,0.10)",   text: "#8a4a14" },
 };
 
 const PAIR_COLORS = [
@@ -463,10 +470,10 @@ function ScoreBar({ score, total, submitted }) {
     : pct>=60  ? { label:"मध्यम्",   color: "#8a7014" }
     :            { label:"पुनः पठ!", color: C.wrong   };
   return (
-    <div style={{ padding:"11px 22px", background:"#110d1a", borderBottom:"1px solid "+C.border, display:"flex", alignItems:"center", gap:"14px" }}>
+    <div style={{ padding:"11px 22px", background:"rgba(200,170,100,0.08)", borderBottom:"1px solid "+C.border, display:"flex", alignItems:"center", gap:"14px" }}>
       <div className="deva" style={{ fontSize:"17px", fontWeight:"600", color:grade.color, minWidth:"120px" }}>{grade.label}</div>
       <div style={{ flex:1 }}>
-        <div style={{ height:"4px", background:"#2e1e44", borderRadius:"2px", overflow:"hidden" }}>
+        <div style={{ height:"4px", background:"#e8dfc0", borderRadius:"2px", overflow:"hidden" }}>
           <div style={{ height:"100%", width:`${pct}%`, background:grade.color, borderRadius:"2px", transition:"width 0.6s" }} />
         </div>
       </div>
@@ -487,20 +494,20 @@ function TableGrid({ headers, rows, answers, inputs, submitted, showAnswers, onI
       </thead>
       <tbody>
         {rows.map((row,ri) => (
-          <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(80,40,120,0.06)" }}>
-            <td style={{ padding:"7px 8px", fontFamily:"'Cinzel',serif", fontSize:"10px", color:C.textMuted, borderBottom:"1px solid #1e1230", whiteSpace:"nowrap" }}>{row.label}</td>
+          <tr key={ri} style={{ background: ri%2===0?"transparent":"rgba(200,170,100,0.06)" }}>
+            <td style={{ padding:"7px 8px", fontFamily:"'Cinzel',serif", fontSize:"10px", color:C.textMuted, borderBottom:"1px solid #e8dfc0", whiteSpace:"nowrap" }}>{row.label}</td>
             {answers[ri].map((answer,ci) => {
               const key = `${ri}-${ci}`;
               const val = inputs[key]||"";
               const st = submitted ? checkAnswer(val,answer) : null;
               return (
-                <td key={ci} style={{ padding:"4px 5px", textAlign:"center", borderBottom:"1px solid #1e1230",
+                <td key={ci} style={{ padding:"4px 5px", textAlign:"center", borderBottom:"1px solid #e8dfc0",
                   background:!st?"transparent":st==="correct"?"rgba(45,138,95,0.1)":"rgba(155,35,53,0.1)" }}>
                   <div style={{ position:"relative" }}>
                     <input type="text" value={val} onChange={e => onInput(key, e.target.value)}
                       style={{ width:"100%", minWidth:"70px", padding:"4px 5px",
                         fontFamily:"'EB Garamond',serif", fontSize:"13px", textAlign:"center",
-                        background: !st?"#130e1e":st==="correct"?"rgba(45,138,95,0.08)":"rgba(155,35,53,0.08)",
+                        background: !st?"#fffdf6":st==="correct"?"rgba(45,138,95,0.08)":"rgba(155,35,53,0.08)",
                         border:"1px solid", borderColor:!st?C.border:st==="correct"?C.correct:C.wrong,
                         borderRadius:"2px", outline:"none", color:C.text, transition:"all 0.2s" }} />
                     {submitted && st==="wrong" && showAnswers && (
@@ -590,8 +597,8 @@ function MatchingMode() {
   return (
     <div>
       <div style={{ display:"flex", alignItems:"center", gap:"12px", marginBottom:"12px" }}>
-        <div style={{ flex:1, height:"4px", background:"#2e1e44", borderRadius:"2px", overflow:"hidden" }}>
-          <div style={{ height:"100%", width:`${(mc/PAIRS)*100}%`, background:C.purpleDim, transition:"width 0.4s" }} />
+        <div style={{ flex:1, height:"4px", background:"#e8dfc0", borderRadius:"2px", overflow:"hidden" }}>
+          <div style={{ height:"100%", width:`${(mc/PAIRS)*100}%`, background:"#b8973e", transition:"width 0.4s" }} />
         </div>
         <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", color:C.textMuted, whiteSpace:"nowrap" }}>
           {mc}/{PAIRS}{acc!==null?` · ${acc}% acc`:""}
@@ -599,12 +606,12 @@ function MatchingMode() {
       </div>
       {!done && <div style={{ textAlign:"center", marginBottom:"10px", color:C.textMuted, fontSize:"12px", fontStyle:"italic" }}>Click a Sanskrit word, then its English meaning</div>}
       {done && (
-        <div style={{ textAlign:"center", padding:"14px", background:"linear-gradient(180deg,#2a1040,#1a0830)", border:"1px solid "+C.purpleDim, borderRadius:"4px", marginBottom:"14px" }}>
-          <div className="deva" style={{ fontSize:"18px", color:C.purpleLight, fontWeight:"700", marginBottom:"4px" }}>
+        <div style={{ textAlign:"center", padding:"14px", background:"linear-gradient(180deg,#4a3010,#3a2410)", border:"1px solid #b8973e", borderRadius:"4px", marginBottom:"14px" }}>
+          <div className="deva" style={{ fontSize:"18px", color:"#f0e4c4", fontWeight:"700", marginBottom:"4px" }}>
             {acc===100?"सुन्दरम्! 🪷":acc>=80?"साधु! ✓":"पुनः पठ!"}
           </div>
           <div style={{ color:C.textMuted, fontSize:"12px", marginBottom:"10px" }}>{acc}% accuracy</div>
-          <button onClick={()=>{ setRound(r=>{ const n=r+1; startRound(n); return n; }); }} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 20px", background:C.purpleDim, color:"#f0e8ff", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT ROUND →</button>
+          <button onClick={()=>{ setRound(r=>{ const n=r+1; startRound(n); return n; }); }} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 20px", background:"#8a6914", color:"#f5f0e8", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT ROUND →</button>
         </div>
       )}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"7px 14px" }}>
@@ -666,25 +673,21 @@ function App() {
   const goCat    = (i) => { setCatIdx(i); setWordIdx(0); reset(); };
 
   return (
-    <div style={{ minHeight:"100vh", background:C.bg, fontFamily:"'EB Garamond',serif", color:C.text, paddingBottom:"60px" }}>
+    <div style={{ minHeight:"100vh", background:C.bg, backgroundImage:"radial-gradient(ellipse at 15% 0%,rgba(180,140,80,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(100,60,20,0.06) 0%,transparent 55%)", fontFamily:"'EB Garamond',serif", color:C.text, paddingBottom:"60px" }}>
 
-      {/* Header */}
-      <header style={{ borderBottom:"2px solid #2e1e44", background:"linear-gradient(180deg,#080610,#0e0a14)", padding:"20px 32px 16px", display:"flex", alignItems:"flex-end", gap:"20px" }}>
-        <div>
-          <div className="deva" style={{ fontSize:"11px", letterSpacing:"3px", color:C.purpleDim, marginBottom:"4px" }}>संस्कृत व्याकरण</div>
-          <h1 style={{ fontFamily:"'Cinzel',serif", fontSize:"22px", fontWeight:"700", color:C.purpleLight, margin:0, letterSpacing:"1px" }}>Sanskrit Practice Tables</h1>
-        </div>
-        <div style={{ marginLeft:"auto", fontStyle:"italic", color:C.textMuted, fontSize:"13px", paddingBottom:"2px" }}>
-          अभ्यासः परमो धर्मः
-        </div>
-      </header>
+      {/* Topbar — matches Danish/Greek/Latin */}
+      <nav className="topbar">
+        <a href="../index.html" className="topbar-logo">Glossarium</a>
+        <div className="topbar-sep"/>
+        <span className="topbar-course">संस्कृतम्</span>
+      </nav>
 
       <div style={{ maxWidth:"880px", margin:"0 auto", padding:"0 20px" }}>
 
         {/* Mode tabs */}
-        <div style={{ display:"flex", marginTop:"20px", borderBottom:"2px solid #2e1e44" }}>
+        <div style={{ display:"flex", marginTop:"20px", borderBottom:"2px solid #c9a84c" }}>
           {[["tables","📋  Practice Tables"],["matching","🔗  Vocabulary Matching"]].map(([m,label])=>(
-            <button key={m} onClick={()=>setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 20px", border:"none", borderBottom:mode===m?"2px solid "+C.purpleLight:"2px solid transparent", marginBottom:"-2px", background:mode===m?C.surface:"transparent", color:mode===m?C.purpleLight:C.textMuted, cursor:"pointer", fontWeight:mode===m?"600":"400" }}>
+            <button key={m} onClick={()=>setMode(m)} style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", padding:"9px 20px", border:"none", borderBottom:mode===m?"2px solid #2c1f0e":"2px solid transparent", marginBottom:"-2px", background:mode===m?C.surface:"transparent", color:mode===m?"#2c1f0e":C.textMuted, cursor:"pointer", fontWeight:mode===m?"600":"400" }}>
               {label}
             </button>
           ))}
@@ -692,7 +695,7 @@ function App() {
 
         {/* Matching mode */}
         {mode === "matching" && (
-          <div style={{ marginTop:"16px", background:C.surface, border:"1px solid #2e1e44", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.5)", padding:"20px 22px" }}>
+          <div style={{ marginTop:"16px", background:C.surface, border:"1px solid #d4bc84", borderRadius:"4px", boxShadow:"0 2px 16px rgba(44,31,14,0.09)", padding:"20px 22px" }}>
             <MatchingMode />
           </div>
         )}
@@ -706,7 +709,7 @@ function App() {
               const tc = TAG[c.type];
               const active = i===catIdx;
               return (
-                <button key={c.id} onClick={()=>goCat(i)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"4px 11px", border:"1px solid", borderColor:active?tc.text+"88":"#2e1e44", borderRadius:"20px", background:active?tc.bg:"transparent", color:active?tc.text:C.textMuted, cursor:"pointer", whiteSpace:"nowrap" }}>
+                <button key={c.id} onClick={()=>goCat(i)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"0.8px", padding:"4px 11px", border:"1px solid", borderColor:active?tc.text+"88":"#c9b48a", borderRadius:"20px", background:active?tc.bg:"transparent", color:active?tc.text:C.textMuted, cursor:"pointer", whiteSpace:"nowrap" }}>
                   {c.label}
                   <span style={{ opacity:0.65, marginLeft:"4px", fontSize:"9px" }}>{c.sublabel}</span>
                 </button>
@@ -715,18 +718,18 @@ function App() {
           </div>
 
           {/* Card */}
-          <div style={{ marginTop:"14px", background:C.surface, border:"1px solid #2e1e44", borderRadius:"4px", boxShadow:"0 4px 24px rgba(0,0,0,0.5)", overflow:"hidden" }}>
+          <div style={{ marginTop:"14px", background:C.surface, border:"1px solid #d4bc84", borderRadius:"4px", boxShadow:"0 2px 16px rgba(44,31,14,0.09)", overflow:"hidden" }}>
 
             {/* Card header */}
-            <div style={{ background:"linear-gradient(180deg,#080610,#0e0a14)", padding:"13px 22px", borderBottom:"2px solid #2e1e44", display:"flex", alignItems:"center", gap:"14px" }}>
-              <button onClick={()=>goWord(-1)} style={{ background:"rgba(155,89,208,0.1)", border:"1px solid #2e1e44", borderRadius:"2px", color:C.purpleLight, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>‹</button>
+            <div style={{ background:"linear-gradient(180deg,#4a3010 0%,#3a2410 100%)", padding:"13px 22px", borderBottom:"2px solid #b8973e", display:"flex", alignItems:"center", gap:"14px" }}>
+              <button onClick={()=>goWord(-1)} style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(184,151,62,0.4)", borderRadius:"2px", color:"#e8c97a", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>‹</button>
               <div style={{ flex:1 }}>
                 <div style={{ display:"flex", alignItems:"baseline", gap:"10px", flexWrap:"wrap" }}>
-                  <span className="deva" style={{ fontSize:"22px", color:C.purpleLight }}>{word.dv}</span>
-                  <span style={{ fontFamily:"'EB Garamond',serif", fontStyle:"italic", fontSize:"16px", color:C.textMuted }}>
+                  <span className="deva" style={{ fontSize:"22px", color:"#f0e4c4" }}>{word.dv}</span>
+                  <span style={{ fontFamily:"'EB Garamond',serif", fontStyle:"italic", fontSize:"16px", color:"#c4a060" }}>
                     {cat.type!=="irregular" ? word.iast : word.iast}
                   </span>
-                  <span style={{ fontStyle:"italic", color:"#8a7aaa", fontSize:"14px" }}>— {word.meaning}</span>
+                  <span style={{ fontStyle:"italic", color:"#c4a060", fontSize:"14px" }}>— {word.meaning}</span>
                 </div>
                 <div style={{ display:"flex", gap:"8px", marginTop:"4px" }}>
                   <span style={{ fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1.5px", padding:"2px 7px", borderRadius:"10px", background:tag.bg, color:tag.text, border:`1px solid ${tag.text}44` }}>{cat.type.toUpperCase()}</span>
@@ -734,10 +737,10 @@ function App() {
                 </div>
               </div>
               <div style={{ textAlign:"center", color:C.textMuted, fontSize:"11px", flexShrink:0 }}>
-                <div style={{ fontFamily:"'Cinzel',serif", fontSize:"15px", color:C.purpleLight, fontWeight:"600" }}>{wordIdx+1}</div>
+                <div style={{ fontFamily:"'Cinzel',serif", fontSize:"15px", color:"#e8c97a", fontWeight:"600" }}>{wordIdx+1}</div>
                 <div>of {cat.words.length}</div>
               </div>
-              <button onClick={()=>goWord(1)} style={{ background:"rgba(155,89,208,0.1)", border:"1px solid #2e1e44", borderRadius:"2px", color:C.purpleLight, cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>›</button>
+              <button onClick={()=>goWord(1)} style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(184,151,62,0.4)", borderRadius:"2px", color:"#e8c97a", cursor:"pointer", width:"30px", height:"30px", fontSize:"17px", display:"flex", alignItems:"center", justifyContent:"center" }}>›</button>
             </div>
 
             <ScoreBar score={score} total={total} submitted={submitted} />
@@ -749,7 +752,7 @@ function App() {
                 Object.entries(inputs).forEach(([k,v])=>{ const [tIdx,...r]=k.split("-"); if(Number(tIdx)===ti) sub[r.join("-")]=v; });
                 return (
                   <div key={ti}>
-                    {t.tense && <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:C.purpleDim, marginBottom:"8px", textTransform:"uppercase", borderLeft:"3px solid "+C.purpleDim, paddingLeft:"9px" }}>{t.tense}</div>}
+                    {t.tense && <div style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", color:"#8a6914", marginBottom:"8px", textTransform:"uppercase", borderLeft:"3px solid #c9a84c", paddingLeft:"9px" }}>{t.tense}</div>}
                     <TableGrid headers={t.headers} rows={t.rows} answers={t.answers} inputs={sub} submitted={submitted} showAnswers={showAnswers} onInput={(key,val)=>handleInput(ti,key,val)} />
                   </div>
                 );
@@ -757,24 +760,24 @@ function App() {
             </div>
 
             {/* Controls */}
-            <div style={{ padding:"12px 22px 16px", borderTop:"1px solid #1e1230", display:"flex", alignItems:"center", gap:"8px", flexWrap:"wrap" }}>
-              <button onClick={()=>setSubmitted(true)} disabled={filledCount===0} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 18px", background:filledCount===0?"#1e1230":C.purpleDim, color:filledCount===0?C.textMuted:"#f0e8ff", border:"none", borderRadius:"2px", cursor:filledCount===0?"default":"pointer" }}>
+            <div style={{ padding:"12px 22px 16px", borderTop:"1px solid #e8dfc0", display:"flex", alignItems:"center", gap:"8px", flexWrap:"wrap" }}>
+              <button onClick={()=>setSubmitted(true)} disabled={filledCount===0} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 18px", background:filledCount===0?"#c9b48a":"#3a2410", color:"#f0e4c4", border:"none", borderRadius:"2px", cursor:filledCount===0?"default":"pointer" }}>
                 GRADE ({filledCount}/{total})
               </button>
-              <button onClick={reset} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:C.textMuted, border:"1px solid #2e1e44", borderRadius:"2px", cursor:"pointer" }}>RESET</button>
+              <button onClick={reset} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:C.textMuted, border:"1px solid #c9b48a", borderRadius:"2px", cursor:"pointer" }}>RESET</button>
               {submitted && score<total && (
-                <button onClick={()=>setShowAnswers(v=>!v)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:showAnswers?C.correct:C.wrong, border:"1px solid", borderColor:showAnswers?C.correct:"#2e1e44", borderRadius:"2px", cursor:"pointer" }}>
+                <button onClick={()=>setShowAnswers(v=>!v)} style={{ fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1.5px", padding:"8px 14px", background:"transparent", color:showAnswers?C.correct:C.wrong, border:"1px solid", borderColor:showAnswers?C.correct:"#c9b48a", borderRadius:"2px", cursor:"pointer" }}>
                   {showAnswers?"HIDE ANSWERS":"SHOW ANSWERS"}
                 </button>
               )}
               <div style={{ marginLeft:"auto", display:"flex", gap:"6px" }}>
-                <button onClick={()=>goWord(-1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:"transparent", color:C.textMuted, border:"1px solid #2e1e44", borderRadius:"2px", cursor:"pointer" }}>← PREV</button>
-                <button onClick={()=>goWord(1)}  style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:C.purpleDim, color:"#f0e8ff", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT →</button>
+                <button onClick={()=>goWord(-1)} style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:"transparent", color:C.textMuted, border:"1px solid #c9b48a", borderRadius:"2px", cursor:"pointer" }}>← PREV</button>
+                <button onClick={()=>goWord(1)}  style={{ fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", padding:"8px 12px", background:"#8a6914", color:"#f5f0e8", border:"none", borderRadius:"2px", cursor:"pointer" }}>NEXT →</button>
               </div>
             </div>
           </div>
 
-          <div style={{ marginTop:"12px", fontSize:"11px", color:C.textMuted, fontStyle:"italic", textAlign:"center" }}>
+          <div style={{ marginTop:"12px", fontSize:"11px", color:"#9a7a3a", fontStyle:"italic", textAlign:"center" }}>
             Diacritics optional · ā=a · ī=i · ū=u · ś/ṣ=s · ṭ/ṭh=t/th · ḥ=h · ṛ=r
           </div>
         </>}
